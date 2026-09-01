@@ -1,0 +1,189 @@
+'use client'
+
+import { useMemo, useState } from 'react'
+
+import type { Locale, ProductCard, ProductCategory } from '@/lib/content/types'
+import type { Dict } from '@/lib/i18n/ui'
+import { ProductRows } from './ProductRows'
+import styles from './ProductBrowser.module.css'
+
+type Props = {
+  products: ProductCard[]
+  categories: ProductCategory[]
+  locale: Locale
+  dict: Dict
+}
+
+/**
+ * Eight to start. The rows are tall and image-led, so eight already fills
+ * several screens — and Load more keeps the footer reachable and the back
+ * button honest, which infinite scroll does not.
+ */
+const PAGE = 8
+
+const normalise = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+
+export function ProductBrowser({ products, categories, locale, dict }: Props) {
+  const t = dict.products
+  const [category, setCategory] = useState<string | null>(null)
+  const [audience, setAudience] = useState('')
+  const [term, setTerm] = useState('')
+  const [shown, setShown] = useState(PAGE)
+
+  const audiences = useMemo(() => {
+    const present = new Set<string>()
+    products.forEach((p) => p.suitableFor.forEach((s) => present.add(s)))
+    return Object.keys(t.suitable).filter((key) => present.has(key))
+  }, [products, t.suitable])
+
+  const haystacks = useMemo(() => {
+    const map = new Map<string, string>()
+    for (const p of products) {
+      map.set(
+        p.id,
+        normalise([p.title, p.subtitle, p.highlightText, p.categoryName].filter(Boolean).join(' ')),
+      )
+    }
+    return map
+  }, [products])
+
+  const filtered = useMemo(() => {
+    const needle = normalise(term.trim())
+    return products.filter((p) => {
+      if (category && p.categorySlug !== category) return false
+      if (audience && !p.suitableFor.includes(audience)) return false
+      if (needle && !haystacks.get(p.id)?.includes(needle)) return false
+      return true
+    })
+  }, [products, category, audience, term, haystacks])
+
+  const change = (fn: () => void) => {
+    fn()
+    setShown(PAGE)
+  }
+
+  const reset = () =>
+    change(() => {
+      setCategory(null)
+      setAudience('')
+      setTerm('')
+    })
+
+  const visible = filtered.slice(0, shown)
+  const remaining = filtered.length - visible.length
+  const narrowed = category !== null || audience !== '' || term.trim() !== ''
+
+  return (
+    <>
+      <div className={styles.controls}>
+        <div className={styles.categories} role="group" aria-label={t.filterCategory}>
+          <button
+            type="button"
+            onClick={() => change(() => setCategory(null))}
+            aria-pressed={category === null}
+            className={category === null ? `${styles.filter} ${styles.filterActive}` : styles.filter}
+          >
+            {t.all}
+          </button>
+          {categories.map((item) => (
+            <button
+              key={item.slug}
+              type="button"
+              onClick={() => change(() => setCategory(item.slug))}
+              aria-pressed={category === item.slug}
+              className={
+                category === item.slug ? `${styles.filter} ${styles.filterActive}` : styles.filter
+              }
+            >
+              {item.name}
+            </button>
+          ))}
+        </div>
+
+        <div className={styles.aside}>
+          {audiences.length > 1 ? (
+            <div className={styles.audience}>
+              <span className={styles.audienceLabel} id="audience-label">
+                {t.forLabel}
+              </span>
+              <select
+                className={styles.select}
+                aria-labelledby="audience-label"
+                value={audience}
+                onChange={(e) => change(() => setAudience(e.target.value))}
+              >
+                <option value="">{t.anyone}</option>
+                {audiences.map((key) => (
+                  <option key={key} value={key}>
+                    {t.suitable[key]}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          <div className={styles.search}>
+            <input
+              className={styles.searchInput}
+              type="search"
+              value={term}
+              placeholder={t.searchPlaceholder}
+              aria-label={t.searchPlaceholder}
+              onChange={(e) => change(() => setTerm(e.target.value))}
+            />
+            {term ? (
+              <button
+                type="button"
+                className={styles.clear}
+                onClick={() => change(() => setTerm(''))}
+                aria-label={t.clear}
+              >
+                ×
+              </button>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.count} aria-live="polite">
+        {t.showing
+          .replace('{shown}', String(visible.length))
+          .replace('{total}', String(filtered.length))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <p className={styles.empty}>
+          {t.empty}
+          {narrowed ? (
+            <button type="button" className={styles.reset} onClick={reset}>
+              {t.reset}
+            </button>
+          ) : null}
+        </p>
+      ) : (
+        <>
+          <ProductRows products={visible} locale={locale} dict={dict} />
+
+          {remaining > 0 ? (
+            <div className={styles.more}>
+              <button
+                type="button"
+                className={styles.moreButton}
+                onClick={() => setShown((n) => n + PAGE)}
+              >
+                {t.loadMore}
+              </button>
+              <span className={styles.moreCount}>
+                {t.remaining.replace('{n}', String(remaining))}
+              </span>
+            </div>
+          ) : null}
+        </>
+      )}
+    </>
+  )
+}

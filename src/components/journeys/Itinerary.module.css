@@ -1,0 +1,144 @@
+.days {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.days::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 30px;
+  bottom: 30px;
+  width: 1px;
+  background: var(--hairline);
+}
+
+.day {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: clamp(20px, 3vw, 48px);
+  padding: clamp(28px, 4vh, 44px) 0;
+}
+
+.dayNumber {
+  font: 400 13px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.18em;
+  color: var(--emas-deep);
+  background: var(--ivory);
+  padding: 8px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.dayHeader {
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 18px;
+}
+
+.dayLabel {
+  font: 400 10px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+}
+
+.dayTitle {
+  margin: 12px 0 0;
+  font: 400 clamp(20px, 2.2vw, 28px) / 1.35 var(--font-marcellus), serif;
+}
+
+.dayNote {
+  margin: 10px 0 0;
+  font: 300 13.5px/1.85 var(--font-karla), sans-serif;
+  color: var(--ink-body);
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(16, 34, 47, 0.08);
+  align-items: baseline;
+}
+
+.time {
+  font: 400 11px/1.6 var(--font-karla), sans-serif;
+  letter-spacing: 0.14em;
+  color: var(--ink-label);
+}
+
+.itemTitle {
+  font: 400 16px/1.5 var(--font-marcellus), serif;
+}
+
+.itemMeta {
+  display: block;
+  margin-top: 5px;
+  font: 300 12px/1.7 var(--font-karla), sans-serif;
+  color: var(--ink-label);
+}
+
+.itemLink {
+  color: var(--biru);
+  border-bottom: 1px solid rgba(169, 123, 42, 0.4);
+}
+
+.itemLink:hover {
+  color: var(--emas-deep);
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: clamp(24px, 3vw, 44px);
+  margin-top: clamp(48px, 8vh, 84px);
+}
+
+.fact {
+  border-top: 1px solid var(--hairline);
+  padding-top: 18px;
+}
+
+.factKey {
+  font: 400 10px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+}
+
+.factValue {
+  margin-top: 12px;
+  font: 400 16px/1.55 var(--font-marcellus), serif;
+}
+
+.factList {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font: 300 13.5px/1.9 var(--font-karla), sans-serif;
+  color: var(--ink-body);
+}
+
+@media (max-width: 780px) {
+  .days::before {
+    display: none;
+  }
+
+  .day {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .item {
+    grid-template-columns: 60px 1fr;
+    gap: 14px;
+  }
+}

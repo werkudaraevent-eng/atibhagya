@@ -1,0 +1,31 @@
+[
+  {
+    "slug": "agni-hotra",
+    "category": "Mind, Body & Spirit",
+    "venues": [
+      "Om Ham Resort",
+      "Anand Ashram",
+      "Five Element Wellness",
+      "Pyramid of Chi Wellness",
+      "Bali Silent Retreat"
+    ],
+    "suitableFor": ["solo", "group", "corporate"],
+    "featured": true,
+    "en": {
+      "title": "Agni Hotra",
+      "subtitle": "Fire Blessing Ritual",
+      "description": "Ceremonial fire ritual where unwanted energy or intentions are offered into sacred fire for transformation. Guests meditate in the ceremonial fire space while the priest chants mantras and rings the bell, offering grain and food into the flames to release mental blockages.",
+      "highlightText": "Releases unwanted energy and aspects, and helps manifest new intentions. Balances energy, voice and mind.",
+      "durationText": "60 Minutes",
+      "facilities": ["Offering Ritual", "Traditional Cloth", "Eye Pillow"]
+    },
+    "id": {
+      "title": "Agni Hotra",
+      "subtitle": "Ritual Api Pemberkatan",
+      "description": "Ritual api upacara: energi atau niat yang tak lagi dibutuhkan dipersembahkan ke dalam api suci untuk ditransformasikan.",
+      "highlightText": "Melepaskan energi dan hal yang tak lagi dibutuhkan, serta membantu mewujudkan niat baru.",
+      "durationText": "60 menit",
+      "facilities": ["Ritual persembahan", "Kain tradisional", "Bantal mata"]
+    }
+  }
+]

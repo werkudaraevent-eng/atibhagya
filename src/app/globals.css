@@ -1,0 +1,178 @@
+:root {
+  /* Palette — see design_handoff_atibhagya_website/README.md § Design Tokens */
+  --biru: #10222f;
+  --biru-footer: #0d1c27;
+  --ivory: #f6f3e7;
+  --ivory-2: #efece0;
+  --ivory-on-dark: #e9e4d8;
+  --emas: #c69a4b;
+  --emas-deep: #a97b2a;
+  --emas-hover: #e3bd72;
+
+  --ink-body: rgba(16, 34, 47, 0.65);
+  --ink-label: rgba(16, 34, 47, 0.55);
+  --ink-caption: rgba(16, 34, 47, 0.45);
+  --hairline: rgba(16, 34, 47, 0.2);
+  --hairline-strong: rgba(16, 34, 47, 0.25);
+
+  --radius: 2px;
+  --radius-pill: 20px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--biru);
+  font-family: var(--font-karla), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--biru);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--emas-deep);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+}
+
+img,
+video {
+  display: block;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: var(--font-karla), system-ui, sans-serif;
+  color: var(--biru);
+  background: transparent;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--emas-deep) !important;
+}
+
+::placeholder {
+  color: rgba(16, 34, 47, 0.35);
+}
+
+/* Visible focus for keyboard users — the design has no focus ring of its own. */
+:focus-visible {
+  outline: 2px solid var(--emas-deep);
+  outline-offset: 3px;
+}
+
+/* --- Motion --------------------------------------------------------------
+ *
+ * GSAP owns the animation (see `src/components/Motion.tsx`). CSS keeps only
+ * the states that must be right before JavaScript runs, so nothing flashes
+ * into view and then animates from the start.
+ */
+
+[data-fade] {
+  opacity: 0;
+}
+
+/* Headlines are hidden until SplitText has measured their lines. */
+[data-headline] {
+  visibility: hidden;
+}
+
+[data-rule] {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+[data-open] {
+  clip-path: inset(0% 0% 100% 0%);
+}
+
+[data-index-marker] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* Without JavaScript nothing would ever animate in, so show everything. */
+.no-js [data-fade],
+.no-js [data-rule],
+.no-js [data-open],
+.no-js [data-headline] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  clip-path: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-fade],
+  [data-headline],
+  [data-rule],
+  [data-open] {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    clip-path: none;
+  }
+}
+
+@keyframes cue {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 0.25;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,2136 @@
+[
+  {
+    "slug": "agni-hotra",
+    "code": "WEL-001",
+    "category": "Rituals & Ceremony",
+    "venues": [
+      "Om Ham Resort",
+      "Anand Ashram",
+      "Five Element Wellness",
+      "Pyramid Of Chi Wellness",
+      "Bali Silent Retreat"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 0,
+    "en": {
+      "title": "Agni Hotra",
+      "subtitle": "Fire Blessing Ritual",
+      "description": "Ceremonial fire ritual where unwanted energy/intentions are offered into sacred fire for transformation. Guest meditates in ceremonial fire space while priest chants mantras and rings bell, offering grain/food into the flames to release mental blockages.",
+      "highlightText": "Releases unwanted energy/aspects, helps manifest new intentions. Balances energy, voice and mind",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Offering Ritual",
+        "traditional Cloth",
+        "Eye Pillow"
+      ]
+    }
+  },
+  {
+    "slug": "tirta-ening-melukat",
+    "code": "WEL-002",
+    "category": "Rituals & Ceremony",
+    "venues": [
+      "Mengening Temple",
+      "Tirta Empul Temple",
+      "Om Ham Resort",
+      "Taman Beji Waterfall",
+      "Samsara Living Museum"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 1,
+    "en": {
+      "title": "Tirta Ening (Melukat)",
+      "subtitle": "Water Purification and Spiritual Blessed",
+      "description": "A traditional Balinese Hindu purification ritual involving the use of holy water (tirta) to cleanse the body, mind, and spirit of negative energy, bad luck, or spiritual impurities. It's typically performed at a sacred spring, waterfall, or temple, led by a Balinese priest, Dressed in Balinese attire, guest will guided to standing beneath a row of carved water spouts while offering prayers and letting the water flow over the head and body",
+      "highlightText": "it's a genuine spiritual experience meant to release negative energy, clear the mind, and restore a sense of balance and renewal",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Offering Ritual",
+        "traditional Cloth",
+        "Tridatu Bracelet",
+        "Towel"
+      ]
+    }
+  },
+  {
+    "slug": "moonlight-remedies",
+    "code": "WEL-003",
+    "category": "Rituals & Ceremony",
+    "venues": [
+      "Besakih Temple",
+      "The Oberoi Resort",
+      "Om Ham Resort",
+      "Five Element Wellness",
+      "Samsara Living Museum"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 2,
+    "en": {
+      "title": "Moonlight Remedies",
+      "subtitle": "Fullmoon Cleansing Ritual",
+      "description": "Praying ritual at the selected local temple dedicated to Goddess Sang Hyang Chandra (Moon God) for seeking spiritual wellbeing and dispelling negativity. Guided by Local Hindu Priest, guest will also learn how to make an offering (Canang Sari) before the praying sessions start.",
+      "highlightText": "Balinese cosmology holds that at fullmoon, the connection between the physical world (sekala) and the unseen spiritual world (niskala) is at its clearest, so prayers and offerings are believed to carry more power and be more likely to reach the gods and ancestors",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Offering Ritual",
+        "traditional Cloth",
+        "Canang sari",
+        "making class"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-chakra-balancing",
+    "code": "WEL-004",
+    "category": "Healing & Sound",
+    "venues": [
+      "Spiritual Soul Healing Bali",
+      "Ubud Wellness"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 3,
+    "en": {
+      "title": "Balinese Chakra Balancing",
+      "subtitle": "Open Aura, Balancing Chakra, and Trauma Healing",
+      "description": "Embark on a holistic journey of healing and self discovery to unlock the wisdom of your soul through palmistry, numerology, open your inner aura, and balancing your 7 chakras. This sessions followed by a deep trauma healing and purification blessing ceremony to renewal your soul.",
+      "highlightText": "Release the weight of past burben, anxiety, and trauma. Healing begins when you let go of what no longer serves you, allowing space for peace, strength, and renewal",
+      "durationText": "150 Minutes",
+      "facilities": [
+        "Palm Reading",
+        "Water Blessing",
+        "Traditional Cloth"
+      ]
+    }
+  },
+  {
+    "slug": "kundalini-chakra-healing",
+    "code": "WEL-005",
+    "category": "Healing & Sound",
+    "venues": [
+      "Private Signature at COMO Shambala Uma, Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 4,
+    "en": {
+      "title": "Kundalini Chakra Healing",
+      "subtitle": "Energy Healing and Balancing Chakra by Master Dewa Made Sulendra",
+      "description": "During this sessions, Master Dewa energetically scans the body to identify problem areas and acts as a conduit to focus universal energy on healing and balancing the chakras. Rebalancing your chakras can improve your mood and energy levels, alleviate physical symptoms associated with stress and anxiety, and boost self-esteem.",
+      "highlightText": "Dewa is a Balinese-born healer specializing in Kundalini energy and chakra healing. As a traditional Balinese healer, he draws upon his universal connection to offer insights into various situations, creating opportunities for self-healing.",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Herbal drink",
+        "Body Scan",
+        "Treatment"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-energy-healing",
+    "code": "WEL-006",
+    "category": "Healing & Sound",
+    "venues": [
+      "Private Balinese house at Sukawati Village"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 5,
+    "en": {
+      "title": "Balinese Energy Healing",
+      "subtitle": "Practice and restore energy healing by Jero Mangku Gede Eka Sukawati",
+      "description": "The methods of Jero Mangku Eka healing is included removing bad spirit with improving cakra point and kundalini. Healing treatment is combined with massage and herbs plans oil. Not only cleaning energy spirit, on healing methode Jero Mangku also help to improve and maintenance the cetral nervous which is panic and stress triggers.",
+      "highlightText": "Blessing ritual and energy purification will reduce your bad spirit and nightmare. Restore spiritual energy to be more present and express gratitude",
+      "durationText": "90-120 Minutes",
+      "facilities": [
+        "Massage",
+        "treatment",
+        "Offering",
+        "Water Blessing",
+        "Traditional Cloth"
+      ]
+    }
+  },
+  {
+    "slug": "floating-reiki-energy-healing",
+    "code": "WEL-007",
+    "category": "Healing & Sound",
+    "venues": [
+      "Signature of Udara Bali Wellness"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 6,
+    "en": {
+      "title": "Floating Reiki Energy Healing",
+      "subtitle": "Water Healing Treatment through Energy (Reiki Treatment)",
+      "description": "Experience the traditional art of Reiki, reimagined in the gentle embrace of warm water. Floating Reiki invites you into a heated pool with relaxing underwater music, where gravity ceases to exist. As you float, you will drift into a state of total weightlessness while the practitioner transfers universal life force energy through their hands, either by placing them gently on various body parts or hovering them just above.",
+      "highlightText": "The water’s conductive nature allows this energy to flow even more freely, softening your muscles and allowing your nervous system to fully surrender.",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Head Pillow &",
+        "Floats",
+        "Towel",
+        "Sauna And Pool",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "sacred-sound-of-surya",
+    "code": "WEL-008",
+    "category": "Healing & Sound",
+    "venues": [
+      "Udara Bali Wellness",
+      "Retrat"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 7,
+    "en": {
+      "title": "Sacred Sound Of Surya",
+      "subtitle": "Sound Healing (Quantum Sound Dome) by Udara Bali",
+      "description": "Lies and relax in immersive dome space while gongs/singing bowls create resonant sound bath and some sacred chanting. This session combining multiple sound bath formats using artisan gongs, singing bowls and indigenous instruments in dedicated 'Domes at Udara Bali",
+      "highlightText": "Sound Healing to Relaxation, stress relief, energy field balancing, clearing blockages",
+      "durationText": "150 Minutes",
+      "facilities": [
+        "Affirmation Bracelet",
+        "Welcoming",
+        "chocolate Ceremony"
+      ]
+    }
+  },
+  {
+    "slug": "sacred-chant-meditation",
+    "code": "WEL-009",
+    "category": "Healing & Sound",
+    "venues": [
+      "Om Ham Resort",
+      "Ashram Munivara"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 8,
+    "en": {
+      "title": "Sacred Chant Meditation",
+      "subtitle": "The practice of Sacred Chant by Master Ketut Arsana",
+      "description": "Sacred chant meditation using a harmonium with mantras is a powerful and transformative practice that combines ancient eastern traditions with the healing power of sound. In this practice, a harmonium is used to create beautiful and uplifting melodies that accompany the recitation of mantras.",
+      "highlightText": "A sacred chant or mantra is a powerful sound, word, or phrase repeated to focus the mind, calm the spirit, and connect with higher consciousness. This practice can help reduces stress, deepens focus and brings energy balance.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "ancient-sound-healing",
+    "code": "WEL-010",
+    "category": "Healing & Sound",
+    "venues": [
+      "Signature Private of Pyramids of Chi Wellness, Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 9,
+    "en": {
+      "title": "Ancient Sound Healing",
+      "subtitle": "A Mystical and Ethereal Sound Healing Experience by Pyramids of Chi",
+      "description": "An Ancient Sound Healing session invites you into an effortless state of deep relaxation. The process requiring nothing but your presence to be fully received. The rhythmic frequencies of ancient instruments merge with the multi-instrumental talents to create an ocean of vibration. These waves of sound resonate with your DNA, and align your chakra system, supporting your body’s innate intelligence to feel, release, heal, and deeply relax.",
+      "highlightText": "You will drop into a deep, meditative state allowing your body’s innate ability to heal itself take over, leaving you rejuvenated. These deep, meditative states increase our ability to receive messages that cannot be perceived during our busy, daily lives.",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Bed and pillow",
+        "Eye Pillow",
+        "Blanket",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "crystals-sound-bath-meditation",
+    "code": "WEL-011",
+    "category": "Healing & Sound",
+    "venues": [
+      "Om Ham Resort",
+      "Ashram Munivara",
+      "Bodywork Ubud",
+      "Garuda Wisnu Kencana"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 10,
+    "en": {
+      "title": "Crystals Sound Bath Meditation",
+      "subtitle": "Sound bath Meditation",
+      "description": "Sound-based purification session with Tibetan singing bowls and crystals for chakra/energy cleansing. Guest lies down while healer plays singing bowls/crystal tones for vibrational cleansing. Immerse your mind and body with the calming sound frequency that will guide you through the 60 minutes journey full of relaxation and reflection.",
+      "highlightText": "The Benefit of sound bath session is for the energetic cleansing, relaxation, and chakra balance",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Welcome drink",
+        "Eye pillow"
+      ]
+    }
+  },
+  {
+    "slug": "floating-sound-bath-meditation",
+    "code": "WEL-012",
+    "category": "Healing & Sound",
+    "venues": [
+      "Om Ham Resort",
+      "Ubud Aura Wellness"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 11,
+    "en": {
+      "title": "Floating Sound Bath Meditation",
+      "subtitle": "Water Pool Sound bath Meditation by Sawitry",
+      "description": "a unique practice that elevates deep relaxation by combining the gentle support of water with the healing power of sound. Water acts as a natural amplifier and conductor. As sounds of Tibetan bowl permeate the air, they also travel through the water, allowing the frequencies to gently penetrate every cell of your body.",
+      "highlightText": "This state of effortless floating allows you to fully surrender, as the healing vibrations of sound work their magic.",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Floating Bed",
+        "Blanket",
+        "Eye Pillow",
+        "Herbal Tea"
+      ]
+    }
+  },
+  {
+    "slug": "sacred-resonance-of-laughter",
+    "code": "WEL-013",
+    "category": "Healing & Sound",
+    "venues": [
+      "Om Ham Resort",
+      "Ashram Munivara"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 12,
+    "en": {
+      "title": "Sacred Resonance Of Laughter",
+      "subtitle": "The practice of Kundalini Tantra Yoga by Master Ketut Arsana",
+      "description": "The traditional boundaries of spiritual practice were dissolved not by silence, but by the transformative power of a belly laugh. This yoga exercice integrated intentional laughter exercises into the flow of movement. The shala erupted into a sea of spontaneous giggles that soon blossomed into roars of uninhibited joy",
+      "highlightText": "This biochemical medicine yoga practice was designed to flood the body with endorphins while simultaneously flushing out the shadow of cortisol.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "sacred-nap-meditation",
+    "code": "WEL-014",
+    "category": "Healing & Sound",
+    "venues": [
+      "Private Signature",
+      "Session at Four",
+      "Season Resort Bali"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 13,
+    "en": {
+      "title": "Sacred Nap Meditation",
+      "subtitle": "Mantra Chanting & Singing Bowl Sound Healing by Heny Ferawati",
+      "description": "It takes you back to experience the beautiful feeling as a baby, combined with powerful healing of sacred chanting and singing bowl, engaging your inner self with the nature around you. Most Balinese mothers rock their babies to sleep using a batik sling, singing traditional lullaby songs and telling a story until the baby falls asleep. Instead of a batik sling, we use 100 percent pure silk hammocks",
+      "highlightText": "This Sacred Nap drives you into Deep relaxation condition, which is good for boosting immunity, and maintaining healthy blood pressure, heart and brain circulation.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "ice-breathwork-immersion",
+    "code": "WEL-015",
+    "category": "Healing & Sound",
+    "venues": [
+      "Private Signature",
+      "Session at Pyramids",
+      "Of Chi Wellness"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 14,
+    "en": {
+      "title": "Ice Breathwork Immersion",
+      "subtitle": "Guided Breathwork with Ice Bath Experience",
+      "description": "Through deep, rhythmic breathing, you will elevate your energetic frequency and flood your body with life-force energy. Following the breathwork, you will take this new mental clarity directly into the cold. Learn to be comfortable in the uncomfortable and overcoming intense physical challenges. Through relaxing breathing technique, you will guided to face your fears, breakthrough internal barriers, and reach a state of pure bliss in the ice-revealing your true, potent power from within.",
+      "highlightText": "Inspired by the Wim Hof Method, this powerful session helps you release limiting beliefs, clear emotional clutter, and step out of your head and into your body",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Blanket",
+        "Towel",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "ama-multisensory-dome",
+    "code": "WEL-016",
+    "category": "Healing & Sound",
+    "venues": [
+      "Private Signature",
+      "Session at Pyramids",
+      "Of Chi Wellness"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 15,
+    "en": {
+      "title": "AMA Multisensory Dome",
+      "subtitle": "A PLANETARIUM FOR YOUR INNER UNIVERSE",
+      "description": "AMA is an immersive projection mapping experience where art, sound, and technology converge to create an environment for deep rest, sensory exploration, and expanded awareness. Within the custom-designed Dome, high-resolution visuals unfold across the entire field of vision, transforming the architecture into a living canvas of light and motion.",
+      "highlightText": "Spatial sound, subtle scent, and gentle vibration combine to create a carefully orchestrated sensory environment that encourages stillness, presence, and immersion.",
+      "durationText": "70 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Blanket",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "kundalini-tantra-yoga",
+    "code": "WEL-017",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Om Ham Resort",
+      "Ubud Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 16,
+    "en": {
+      "title": "Kundalini Tantra Yoga",
+      "subtitle": "Yoga Practice by Master Ketut Arsana",
+      "description": "This healing Yoga uses tantra movements along with pranayama (breath) at the same time. The combined techniques are important for energy raising, flowing, moving and balancing. Tantra raises the energy and can be used in your life. With this technique people can in a short time feel the energy working internally and make the glands active.",
+      "highlightText": "In Kundalini Tantra Yoga we all move together in a movement, the energy flowing, using the body as a Yantra to receive and create energy – God energy.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "pranayama-yoga",
+    "code": "WEL-018",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Udara Bali Wellness",
+      "Om Ham Resort",
+      "Yoga Barn",
+      "Power of Now Oasis"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 17,
+    "en": {
+      "title": "Pranayama Yoga",
+      "subtitle": "Yoga and practice of breathing exercises",
+      "description": "Pranayama is the formal practice of breathing exercises with the aim to control (= ) the vital life force (= ). With various kinds of practices, we learn to regulate, deepen, refine and guide the breath in a conscious way. Pranayama can be a standalone practice; it can be integrated into a yoga class or it can be used in preparation for meditation.",
+      "highlightText": "Every inhalation provides us with fresh oxygen that is necessary to create energy in the cells and every exhalation helps to expel waste material such as carbon dioxide.",
+      "durationText": "45-60 Minutes",
+      "facilities": [
+        "Yoga mat",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "hatha-yoga",
+    "code": "WEL-019",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Udara Bali Wellness",
+      "Power of Now Oasis",
+      "Yoga Barn",
+      "Om Ham Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 18,
+    "en": {
+      "title": "Hatha Yoga",
+      "subtitle": "Yoga Practice and Movement",
+      "description": "Hatha Flow is a gentle and traditional form of yoga that focuses on the balance of physical postures and breath control. In contrast to Vinyasa, Hatha Flow involves holding poses for a longer duration, promoting stability, alignment, and relaxation. This practice aims to cultivate a sense of harmony between body and mind through deliberate and mindful movements.",
+      "highlightText": "The slower pace of the class gives space for exploring the proper alignment of each pose and for harmonizing the connection between body, breath and mind.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "vinyasa-yoga",
+    "code": "WEL-020",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Udara Bali Wellness",
+      "Power of Now Oasis",
+      "Yoga Barn",
+      "Om Ham Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 19,
+    "en": {
+      "title": "Vinyasa Yoga",
+      "subtitle": "Yoga Practice and Movement",
+      "description": "Vinyasa Flow is a dynamic style of yoga that seamlessly synchronizes breath with movement, creating a continuous and flowing sequence of poses. It emphasizes the connection between breath and postures, promoting flexibility, strength, and mindfulness. Vinyasa classes typically offer a creative and varied sequence, making each session a unique and invigorating experience.",
+      "highlightText": "Vinyasa yoga links smooth physical movement with deep breathing. It builds full-body strength, improves joint flexibility, supports heart health, and lowers stress through focused, continuous flow",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "yin-yoga",
+    "code": "WEL-021",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Udara Bali Wellness",
+      "Power of Now Oasis",
+      "Yoga Barn",
+      "Om Ham Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 20,
+    "en": {
+      "title": "Yin Yoga",
+      "subtitle": "Yoga Practice and Movement",
+      "description": "Yin Yoga focuses on gentle, seated and reclined postures that are held for longer periods of time, ranging from 1 to 5 minutes. A therapeutic style of yoga where asana/poses are practiced on or lower to the ground for gravity to help go deep in poses. Focus is placed on the breath as an important integration to allow the body to unwind and to release tension.",
+      "highlightText": "This practice encourages stillness and silent introspection, targeting your connective tissues, ligaments, and joints that normally aren't exercised as much in more active styles of physical yoga practice.",
+      "durationText": "75 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "aqua-yoga",
+    "code": "WEL-022",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Ubud Aura",
+      "COMO UMA Canggu",
+      "Om Ham Resort",
+      "Mahajaya Swimhub",
+      "Udara Bali"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 21,
+    "en": {
+      "title": "Aqua Yoga",
+      "subtitle": "Yoga Practice and Movement",
+      "description": "Aqua Yoga combines the traditional principles and postures of yoga with the unique properties of water, such as buoyancy, resistance, and hydrostatic pressure. Moving through water provides natural, gentle resistance in all directions. This helps to strengthen muscles without the need for heavy weights, building tone and endurance",
+      "highlightText": "The water supports a significant portion of your body weight (up to 70% in chest-deep water),reducing impact on joints like knees, hips, and ankles. This makes it ideal for individuals with joint pain, arthritis, injuries, or those recovering from surgery.",
+      "durationText": "75 Minutes",
+      "facilities": [
+        "Towel & Shower",
+        "Cap",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "aerial-yoga",
+    "code": "WEL-023",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Udara Bali Wellness",
+      "Power of Now Oasis",
+      "Yoga Barn"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 22,
+    "en": {
+      "title": "Aerial Yoga",
+      "subtitle": "Yoga Practice and Movement",
+      "description": "Aerial silk hammock yoga juicy stretches and exercises to strengthen the muscles with standing and balancing poses, forward folds and back bends, side stretches, twists, inversions and relaxation. This yoga practice allowing your body to fly above the mat and even to hang upside down with the fabric wrapped around you",
+      "highlightText": "Aerial Yoga practice help you to build strength and increase flexibility as well as improve your balance and overall postural stability. As other forms of Yoga it helps you increase mobility, tone your muscles and realign your joints",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Slik Hammock",
+        "Welcome drink"
+      ]
+    }
+  },
+  {
+    "slug": "qi-gong",
+    "code": "WEL-024",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Udara Bali Wellness",
+      "Adda Yoga Canggu",
+      "Yoga Barn",
+      "The Bali Purnati Center"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 23,
+    "en": {
+      "title": "Qi Gong",
+      "subtitle": "Yoga Practice and Movement",
+      "description": "The mental aspect of this training is stepping into a state of calm, relaxation and stillness. This approach to Qi Gong is in marrying the body awareness, sensitivity, power and structural alignment of the martial tradition, with health and greater spiritual openings. Qigong movements are generally less complex and can be adapted to suit individuals with physical limitations or injuries",
+      "highlightText": "Benefits of Qi gong include integration of the movements of the physical system into one harmonious unit, grounding into the earth energy, awareness and correction of old mind and trauma patterns, and safely building internal strength",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "ecstatic-dance",
+    "code": "WEL-025",
+    "category": "Yoga & Movement",
+    "venues": [
+      "Yoga Barn"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 24,
+    "en": {
+      "title": "Ecstatic Dance",
+      "subtitle": "Group Community Dance Movement Meditation At Yoga Barn",
+      "description": "a vibrant form of expression rooted in our ancestral heritage and cultural diversity, celebrates the freedom of movement in its purest form, transcending traditional dance norms of routines and steps. This practice offers a liberating space for anyone to step onto the dance floor and immerse themselves in a world of self-expression, helping to release limitations and embrace comfort in both body and personality.",
+      "highlightText": "Ecstatic dance offers powerful mental, emotional, and physical benefits through free-form, unchoreographed movement in a safe, judgment-free space. It increase mood enhancement, Anxiety, Stress Release, and deep relaxation",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Yoga mat and",
+        "pillow",
+        "Welcome drink"
+      ]
+    }
+  },
+  {
+    "slug": "elysian-head-spa",
+    "code": "WEL-026",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Ubud Bodywork Centre",
+      "Om Ham Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 25,
+    "en": {
+      "title": "Elysian Head Spa",
+      "subtitle": "Scalp Treatment",
+      "description": "Step into a heavenly state of deep relaxation with Elysian Head Spa, an Om Ham signature water healing treatment. This treatment combining flowing water therapy with modern scalp care. This experience is designed to release tension, nourish the scalp, and restore inner balance.",
+      "highlightText": "Elysian Head Spa provides deep scalp cleansing, tension relief, and targeted hair restoration solutions tailored to individual needs. Impoved Circulation and growth, stress tension release, and hair restoration.",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Spa Amenities",
+        "Towel",
+        "Herbal drink and",
+        "healthy cookies"
+      ]
+    }
+  },
+  {
+    "slug": "buddha-kecapi-massage",
+    "code": "WEL-027",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Ubud Bodywork Centre",
+      "Om Ham Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 26,
+    "en": {
+      "title": "Buddha Kecapi Massage",
+      "subtitle": "Healing Treatment by Master Ketut Arsana",
+      "description": "Buddha Kecapi means, “Inner light healing inspired by love”. An intuitive healing treatment in which Master Ketut Arsana combined energy balancing, with therapeutic massage, chakra healing and as a final touch, Prana will be channeling to harmonize energy within. He performs a body scan, intuitively discovering specific areas that need attentions in specific client conditions, bellow treatments may occur in this session",
+      "highlightText": "Elysian Head Spa provides deep scalp cleansing, tension relief, and targeted hair restoration solutions tailored to individual needs. Impoved Circulation and growth, stress tension release, and hair restoration.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Spa Amenities",
+        "Towel",
+        "Herbal drink and",
+        "healthy cookies"
+      ]
+    }
+  },
+  {
+    "slug": "sea-salt-detox-spa",
+    "code": "WEL-028",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Om Ham Resort",
+      "Ubud Bodywork Centre"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 27,
+    "en": {
+      "title": "Sea Salt Detox Spa",
+      "subtitle": "Spa and Body Treatment",
+      "description": "Aimed at awakening your senses with daily yoga classes and becoming more in tune with your bodies needs through detailed food plans and fasting. Explore the daily Kundalini Tantra Yoga, Neti Pot Practice and Diet Detox Programs Designed to eliminate toxins from the body, involved a period of fasting and followed by a strict diet of fruit, vegetables, juices, herbs, teas, and water. for the body.",
+      "highlightText": "A sea salt spa treatment exfoliates your skin, relaxes your muscles, and reduces stress",
+      "durationText": "5 Days, 4 Nights",
+      "facilities": [
+        "4 Nights Accomodation",
+        "Daily Detox Meals",
+        "4x Kundalini Tantra",
+        "Yoga Class",
+        "Signature Treatment",
+        "Spa"
+      ]
+    }
+  },
+  {
+    "slug": "boreh-rejuvination-ritual",
+    "code": "WEL-029",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Om Ham Resort",
+      "Ubud Bodywork Centre"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 28,
+    "en": {
+      "title": "Boreh Rejuvination Ritual",
+      "subtitle": "Lymphatic Boreh Body Treatment",
+      "description": "This treatment combines relaxing massage with revitalizing full body massage to stimulate circulation; followed by medicinal herbal scrub for the lymphatic system. This herbal scrub is rubbed all over the skin creating a sensation of ‘pins and needles ‘and gentle heat. Your treatment will be completed with a special spice bath.",
+      "highlightText": "A lymphatic boreh spa combines gentle lymphatic massage with a warming Balinese spice paste to detoxify your body, boost circulation, and relieve deep muscle ache",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Boreh Making Class",
+        "Spa Amenities",
+        "Herbal Drink",
+        "Towel and Bathup"
+      ]
+    }
+  },
+  {
+    "slug": "hyperbaric-oxygen-therapy",
+    "code": "WEL-030",
+    "category": "Spa & Retreats",
+    "venues": [
+      "COMO Shambala",
+      "Udara Bali Wellness"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 29,
+    "en": {
+      "title": "Hyperbaric Oxygen Therapy",
+      "subtitle": "Jetlag Remedy Treatment",
+      "description": "Hyperbaric Oxygen Therapy (HBOT) is considered an effective, evidence-backed, and increasingly popular remedy for combating the symptoms of jet lag. By delivering 100% pure oxygen in a pressurized chamber, HBOT reverses the oxygen deprivation caused by flying at high altitudes, helping travelers recover faster, improve sleep, and eliminate brain fog",
+      "highlightText": "This therapy have a multitude of benefits, including enhanced concentration, a fortified immune system, radiant glowing skin and boosted energy levels.",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "HBOT Machine",
+        "Herbal Drink",
+        "Towel and pillow"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-jetlag-remedies",
+    "code": "WEL-031",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Om Ham Resort",
+      "Ubud Bodywork Centre"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 30,
+    "en": {
+      "title": "Balinese Jetlag Remedies",
+      "subtitle": "Balinese Massage & Relaxation",
+      "description": "Combining gentle and strong balinese massage incorporating meridian point acupressure and yogic stretching then followed by a hot herbal cloth that is applied along the spine. This session begin with sound healing to harmonize the energy within. The relaxation session restore your fatigue, good for reduce jetlag from long distance travel.",
+      "highlightText": "Traditional and herbal spices using to scrubs your body during the massage process will relief tension and stimulate blood circulation.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Foot Massage",
+        "Boreh scrub",
+        "Towel",
+        "Shower Bathroom"
+      ]
+    }
+  },
+  {
+    "slug": "shanthi-ayurvedic",
+    "code": "WEL-032",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Bali Botanica by Oneworld Ayurveda, Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 31,
+    "en": {
+      "title": "Shanthi Ayurvedic",
+      "subtitle": "3 days of Sleep & Strees Relief Treatment Program by Bali Botanica",
+      "description": "Ayurveda emphasizes mental well-being as the foundation of good health. Trouble sleeping is the signs of Vata Imbalance, a primary life force in Ayurveda that controls movement, breathing, blood flow, and thoughts in the body. This program can help address these condition to help you feel better rested, more balanced and less stressed",
+      "highlightText": "This treatment combining full body massage, with steam chamber relaxing, cooling remedy, and pouring medical oil in a continuous stream over the forehead for calming the nervous system and reduce insomnia",
+      "durationText": "3 Days (Non-Residential)",
+      "facilities": [
+        "Ayurvedic",
+        "Consultation",
+        "Daily Lunch",
+        "6 x Ayurvedic",
+        "Treatment"
+      ]
+    }
+  },
+  {
+    "slug": "niruja-ayurvedic",
+    "code": "WEL-033",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Bali Botanica by Oneworld Ayurveda, Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 32,
+    "en": {
+      "title": "Niruja Ayurvedic",
+      "subtitle": "3 days of Muscle & Joint Healing Treatment Program by Bali Botanica",
+      "description": "Healthy muscle, bones, and joint are essential for freedom of movement. Viata imbalances are associated with joint disorders, while Pitta imbalance are tied to inflammation, muscle pain, sprains, and acute pain episodes. Kapha imbalances result in muscle and morning stiffness",
+      "highlightText": "Ayurvedic treatments effectively aid conditions like arthritis, rheumatoid arthritis, spinal problems, and sport injuries.",
+      "durationText": "3 Days (Non-Residential)",
+      "facilities": [
+        "Ayurvedic",
+        "Consultation",
+        "Daily Lunch",
+        "6 x Ayurvedic",
+        "Treatment"
+      ]
+    }
+  },
+  {
+    "slug": "panchakarma-retreat",
+    "code": "WEL-034",
+    "category": "Spa & Retreats",
+    "venues": [
+      "YARA Wellness Tabanan"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple"
+    ],
+    "featured": false,
+    "order": 33,
+    "en": {
+      "title": "Panchakarma Retreat",
+      "subtitle": "7 Days of Luxury Ayurvedic Retreat Signature by YARA Wellness",
+      "description": "This Ayurvedic Retreat follows a personalised, step by-step Panchakarma healing program designed around your individual constitution (Prakriti) and current imbalances, assessed by a vaidya. This approach starts with detox and body treatment to prepare the next cleansing phase. cleansing procedures are introduced based on a medical assessment. These are the classical five actions of Panchakarma therapy, including 30 days aftercare.",
+      "highlightText": "This Ayurvedic treatments is designed to gently clear accumulated toxins (ama), restore digestive fire (agni), and rebalance the doshas, Vata, Pitta, and Kapha..",
+      "durationText": "7 Night (Residential)",
+      "facilities": [
+        "Ayurvedic",
+        "Consultation",
+        "Daily Meals",
+        "Daily Treatment",
+        "All Facilities Acces"
+      ]
+    }
+  },
+  {
+    "slug": "prema-sambhanda-retreat",
+    "code": "WEL-035",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Five Element Retreat, Ubud"
+    ],
+    "suitableFor": [
+      "couple"
+    ],
+    "featured": false,
+    "order": 34,
+    "en": {
+      "title": "Prema Sambhanda Retreat",
+      "subtitle": "A Five Element Signature journey of conscious connection and heart awakening for couples",
+      "description": "Grounded in the Sanskrit meaning of “Divine Love Connection,” this retreat invites partners to slow down, reflect and realign their union through shared healing, sacred rituals and heart-centred dialogue. The experience blends ancient Balinese wisdom with modern relational practices, creating a nourishing space for couples’ intimacy, connection renewal and conscious communication.",
+      "highlightText": "The Prema Sambandha retreat is a sacred offering for couples seeking to deepen their emotional bond, rekindle intimacy, and communicate with presence and compassion.",
+      "durationText": "3 Night (Residential)",
+      "facilities": [
+        "Daily Meals",
+        "One Romantic",
+        "Dinner",
+        "Relationship",
+        "Coaching"
+      ]
+    }
+  },
+  {
+    "slug": "replenish-and-detox-retreat",
+    "code": "WEL-036",
+    "category": "Spa & Retreats",
+    "venues": [
+      "Om Ham Resort",
+      "Ubud Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 35,
+    "en": {
+      "title": "Replenish and Detox Retreat",
+      "subtitle": "5 Days of detoxification retreat",
+      "description": "Aimed at awakening your senses with daily yoga classes and becoming more in tune with your bodies needs through detailed food plans and fasting. Explore the daily Kundalini Tantra Yoga, Neti Pot Practice and Diet Detox Programs Designed to eliminate toxins from the body, involved a period of fasting and followed by a strict diet of fruit, vegetables, juices, herbs, teas, and water. for the body.",
+      "highlightText": "Through fasting, your body will have time to rest the organs, and effective to stimulate the liver to get rid of toxins, improve body circulation & balance, and provide healthy nutrients",
+      "durationText": "5 Days, 4 Nights",
+      "facilities": [
+        "4 Nights Accomodation",
+        "Daily Detox Meals",
+        "4x Kundalini Tantra",
+        "Yoga Class",
+        "Signature Treatment",
+        "Spa"
+      ]
+    }
+  },
+  {
+    "slug": "wanaprastha-forest-therapy",
+    "code": "WEL-037",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Bali Botanical Garden, Bedugul",
+      "Munduk Molding",
+      "Plantation Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 36,
+    "en": {
+      "title": "Wanaprastha Forest Therapy",
+      "subtitle": "Nature Immersion and Forest Theraphy by Forest Therapy Indonesia",
+      "description": "Forest therapy is a holistic medical therapy approach that utilizes the natural power of the forest to maintain physical and mental health, as well as disease prevention, and requires guidance from a forest therapy expert, mental health therapist, or medical/health professional. Combining walking meditation and mindfulness eating this practice inviting one to slow down, breathe deeply, and connecting with living essence of the forest.",
+      "highlightText": "Through this nature immersion, you will get various health benefits for Increasing production of anti-cancer proteins and Assists in weight loss, Lowers blood pressure, Reduces stress, Improves cardiovascular health and metabolism, and deep relaxation",
+      "durationText": "120 minutes",
+      "facilities": [
+        "Guided Walking",
+        "Meditation",
+        "Mindful Lunch",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "waterfall-hydro-therapy",
+    "code": "WEL-038",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Banyumala Twin Waterfall",
+      "Sekumpul Waterfall",
+      "Banyu Wana Waterfall"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 37,
+    "en": {
+      "title": "Waterfall Hydro Therapy",
+      "subtitle": "Nature Immersion and Water Theraphy by Forest Therapy Indonesia",
+      "description": "A guided water-healing experience inspired by the water element and designed for deep restoration. We are led through a gentle sequence of breath awareness, stillness to feel a gently moving water, and meditative moment to notice sensation, weight, temperature, sound, buoyancy, and emotional response in the water, allowing the body to soften and the mind to settle into quiet clarity.",
+      "highlightText": "Research on therapeutic aquatic exercise has found benefits for pain relief, recovery function, quality of life, sleep quality, and overstimulated mind",
+      "durationText": "180 minutes",
+      "facilities": [
+        "Guided Water",
+        "Meditation",
+        "Mindful Eating",
+        "Water Blessing",
+        "Trekking Pole"
+      ]
+    }
+  },
+  {
+    "slug": "guided-nature-forest-walking",
+    "code": "WEL-039",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Signature Private at Munduk Molding",
+      "Plantation Nature Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 38,
+    "en": {
+      "title": "Guided Nature Forest Walking",
+      "subtitle": "Forest and Coffee Plantation Trekking by Munduk Molding Plantation",
+      "description": "Embark on a journey through the heart of a coffee plantation and discover the secrets behind producing the finest Arabica coffee. Our expert guides will lead you through the various stages of the coffee-making process, from planting and harvesting to drying, cleaning, roasting, and brewing.",
+      "highlightText": "Forest walking combined with coffee offers a powerful boost to your mind, body, and soul by blending nature's healing elements with a mindful caffeine ritual.",
+      "durationText": "90 minutes",
+      "facilities": [
+        "Guided Walking",
+        "Bird Watching",
+        "Coffee Experience",
+        "Trekking Pole"
+      ]
+    }
+  },
+  {
+    "slug": "zen-harmony-diving",
+    "code": "WEL-040",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Signature Private at Zen",
+      "Resort, Lovina North, Bali"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 39,
+    "en": {
+      "title": "Zen Harmony Diving",
+      "subtitle": "Mindfulness Scuba Diving by Zen Resort Bali",
+      "description": "Zen Harmony Scuba Diving integrates Yoga, Meditation, Pranayama, and Ayurveda with scuba diving enhancing your health and fitness whilst discovering the amazing beauty and diversity of marine life. The five famous dive sites in North Bali, suited for everyone and all experience levels, are all accessible from Zen Resort, namely Puri Jati and Zen Reef",
+      "highlightText": "Sail along the North Bali coastline taking in the landscape, witness the breath-taking horizon appear with the Sun’s first rays, find the dolphins and watch them play in the morning Sun, whilst you sip Ginger Tea.",
+      "durationText": "150 minutes",
+      "facilities": [
+        "Scuba Diving",
+        "Equipment",
+        "Guided Diving Expert",
+        "Breakfat on the Boat",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-herbalism-permaculture",
+    "code": "WEL-041",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Bhakti Farm Ubud",
+      "Begawan Biji",
+      "Om Ham Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 40,
+    "en": {
+      "title": "Balinese Herbalism Permaculture",
+      "subtitle": "an introduction to Balinese herbal traditions by Bhakti Garden",
+      "description": "Balinese Herbalism is an exploration of the deep connection between the human body, nature, well-being, and daily wellness practices. You will learn how to identify and use traditional herbs, culminating in the creation of 7 traditional herbal remedies that can be replicated at home using easily sourced substitutes.",
+      "highlightText": "​Herbalism prioritizes using mineral-rich plants regularly, staying hydrated, nurturing the nervous system, aiding digestion, getting enough rest, and weaving simple rituals into your day, like brewing and drinking tea.",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Herbal Drink",
+        "Herbal Making",
+        "Properties",
+        "Herbal Gift"
+      ]
+    }
+  },
+  {
+    "slug": "farm-to-table-dining",
+    "code": "WEL-042",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Begawan Biji, Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 41,
+    "en": {
+      "title": "Farm to Table Dining",
+      "subtitle": "Dining Experience at Begawan Biji Regenerative Farm",
+      "description": "Experience a dining where you can see directly where your food is grown naturally at Begawan Biji Regenerative farm, featuring fresh, locally sourced ingredients from Begawan Biji’s own farm and freshly brewed coffee or selection of tea and herbal infusions from the garden. Immerse yourself in Bali’s traditional rice farming practices and learn the roots of the island’s agricultural heritage on a regenerative farm",
+      "highlightText": "Explore the mandala-shaped permaculture garden, Mansur Heritage rice paddies, nursery, poultry, composting pit, and if you’re lucky, you might even spot the Bali Starlings at the farm",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Herbal Drink",
+        "Permaculture",
+        "Garden tour",
+        "Bird Watching"
+      ]
+    }
+  },
+  {
+    "slug": "atiti-bojana-dining",
+    "code": "WEL-043",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Samsara Living Museum",
+      "Taman Dedari Ubud",
+      "Karangasem Royal",
+      "Palace",
+      "Tenganan Village"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 42,
+    "en": {
+      "title": "Atiti Bojana Dining",
+      "subtitle": "Dining Experience at Samsara Living Museum",
+      "description": "Atiti Bojana, meaning 'selected food served to honored guests', the art of serving and consuming food in this style has also been going on since ancient time. Feel the rich and a taste of Eastern Bali flavors in each dish where we prepare specifically through a traditional cooking process. Experience the Balinese Royal Palace dining banquet in the most authentic venue.",
+      "highlightText": "In this authentic Balinese cuisine, guest will invite to prepare sate lilit and sayur liklik, traditional dishes inspired by the palm-leaf manuscript of Dharma Caruban, an ancient manuscript that serves as a traditional guide to Balinese gastronomy, culinary philosophy, and sacred cooking rituals.",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Herbal Drink",
+        "Traditional Balinese",
+        "cloth",
+        "Sate lilit Making",
+        "class"
+      ]
+    }
+  },
+  {
+    "slug": "megibung-dining",
+    "code": "WEL-044",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Tenganan",
+      "Pengrisingan Village",
+      "Samsara Living Museum"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 43,
+    "en": {
+      "title": "Megibung Dining",
+      "subtitle": "Dining Experience & Village Visit at Tenganan Pengrisingan Village",
+      "description": "Megibung means communal dining or eating together from a shared portion to symbolize unity, equality, and togetherness. This is an ancient tradition from Karangasem in East Bali, dating back to the 17th century when group of people sitting cross-legged in a circle to eat on the same plate. The menu combining rice and traditional side dishes (like, sate, and meats) are piled high on a large tray lined with a banana leaf ( )",
+      "highlightText": "gibungan Tenganan Pegringsingan is one of Bali's oldest traditional villages, Bali Aga, an original indigenous Balinese who kept their ancient traditions before Hindu kingdoms arrived.",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Village entrance",
+        "and donation",
+        "Village tour",
+        "Traditional Cloth"
+      ]
+    }
+  },
+  {
+    "slug": "painting-art-fine-dining",
+    "code": "WEL-045",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Seven Painting at Kaamala Resort Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 44,
+    "en": {
+      "title": "Painting Art Fine Dining",
+      "subtitle": "Fine Dining Experience at Seven Painting Ubud",
+      "description": "An immersive dining journey unlike any other, Seven Paintings blends art, storytelling, and gastronomy into a multi-sensory experience. Set in an intimate and theatrical space, each moment is carefully curated to engage the senses transforming dinner into a captivating narrative. Perfect for exclusive gatherings and special occasions, the experience invites guests to step into a world where visuals, flavors, and emotions intertwine",
+      "highlightText": "Drawing inspiration from timeless masterpieces such as Van Gogh’s Starry Night, Da Vinci’s Mona Lisa, Picasso’s Weeping Woman, and other celebrated paintings, this exclusive experience is limited to just six seats per evening, ensuring a setting of intimacy, detail, and personalized connection",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "7 course of Balinese",
+        "contemporary set",
+        "menu",
+        "Welcome drink"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-theater-fine-dining",
+    "code": "WEL-046",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Gajah Putih Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 45,
+    "en": {
+      "title": "Balinese Theater Fine Dining",
+      "subtitle": "Fine Dining Experience at Gajah Putih Ubud",
+      "description": "Gajah Putih is a luxury restaurant in Ubud, Bali, offering a multi-course tasting menu of Balinese-inspired cuisine paired with a live dinner theatre performance. It offers a unique dining experience in Bali, where you can enjoy a beautiful fine dining set menu, along with an exciting theatre performance.",
+      "highlightText": "Gajah Putih runs two alternating show themes. LINGKARAN, meaning \"circle,\" follows the natural cycle of a Balinese day and leans toward renewal and morning light; MALAM takes the opposite register, built around the mystery and atmosphere of Bali after dark.",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "course of Balinese",
+        "contemporary set",
+        "menu",
+        "Welcome drink"
+      ]
+    }
+  },
+  {
+    "slug": "bali-mula-mindfull-eating",
+    "code": "WEL-047",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Dapur Bali Mula, Buleleng"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 46,
+    "en": {
+      "title": "Bali Mula Mindfull Eating",
+      "subtitle": "Ancient Tradition Village Dining Experience at Dapur Bali Mula By Chef Yudi",
+      "description": "Dapur Bali Mula is a unique, traditional open-air dining experience in Les Village, North Bali, that serves ancestral Balinese cuisine cooked over wood fires. The place have no fixed menu: Dishes change daily depending on what local fishermen and farmers bring in from the sea, forest, and fields. The intimate hospitality typical of a host welcoming guests is palpable at Dapur Bali Moela",
+      "highlightText": "You can also witness firsthand the process of making arak (a traditional spirit) and liquid palm sugar (juruh) derived from the lontar (palmyra palm).",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Arak Making",
+        "Palm Sugar Making",
+        "Welcome drink"
+      ]
+    }
+  },
+  {
+    "slug": "jamu-herbal-remedies",
+    "code": "WEL-048",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Samsara Living Museum",
+      "Bhakti Farm Ubud",
+      "Usada Bali",
+      "Rumah Reina",
+      "Udara Bali",
+      "Om Ham Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 47,
+    "en": {
+      "title": "Jamu Herbal Remedies",
+      "subtitle": "an introduction to Jamu herbal making by Made Ayu Aryani",
+      "description": "Creating a jamu herbal drink concoction based on the philosophy of the human life cycle, as symbolized by the Majapahit “Surya Wilwaktita”, an emblem associated with the “Dewata Nawa Sanga”, manifestations of Ida Sang Hyang Widhi Wasa who rule over and guard the nine cardinal directions within the cosmological concept of the Hindu Dharma religion in Bali",
+      "highlightText": "The primary benefits of “jamu” include boosting the immune system, relieving pain, and aiding digestion, thanks to the antioxidants and natural active compounds found in the spices.",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Herbal Drink",
+        "Herbal Making",
+        "Properties",
+        "Herbal Gift"
+      ]
+    }
+  },
+  {
+    "slug": "boreh-herbal-remedies",
+    "code": "WEL-049",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Om Ham Resort",
+      "Rumah Reina",
+      "Ubud & Gianyar Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 48,
+    "en": {
+      "title": "Boreh Herbal Remedies",
+      "subtitle": "Traditional Scrub Making Experience",
+      "description": "Learn how to make Boreh, a traditional scrub especially formulated for the lymphatic system, a ritual originally used by rice farmers to soothe tired muscles and ward off illness. The guests will enjoy an experience of picking the ingredients from our own garden. Boreh scrub made from a potent blend of ground-up herbs and spices. While recipes vary, the mixture typically includes warming ingredients and bound together with rice powder.",
+      "highlightText": "Boreh Made of a combination of traditional organic spices and roots that helps to eliminate dead skin cells making you to feel and look fresh",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Herbal Drink",
+        "Guidebook",
+        "Bucket Hat"
+      ]
+    }
+  },
+  {
+    "slug": "loloh-herbal-remedies",
+    "code": "WEL-050",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Om Ham Resort",
+      "Samsara Living Museum",
+      "Ubud & Gianyar Area",
+      "Rumah Reina"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 49,
+    "en": {
+      "title": "Loloh Herbal Remedies",
+      "subtitle": "Loloh Herbal Making based on your numerology character",
+      "description": "passed down for centuries. It is made from natural ingredients such as turmeric, ginger, temulawak, kencur, lemongrass, and various other spices, and is believed to offer many health benefits. Before creating this herbal drink you are invites to experience the Pratiti reading, a Balinese calendar calculations and find meaning of our birth are based on the methodology and conduct consultations on matters deemed to provide a special wellness treatment",
+      "highlightText": "Loloh Cemcem main ingredient is from cemcem leaves (Spondias pinnata, also known as forest kedondong) that aids digestion, relieves bloating or heartburn, and helps lower blood pressure",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Herbal Drink",
+        "Guidebook",
+        "Bucket Hat"
+      ]
+    }
+  },
+  {
+    "slug": "meramban",
+    "code": "WEL-051",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Rumah Reina",
+      "Ubud & Gianyar Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 50,
+    "en": {
+      "title": "Meramban",
+      "subtitle": "Foraging for Medicinal Plant by Made Ayu Aryani",
+      "description": "Foraging for medicinal plants is identifying medicinal plants in our surroundings and engaging the senses to recognize them. Sharing the local names of medicinal plants identified while foraging. This is followed by preparing remedies, understanding the “sad rasa” (six tastes) within them, and grasping the properties and potential of the plants to benefit the body.",
+      "highlightText": "Foraging medicinal plants provides fresh, potent botanical remedies and connects you directly with nature.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Herbal Drink",
+        "Guidebook",
+        "Bucket Hat"
+      ]
+    }
+  },
+  {
+    "slug": "paon-bogha",
+    "code": "WEL-052",
+    "category": "Nature & Nourishment",
+    "venues": [
+      "Samsara Living Museum",
+      "Om Ham Resort",
+      "Garuda Wisnu Kencana",
+      "Selected Resto in Ubud & Gianyar Area",
+      "Ubud Royal Palace"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 51,
+    "en": {
+      "title": "Paon Bogha",
+      "subtitle": "Balinese Cooking Class",
+      "description": "Discover the secrets of Balinese food and gastronomy ingredient inspired by the ancient manuscript “Lontar Dharma Caruban”, the definitive scriptural authority on the culinary arts. It outlines the ethics of food processing and provides formulas for seasoning pastes and ceremonial dishes. Our chef will guide you through a homemade interactive Balinese cooking class, we will collect some of the ingredients for our food in our own garden.",
+      "highlightText": "Balinese traditional spice blends (basa genep) are rich in spices scientifically proven to contain active compounds that combat free radicals and boost the body's immunity.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Cooking Apron",
+        "Cooking Equipment",
+        "Cooking Ingredient",
+        "Guidebook",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "pratiti-reading",
+    "code": "WEL-053",
+    "category": "Art & Culture",
+    "venues": [
+      "Samsara Living Museum",
+      "Om Ham Resort",
+      "Spiritual Soul Healing",
+      "Amankila Resort"
+    ],
+    "suitableFor": [
+      "solo"
+    ],
+    "featured": false,
+    "order": 52,
+    "en": {
+      "title": "Pratiti Reading",
+      "subtitle": "Balinese astrology-based wellness session",
+      "description": "Rooted in the science of Jyotisa and the Balinese calendar system, it combines traditional calculations with intuitive interpretation. This Jyotisa methodology will be able to provide a very special wellness treatment through a birth approach called Oton A Pratiti reader will analyze your unique birth date, time, and natural influences to interpret the symbolic patterns that shape your life",
+      "highlightText": "The goal is to foster self-awareness, help you understand your strengths and challenges, and identify ways to balance your emotional and spiritual energies.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Cooking Apron",
+        "Cooking Equipment",
+        "Cooking Ingredient",
+        "Guidebook",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "human-design",
+    "code": "WEL-054",
+    "category": "Art & Culture",
+    "venues": [
+      "Bali Usada",
+      "Nusa Dua Area",
+      "Ubud Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 53,
+    "en": {
+      "title": "Human Design",
+      "subtitle": "Personal Self-Discovery by Nona Jupiter",
+      "description": "Human Design is a comprehensive system enabling self-discovery, illuminating how individuals function and grow. It aids in navigating diverse traits like talents, weaknesses, and influenced areas, fostering a deeper understanding of oneself. Learning about your Human Design Chart can revolutionise life perspectives, fostering confidence in decision-making and empowering individuals to make choices with heightened self-assurance",
+      "highlightText": "Human Design acts as a personalized energetic blueprint or \"user manual\" that helps you understand how you naturally function and make decisions, reduce burnout, and improves relationship.",
+      "durationText": "120-150 Minutes",
+      "facilities": [
+        "Human Design",
+        "Modul",
+        "Coffee Break",
+        "Stationery"
+      ]
+    }
+  },
+  {
+    "slug": "palmistry-tarot-reading",
+    "code": "WEL-055",
+    "category": "Art & Culture",
+    "venues": [
+      "Ubud Area",
+      "Om Ham Resort",
+      "Spiritual Soul Healing"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 54,
+    "en": {
+      "title": "Palmistry & Tarot Reading",
+      "subtitle": "Personal Self Discovery By Ida Ayu Citra Kusuma",
+      "description": "Rooted in the science of Jyotisa and the Balinese calendar system, it combines traditional calculations with intuitive interpretation. This Jyotisa methodology will be able to provide a very special wellness treatment through a birth approach called Oton A Pratiti reader will analyze your unique birth date, time, and natural influences to interpret the symbolic patterns that shape your life",
+      "highlightText": "The goal is to foster self-awareness, help you understand your strengths and challenges, and identify ways to balance your emotional and spiritual energies.",
+      "durationText": "45 Minutes",
+      "facilities": [
+        "Reading Card",
+        "Balinese offering",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "mandala-making-meditation",
+    "code": "WEL-056",
+    "category": "Art & Culture",
+    "venues": [
+      "Om Ham Resort",
+      "Ubud Area",
+      "Garuda Wisnu Kencana",
+      "Sanur Area",
+      "Kuta & Nusa Dua Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 55,
+    "en": {
+      "title": "Mandala Making Meditation",
+      "subtitle": "Self Reflection Through Flowers Art Meditation",
+      "description": "Flower mandalas have been used for centuries as a powerful tool for self-reflection, healing, and spiritual growth body. you will learn the art of flower mandala making step-by-step. We provide a wide array of fresh, vibrant flowers and a serene and inspiring space for you to unleash your creativity. This experience is open to all who seek solace, self-discovery, and a moment of artistic expression.",
+      "highlightText": "Each petal holds a story, and as you shape your mandala, you’ll witness the beauty of impermanence and the endless cycles of life.",
+      "durationText": "60-90 Minutes",
+      "facilities": [
+        "Flowers and",
+        "property guidances",
+        "Meditation Sessions",
+        "Welcome Drink"
+      ]
+    }
+  },
+  {
+    "slug": "lontar-manuscript-writing",
+    "code": "WEL-057",
+    "category": "Art & Culture",
+    "venues": [
+      "Om Ham Resort",
+      "Samsara Living Museum",
+      "Amankila Resort",
+      "Ubud Area",
+      "Kuta & Nusa Dua Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 56,
+    "en": {
+      "title": "Lontar Manuscript Writing",
+      "subtitle": "Meditative Craft Through Ancient Manuscript Carving",
+      "description": "Age-old palm leaf manuscripts containing sacred texts, and ancient wisdom, a guide for almost every aspect of Balinese culture, spirituality, and daily life. Try writing on lontar leaves and learn about the Balinese philosophical values embedded in each manuscript into meditative process. A rushed or tense hand will fracture the fragile palm leaf. To carve successfully, the practitioner must naturally slow their breathing and lower their physical tension",
+      "highlightText": "Engaging in this delicate process offers profound mind, body, and soul therapeutic benefits such as sharping your focus, promotes deep state of cognitive, regulates nervous system through the slow breathing of carving process",
+      "durationText": "60-90 Minutes",
+      "facilities": [
+        "Carving tools",
+        "Drying Palm leaves",
+        "Traditional Cloth",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "canang-sari-offering",
+    "code": "WEL-058",
+    "category": "Art & Culture",
+    "venues": [
+      "Om Ham Resort",
+      "Samsara Living Museum",
+      "Garuda Wisnu Kencana",
+      "Ubud Area",
+      "Kuta & Nusa Dua Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 57,
+    "en": {
+      "title": "Canang Sari Offering",
+      "subtitle": "Self Reflection Through Flowers Art Meditation",
+      "description": "You can now experience the series of offerings that you often see and admire in various Balinese ritual processions first hand, starting from preparing the ingredients, assembling them, to getting to know the naming of each component which is rich in meaning and purpose. Creating beautiful and unique shapes from coconut leaves, bananas and other materials really saves you time, and then arranges them into a grand design.",
+      "highlightText": "Daily offerings made by Balinese Hindus to thank the God (Sang Hyang Widhi Wasa) in praise and prayer. Offering will be seen in the Balinese temple and on small shrines in houses.",
+      "durationText": "60 Minutes",
+      "facilities": [
+        "Flowers and",
+        "property guidances",
+        "Meditation Sessions",
+        "Welcome Drink"
+      ]
+    }
+  },
+  {
+    "slug": "kumbha-pottery-art-therapy",
+    "code": "WEL-059",
+    "category": "Art & Culture",
+    "venues": [
+      "Setungku Ceramics, Ubud",
+      "Serayu Pottery Ubud",
+      "Kevala Studio Ceramics, Sanur",
+      "Vagabond Design Lab, Canggu",
+      "Ubud & Gianyar Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 58,
+    "en": {
+      "title": "Kumbha Pottery Art Therapy",
+      "subtitle": "Pottery Workshop (Wheel Throwing & Hand Building)",
+      "description": "Healing through creativity with clay studio offering wheel-throwing, hand building, and paint your own piece sessions as a mindful, tactile art practice. This artistic practice promotes a creative satisfaction and therapeutic/meditative focus. Tactile, meditative shaping of clay by hand or on the wheel, reconnecting with playful creativity.",
+      "highlightText": "Pottery making calms your mind through focused creativity, improves body coordination and hand strength, and nurtures your soul by grounding you in the present moment through tactile self-expression.",
+      "durationText": "120 - 150 Minutes",
+      "facilities": [
+        "2kg of Clay",
+        "Pottery tools",
+        "Guidebook",
+        "Coffee and tea"
+      ]
+    }
+  },
+  {
+    "slug": "chitra-sutra-art-painting",
+    "code": "WEL-060",
+    "category": "Art & Culture",
+    "venues": [
+      "Bartega Studio",
+      "Arma Museum Ubud",
+      "Ayana Rimba Jimbaran",
+      "Garuda Wisnu Kencana",
+      "Uluwatu & Sanur Beach"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 59,
+    "en": {
+      "title": "Chitra Sutra Art Painting",
+      "subtitle": "Painting and Visual Art Therapy",
+      "description": "A private painting experience inspired by the surrounding scenery, inviting guests to translate what they have felt into color, texture, and form. In this way, water becomes both landscape and metaphor: a force of movement, as a creative release shaped by feeling, reflection, and emotional renewal",
+      "highlightText": "Art and mindfulness are deeply interconnected practices in presence, observation, and intention, when combined, they form a powerful pathway to emotional healing, self-understanding, and spiritual growth.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Canvas",
+        "Acrilic paint",
+        "Painting amenities",
+        "Coffee and tea"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-kamasan-painting",
+    "code": "WEL-061",
+    "category": "Art & Culture",
+    "venues": [
+      "Sinar Pande Wayang",
+      "House Studio Klungkung",
+      "Art Studio near Gianyar Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 60,
+    "en": {
+      "title": "Balinese Kamasan Painting",
+      "subtitle": "Visual art Therapy with Balinese Kamasan Maestro, I Wayan Pande Sumantra",
+      "description": "Kamasan painting is a classical, centuries-old Balinese art form originating from the village of Kamasan in the Klungkung Regency of East Bali. A traditional Balinese Kamasan-style painting depicting scenes from the Hindu epic Ramayana. The characters are drawn in the classic wayang kulit puppet aesthetic, featuring slender elongated bodies, almond-shaped almond eyes, and sharp pointed noses. An Authentic Indonesian folklore art style.",
+      "highlightText": "I Wayan Pande Sumantra is a master classical Kamasan painter from Klungkung, Bali, dedicated to preserving and adapting traditional wayang-style art.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Canvas",
+        "Acrilic paint",
+        "Painting amenities",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "painting-to-music-therapy",
+    "code": "WEL-062",
+    "category": "Art & Culture",
+    "venues": [
+      "Therapeutic Art",
+      "Space, Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 61,
+    "en": {
+      "title": "Painting to Music Therapy",
+      "subtitle": "Abstract free hand movement painting through the music by Angela Klees",
+      "description": "Painting to music is a therapeutic wellness practice that blends sound frequencies with free-hand physical movement to release emotional tension, reduce stress, and promote mental clarity. Instead of focusing on the final visual product, this process prioritizes the mindful act of creation, using the rhythm and melody of music to guide your hands across the canvas.",
+      "highlightText": "Painting to music with free-hand movements enhances wellness by reducing stress and unlocking emotional expression through the therapeutic, rhythmic connection between sound and visual creativity.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Canvas",
+        "Acrilic paint",
+        "Painting amenities",
+        "Coffee and tea"
+      ]
+    }
+  },
+  {
+    "slug": "batik-painting",
+    "code": "WEL-063",
+    "category": "Art & Culture",
+    "venues": [
+      "Five Art Ubud Studio",
+      "Nirvana Batik Course",
+      "Arma Museum & Resort",
+      "Vagabond Design Lab, Canggu",
+      "Ubud & Gianyar Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 62,
+    "en": {
+      "title": "Batik Painting",
+      "subtitle": "Traditional Visual Art Therapy",
+      "description": "This hands on experience offers a deeper understanding of one of Indonesia’s most cherished art forms batik, which uses wax-resist dyeing techniques that have been passed down through generations. Guided by skilled batik artisans, you’ll have the chance to create your own unique batik piece. From drawing your design, applying hot wax, to adding colors with natural dyes, every step is a meaningful part of the process.",
+      "highlightText": "Batik is more than a piece of cloth; it is a living philosophy that reflects life, nature, and human connection to the universe. Recognized as a UNESCO Intangible Cultural Heritage, Indonesian batik weaves deep meaning into every single stroke and dot drawn with hot wax",
+      "durationText": "60 - 90 Minutes",
+      "facilities": [
+        "Batik Equipment",
+        "Guidance by artisan",
+        "Seat cushion",
+        "Coffee and tea"
+      ]
+    }
+  },
+  {
+    "slug": "tatah-sungging",
+    "code": "WEL-064",
+    "category": "Art & Culture",
+    "venues": [
+      "Five Art Studio Ubud",
+      "Pondok Pekak Art Studio"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 63,
+    "en": {
+      "title": "Tatah Sungging",
+      "subtitle": "Wood Carving Experiences",
+      "description": "Wood carving is woven into the fabric of Balinese life, from the intricate panels of temple gates to the decorative pieces sold in every art market in Ubud. Led by a craftman, your class begins with selecting your wood and your motif, then you'll learn how to hold and move the chisels safely, how to read the grain of the wood, and how to build up a design from rough outline to fine detail.",
+      "highlightText": "Balinese carving draws heavily from Hindu mythology, nature, and geometric patterns, like zentangle shape, this meditative process will improves wellness by lowering stress, encouraging mindfulness, and building physical dexterity through rhythmic, focused handwork",
+      "durationText": "150 Minutes",
+      "facilities": [
+        "Wood",
+        "Carving Tools",
+        "Coffee And Tea"
+      ]
+    }
+  },
+  {
+    "slug": "wayang-making",
+    "code": "WEL-065",
+    "category": "Art & Culture",
+    "venues": [
+      "Bali Culture Workshop"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 64,
+    "en": {
+      "title": "Wayang Making",
+      "subtitle": "Shadow Puppet Carving Experiences",
+      "description": "In this practice you will learn how to craft a wayang kulit, an ancient form of shadow puppet storytelling art that uses carved leather shaped into characters from the story. The performance is led by a master storyteller called Dalang. The making process involves very careful sketching, carving, chiselling, and colouring. You'll choose a character in a folklore to make but you also have the liberty to sketch your own drawing.",
+      "highlightText": "This art form is not just a visual display but a spiritual and educational medium used to pass down moral values and epic legends through the slow pace meditative carving process.",
+      "durationText": "150 Minutes",
+      "facilities": [
+        "Wayang Leather",
+        "Carving Tools",
+        "Coffee And Tea"
+      ]
+    }
+  },
+  {
+    "slug": "alankara-jewelry-experience",
+    "code": "WEL-066",
+    "category": "Art & Culture",
+    "venues": [
+      "Pondok Pekak",
+      "Bali Turtle Jewelry Workshop",
+      "Ubud & Gianyar Area"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "couple"
+    ],
+    "featured": false,
+    "order": 65,
+    "en": {
+      "title": "Alankara Jewelry Experience",
+      "subtitle": "Silver Jewelry Making",
+      "description": "Silver jewelry making is one of Bali's most celebrated traditional crafts, and in Ubud, you can learn it directly from a master silversmith. You will guided through the fundamental techniques of Balinese silversmithing; shaping, soldering, and finishing sterling silver into a piece of jewelry you design yourself. No prior experience is needed.",
+      "highlightText": "Making silver jewelry improves your mental focus, builds fine motor skills, and nourishes your soul through creative self-expression.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "3 gr Streling Silver",
+        "Silversmithing tools",
+        "Guidance",
+        "Coffee or tea"
+      ]
+    }
+  },
+  {
+    "slug": "mask-painting-experience",
+    "code": "WEL-067",
+    "category": "Art & Culture",
+    "venues": [
+      "I Wayan Muka Mask",
+      "Product Studio",
+      "Mas Village Ubud"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 66,
+    "en": {
+      "title": "Mask Painting Experience",
+      "subtitle": "Mask Painting Experience by The Mask Maker, I Komang Mega",
+      "description": "Spend the day with a local family in Mas, one of Bali’s most famous mask-carving villages. Meet the mask maker I Komang Mega, and witness his renowned wood-carving firsthand. Begin the painting process next, as you listen to ancestral stories of magic behind the masks and the symbol of expression for each mask. Delight in these intimate exchanges and take your creation home, a cherished souvenir of the day’s experience.",
+      "highlightText": "Engaging in this ancient practice allows you to tap into centuries of Balinese Hindu philosophy, where art acts as a physical conduit between the seen world (sekala) and the unseen spiritual world (niskala)",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Wood Mask",
+        "Acrilic paint",
+        "Painting amenities",
+        "Coffee and tea"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-dance-meditation",
+    "code": "WEL-068",
+    "category": "Art & Culture",
+    "venues": [
+      "Pondok Pekak Studio, Ubud",
+      "Arma Museum & Resort",
+      "Royal Casa Ganesha Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 67,
+    "en": {
+      "title": "Balinese Dance Meditation",
+      "subtitle": "An Immersive Cultural Dance Learning Experiences",
+      "description": "Balinese dance is one of UNESCO's Intangible Cultural Heritages of Humanity, a sacred performance tradition that has been refined over centuries. Your lesson introduces you to the foundational vocabulary of Balinese classical dance: the characteristic wide-eyed gaze (tedong), the expressive hand gestures (mudras), the grounded stance, and the basic foot patterns. You will work slowly and carefully to feel the precision and intention behind each movement",
+      "highlightText": "Balinese dance is form of practice that keeps distractions at bay and centers your mind in the present. It performed barefoot, which symbolizes a connection to the earth and the precision in the eye movements sharpening your focus and grounding you mentally.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Wisdom Story of",
+        "Balinese Dance",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-gamelan-meditation",
+    "code": "WEL-069",
+    "category": "Art & Culture",
+    "venues": [
+      "Pondok Pekak Studio",
+      "Arma Museum & Resort"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 68,
+    "en": {
+      "title": "Balinese Gamelan Meditation",
+      "subtitle": "An Immersive Cultural Music Learning Experiences",
+      "description": "The sound of gamelan is the sound of Bali. The instruments, bronze keys and gongs arranged in an interlocking ensemble, produce a layered, hypnotic music. The class begins by helping you understand how gamelan music works: its cyclical structure, the interlocking patterns between instruments, and the role each instrument plays in the ensemble. The sound of bronze piece repeating cycle is an incredibly satisfying experience",
+      "highlightText": "This traditional ensemble orchestra utilizes hand-forged bronze gongs, metallophones, and bamboo flutes to tap into a uniquely restorative frequency for Anxiety reduction, cardiovascular regulation, spiritual resonance and joyful feeling.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Gamelan Set",
+        "Guidance",
+        "Herbal drink"
+      ]
+    }
+  },
+  {
+    "slug": "kecak-dance-art-performance",
+    "code": "WEL-070",
+    "category": "Art & Culture",
+    "venues": [
+      "Uluwatu Temple",
+      "Melasti Beach"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 69,
+    "en": {
+      "title": "Kecak Dance Art Performance",
+      "subtitle": "An Immersive Cultural Dance Performance Experiences",
+      "description": "Kecak Uluwatu is one of Bali’s most iconic cultural performances: a dramatic sunset dance at Uluwatu Temple that combines rhythmic group chanting, Ramayana storytelling, and a spectacular cliffside setting above the ocean. At Uluwatu, it is performed in an open-air setting near the temple, timed with sunset, which gives the performance its famous combination of chant, fire, myth, and ocean panorama.",
+      "highlightText": "What makes it special is its spiritual and visual atmosphere. The dance is rooted in elements of the sacred Sanghyang tradition and was developed into its theatrical form in the 1930s",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Temple Donation",
+        "Admission",
+        "Traditional Cloth"
+      ]
+    }
+  },
+  {
+    "slug": "balinese-living-museum",
+    "code": "WEL-071",
+    "category": "Art & Culture",
+    "venues": [
+      "Samsara Living",
+      "Museum, Karangasem"
+    ],
+    "suitableFor": [
+      "solo",
+      "group",
+      "corporate"
+    ],
+    "featured": false,
+    "order": 70,
+    "en": {
+      "title": "Balinese living Museum",
+      "subtitle": "An Immersive Cultural Balinese Visit Experience at Samsara Living Museum",
+      "description": "Welcome to the Balinese authentic cultural sanctuaries: Samsara Living Museum. A living expression of Balinese life, created to protect, preserve, and reinterpret the values, rituals, and wisdom of Bali through everyday practice. Samsara is one of the beliefs of Hindus, particularly in Bali, the Island of God. It is about the stages of life, characterized by various ceremonies and traditional rituals",
+      "highlightText": "In this Living Museum, the Interesting narratives and explanations about the Balinese life cycle will be displayed in a series of meaningful visuals. You also able to see the Arak (Bali Spirit) making and how the old manuscript preserved",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Museum Tour",
+        "Admission",
+        "Traditional Cloth",
+        "Herbal Drink"
+      ]
+    }
+  },
+  {
+    "slug": "tejakula-wayang-wong-art-performance",
+    "code": "WEL-072",
+    "category": "Art & Culture",
+    "venues": [
+      "Tejakula Village Buleleng, North Bali"
+    ],
+    "suitableFor": [
+      "solo",
+      "group"
+    ],
+    "featured": false,
+    "order": 71,
+    "en": {
+      "title": "Tejakula Wayang Wong Art Performance",
+      "subtitle": "An Immersive Cultural Dance Performance Experiences",
+      "description": "Wayang Wong Tejakula is a sacred traditional art form believed to have originated in the 17th century and passed down through generations. It draws upon the Ramayana epic, featuring characters such as Rama, Sita, Laksamana, Rahwana, Hanoman, Sugriwa, Subali, Wibisana, Anggada, Kumbakarna, and the Punakawan, alongside armies of wanara (monkeys) and giants",
+      "highlightText": "Performances are typically held as part of religious ceremonies, specifically during Pahing and Umanis Galungan, with the cast size and duration adjusted to suit the specific story and ceremonial requirements.",
+      "durationText": "90 Minutes",
+      "facilities": [
+        "Temple Donation",
+        "Admission",
+        "Traditional Cloth"
+      ]
+    }
+  },
+  {
+    "slug": "ogoh-ogoh-cultural-parade",
+    "code": "WEL-073",
+    "category": "Art & Culture",
+    "venues": [
+      "All Over Bali during Balinese New Year Eve"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "group"
+    ],
+    "featured": false,
+    "order": 72,
+    "en": {
+      "title": "Ogoh-Ogoh Cultural Parade",
+      "subtitle": "An Immersive Cultural Festival Experiences",
+      "description": "Ogoh-ogoh are large ceremonial effigies in Bali, created to symbolize negative energies and spiritual imbalance. Traditionally paraded on the eve of Nyepi, they represent the ritual cleansing of chaos before the island enters a sacred day of silence, reflection, and renewal. This giant statue often burned or symbolically destroyed at the end of the night to purify the community and wipe away negative energy",
+      "highlightText": "Ogoh-Ogoh parade provides a profound form of holistic catharsis, offering unique psychological, somatic, and spiritual renewal for your mind, body, and soul. Far more than a vibrant street carnival, this ritual serves as an intense collective exhale.",
+      "durationText": "120 Minutes",
+      "facilities": [
+        "Guided Art",
+        "perfomances"
+      ]
+    }
+  }
+]

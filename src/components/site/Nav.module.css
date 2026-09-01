@@ -1,0 +1,255 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  background: linear-gradient(180deg, rgba(16, 34, 47, 0.35), rgba(16, 34, 47, 0));
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  transition:
+    background 0.5s ease,
+    border-color 0.5s ease,
+    backdrop-filter 0.5s ease;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 4vw, 56px);
+  padding: 18px clamp(20px, 4vw, 48px);
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.logo {
+  height: 26px;
+  width: auto;
+  transition: filter 0.4s ease;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.6vw, 38px);
+  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.link {
+  color: #fff;
+  transition: color 0.4s ease;
+}
+
+.link:hover,
+.linkActive {
+  color: var(--emas-hover);
+}
+
+.cta {
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: #fff;
+  padding: 11px 22px;
+  font: 500 10px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  transition:
+    color 0.4s ease,
+    border-color 0.4s ease,
+    background 0.4s ease;
+}
+
+.cta:hover {
+  background: var(--emas-deep);
+  border-color: var(--emas-deep);
+  color: var(--ivory);
+}
+
+/**
+ * A utility, not a page.
+ *
+ * Given the nav links' size, letterspacing and colour, the pair read as two
+ * more menu items. Setting them smaller and tighter, behind a hairline, makes
+ * the group read as one small control instead.
+ */
+.lang {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  padding-left: clamp(14px, 1.8vw, 26px);
+  margin-left: clamp(2px, 0.6vw, 8px);
+  border-left: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.langLink {
+  color: rgba(255, 255, 255, 0.5);
+  font: 400 9.5px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.1em;
+  transition: color 0.4s ease;
+}
+
+.langLink:hover {
+  color: #fff;
+}
+
+.langCurrent {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.langSep {
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 9px;
+  line-height: 1;
+}
+
+.progress {
+  height: 2px;
+  width: var(--scroll-progress, 0%);
+  background: linear-gradient(90deg, var(--emas), var(--emas-deep));
+}
+
+/* --- Over a light page, or scrolled past an immersive hero ------------- */
+
+.nav[data-tone='light'],
+:global(html[data-nav-solid]) .nav {
+  background: linear-gradient(180deg, rgba(246, 243, 231, 0.95), rgba(246, 243, 231, 0.82));
+  border-bottom-color: rgba(16, 34, 47, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.nav[data-tone='light'] .link,
+.nav[data-tone='light'] .toggle,
+:global(html[data-nav-solid]) .link,
+:global(html[data-nav-solid]) .toggle {
+  color: var(--biru);
+}
+
+.nav[data-tone='light'] .link:hover,
+.nav[data-tone='light'] .linkActive,
+:global(html[data-nav-solid]) .link:hover,
+:global(html[data-nav-solid]) .linkActive {
+  color: var(--emas-deep);
+}
+
+.nav[data-tone='light'] .cta,
+:global(html[data-nav-solid]) .cta {
+  color: var(--emas-deep);
+  border-color: var(--emas-deep);
+}
+
+.nav[data-tone='light'] .cta:hover,
+:global(html[data-nav-solid]) .cta:hover {
+  color: var(--ivory);
+}
+
+.nav[data-tone='light'] .logo,
+:global(html[data-nav-solid]) .logo {
+  filter: brightness(0.55) sepia(0.4);
+}
+
+.nav[data-tone='light'] .langLink,
+:global(html[data-nav-solid]) .langLink {
+  color: rgba(16, 34, 47, 0.45);
+}
+
+.nav[data-tone='light'] .langLink:hover,
+.nav[data-tone='light'] .langCurrent,
+:global(html[data-nav-solid]) .langLink:hover,
+:global(html[data-nav-solid]) .langCurrent {
+  color: var(--biru);
+}
+
+.nav[data-tone='light'] .langSep,
+:global(html[data-nav-solid]) .langSep {
+  color: rgba(16, 34, 47, 0.26);
+}
+
+.nav[data-tone='light'] .lang,
+:global(html[data-nav-solid]) .lang {
+  border-left-color: rgba(16, 34, 47, 0.16);
+}
+
+/* --- Small screens ---------------------------------------------------- */
+
+.toggle {
+  display: none;
+  border: none;
+  background: none;
+  padding: 10px 0;
+  color: #fff;
+  font: 500 10px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.4s ease;
+}
+
+.panel {
+  display: none;
+  flex-direction: column;
+  gap: 22px;
+  padding: 26px clamp(20px, 4vw, 48px) 34px;
+  background: rgba(16, 34, 47, 0.97);
+  backdrop-filter: blur(10px);
+}
+
+.panel a:not(.cta) {
+  color: var(--ivory);
+  font: 400 12px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.panel .cta {
+  align-self: flex-start;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Stacked in the panel, a left border and its indent make no sense. */
+.panel .lang {
+  border-left: none;
+  padding-left: 0;
+  margin-left: 0;
+  gap: 8px;
+}
+
+.panel .langLink {
+  color: rgba(246, 243, 231, 0.55);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+
+.panel .langCurrent {
+  color: var(--ivory);
+}
+
+.panelOpen {
+  display: flex;
+}
+
+@media (max-width: 880px) {
+  .links .link,
+  .links .lang {
+    display: none;
+  }
+
+  .toggle {
+    display: block;
+  }
+}
+
+@media (min-width: 881px) {
+  .panel,
+  .panelOpen {
+    display: none;
+  }
+}
