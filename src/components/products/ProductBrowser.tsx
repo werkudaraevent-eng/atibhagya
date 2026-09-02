@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import type { Locale, ProductCard, ProductCategory } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
+import { AudienceSelect } from './AudienceSelect'
 import { ProductRows } from './ProductRows'
 import styles from './ProductBrowser.module.css'
 
@@ -122,24 +123,15 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
 
         <div className={styles.aside}>
           {audiences.length > 1 ? (
-            <div className={styles.audience}>
-              <span className={styles.audienceLabel} id="audience-label">
-                {t.forLabel}
-              </span>
-              <select
-                className={styles.select}
-                aria-labelledby="audience-label"
-                value={audience}
-                onChange={(e) => change(() => setAudience(e.target.value))}
-              >
-                <option value="">{t.anyone}</option>
-                {audiences.map((key) => (
-                  <option key={key} value={key}>
-                    {t.suitable[key]}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <AudienceSelect
+              label={t.forLabel}
+              options={[
+                { value: '', label: t.anyone },
+                ...audiences.map((key) => ({ value: key, label: t.suitable[key] })),
+              ]}
+              value={audience}
+              onChange={(value) => change(() => setAudience(value))}
+            />
           ) : null}
 
           <div className={styles.search}>

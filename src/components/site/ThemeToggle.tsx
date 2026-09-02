@@ -46,7 +46,21 @@ export function ThemeToggle({ toDark, toLight, className }: Props) {
   const [theme, setTheme] = useState<Theme | null>(null)
 
   useEffect(() => {
-    setTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light')
+    const root = document.documentElement
+    // The <head> script normally settles this before paint. Changing
+    // language is a full page load through a different root layout, and on
+    // that path it has been seen not to run — so the saved choice is read
+    // again here and applied if the page disagrees with it.
+    let saved: string | null = null
+    try {
+      saved = localStorage.getItem(THEME_KEY)
+    } catch {
+      // Private mode: nothing saved to read.
+    }
+    if ((saved === 'dark' || saved === 'light') && root.dataset.theme !== saved) {
+      root.dataset.theme = saved
+    }
+    setTheme(root.dataset.theme === 'dark' ? 'dark' : 'light')
   }, [])
 
   const toggle = () => {
