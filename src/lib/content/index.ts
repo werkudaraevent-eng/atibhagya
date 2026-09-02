@@ -61,13 +61,25 @@ const or = <T>(value: T | null | undefined, fallback: T): T => {
 const ownOrigin = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
 
 /**
+ * Where Payload serves uploaded files from. A URL with this path is one of
+ * ours whatever host it carries — a preview deployment's, a branch alias's —
+ * and `next/image` needs it relative, or it refuses the unknown host.
+ */
+const OWN_FILE_PATH = '/api/media/file/'
+
+/**
  * Payload returns absolute URLs because `serverURL` is set for the admin. Left
  * as they are, `next/image` treats our own uploads as a remote host and
  * refuses them unless the deploy domain is listed in `remotePatterns` — so an
  * upload of ours is folded back to a relative path.
  */
-const localise = (url: string) =>
-  ownOrigin && url.startsWith(ownOrigin) ? url.slice(ownOrigin.length) || '/' : url
+const localise = (url: string) => {
+  if (ownOrigin && url.startsWith(ownOrigin)) return url.slice(ownOrigin.length) || '/'
+  // Payload's own files, on any host this deployment happens to have.
+  const at = url.indexOf(OWN_FILE_PATH)
+  if (at !== -1 && /^https?:\/\//.test(url)) return url.slice(at)
+  return url
+}
 
 const toImg = (media: unknown, fallback: Img): Img => {
   if (!media || typeof media !== 'object') return fallback
