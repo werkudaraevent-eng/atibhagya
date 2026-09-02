@@ -165,10 +165,16 @@ textarea:focus {
   opacity: 0;
 }
 
+/* Ornament strokes stay unseen until GSAP draws them in. */
+[data-draw] {
+  opacity: 0;
+}
+
 /* Without JavaScript nothing would ever animate in, so show everything. */
 .no-js [data-fade],
 .no-js [data-rule],
 .no-js [data-open],
+.no-js [data-draw],
 .no-js [data-headline] {
   opacity: 1;
   visibility: visible;
@@ -180,6 +186,7 @@ textarea:focus {
   [data-fade],
   [data-headline],
   [data-rule],
+  [data-draw],
   [data-open] {
     opacity: 1;
     visibility: visible;

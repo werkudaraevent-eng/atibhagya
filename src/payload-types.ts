@@ -242,6 +242,10 @@ export interface Product {
    */
   suitableFor?: ('solo' | 'couple' | 'group' | 'corporate' | 'community')[] | null;
   /**
+   * Which of the five elements the experience belongs to. Shown as a mark on the listing and the page, and as the "Element" filter. Empty: guessed from the category.
+   */
+  element?: ('earth' | 'water' | 'fire' | 'air' | 'ether') | null;
+  /**
    * e.g. agni-hotra
    */
   slug: string;
@@ -908,6 +912,7 @@ export interface ProductsSelect<T extends boolean = true> {
   code?: T;
   category?: T;
   suitableFor?: T;
+  element?: T;
   slug?: T;
   featured?: T;
   order?: T;

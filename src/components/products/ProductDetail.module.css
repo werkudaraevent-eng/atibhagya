@@ -146,6 +146,31 @@
 
 /* One scale for every value — a single fact set larger reads as a headline
    and breaks the column. */
+/* Between the title block and the description: the element's mark, and a
+   short hairline drawing out from it. A pause, with the experience's nature
+   in it. */
+.elementDivider {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: clamp(34px, 5vh, 48px) 0 clamp(6px, 1.5vh, 12px);
+}
+
+/* Hand-drawn in spirit: a fine gold stroke, the first short, the second
+   running out and fading — both drawn in from the left as they enter. */
+.elementLine {
+  display: block;
+  width: 48px;
+  height: 1px;
+  background: var(--emas-deep);
+  opacity: 0.7;
+}
+
+.elementLineFade {
+  width: 140px;
+  background: linear-gradient(90deg, var(--emas-deep), transparent);
+}
+
 .factValue,
 .factList {
   margin: 12px 0 0;

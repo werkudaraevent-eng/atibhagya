@@ -1,5 +1,6 @@
 import { getPayloadSafe } from '../payload'
 import { defaults } from './defaults'
+import { guessElement, isElement } from '../elements'
 import { dict } from '../i18n/ui'
 import type { Dict } from '../i18n/ui'
 import {
@@ -121,6 +122,14 @@ const toProduct = (doc: Any, fallback: Product): Product => ({
   durationText: or(doc.durationText, fallback.durationText),
   facilities: or(labels(doc.facilities), fallback.facilities),
   suitableFor: or(doc.suitableFor, fallback.suitableFor),
+  // Set in the CMS; failing that, read from the text and the category, so
+  // every experience carries an element.
+  element: isElement(doc.element)
+    ? doc.element
+    : guessElement(
+        [doc.title, doc.subtitle, doc.highlightText, doc.description].filter(Boolean).join(' '),
+        (toCategory(doc.category) ?? fallback.category)?.slug,
+      ),
   whatToExpect: or(doc.whatToExpect, fallback.whatToExpect),
   category: toCategory(doc.category) ?? fallback.category,
   venues: (doc.venues ?? []).map(toVenue).filter(Boolean) as Venue[],

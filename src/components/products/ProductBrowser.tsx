@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import type { Locale, ProductCard, ProductCategory } from '@/lib/content/types'
+import { ELEMENTS } from '@/lib/elements'
 import type { Dict } from '@/lib/i18n/ui'
 import { AudienceSelect } from './AudienceSelect'
 import { ProductRows } from './ProductRows'
@@ -33,6 +34,7 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
 
   const [category, setCategory] = useState<string | null>(null)
   const [audience, setAudience] = useState('')
+  const [element, setElement] = useState('')
   const [term, setTerm] = useState('')
   const [shown, setShown] = useState(PAGE)
 
@@ -57,6 +59,12 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
     return Object.keys(t.suitable).filter((key) => present.has(key))
   }, [products, t.suitable])
 
+  // Only the elements the catalogue actually holds, in their canonical order.
+  const elements = useMemo(() => {
+    const present = new Set(products.map((p) => p.element))
+    return ELEMENTS.filter((e) => present.has(e))
+  }, [products])
+
   const haystacks = useMemo(() => {
     const map = new Map<string, string>()
     for (const p of products) {
@@ -73,10 +81,11 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
     return products.filter((p) => {
       if (category && p.categorySlug !== category) return false
       if (audience && !p.suitableFor.includes(audience)) return false
+      if (element && p.element !== element) return false
       if (needle && !haystacks.get(p.id)?.includes(needle)) return false
       return true
     })
-  }, [products, category, audience, term, haystacks])
+  }, [products, category, audience, element, term, haystacks])
 
   const change = (fn: () => void) => {
     fn()
@@ -87,12 +96,13 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
     change(() => {
       setCategory(null)
       setAudience('')
+      setElement('')
       setTerm('')
     })
 
   const visible = filtered.slice(0, shown)
   const remaining = filtered.length - visible.length
-  const narrowed = category !== null || audience !== '' || term.trim() !== ''
+  const narrowed = category !== null || audience !== '' || element !== '' || term.trim() !== ''
 
   return (
     <>
@@ -122,6 +132,18 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
         </div>
 
         <div className={styles.aside}>
+          {elements.length > 1 ? (
+            <AudienceSelect
+              label={t.elementLabel}
+              options={[
+                { value: '', label: t.anyElement },
+                ...elements.map((e) => ({ value: e, label: t.elements[e] })),
+              ]}
+              value={element}
+              onChange={(value) => change(() => setElement(value))}
+            />
+          ) : null}
+
           {audiences.length > 1 ? (
             <AudienceSelect
               label={t.forLabel}

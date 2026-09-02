@@ -1,3 +1,5 @@
+import type { Element } from '../elements'
+
 export const locales = ['en', 'id'] as const
 export type Locale = (typeof locales)[number]
 
@@ -62,6 +64,8 @@ export type Product = {
   durationText?: string
   facilities: string[]
   suitableFor: string[]
+  /** One of the five elements; always resolved, never absent on the site. */
+  element: Element
   whatToExpect?: string
   category?: ProductCategory
   venues: Venue[]
@@ -85,6 +89,7 @@ export type ProductCard = {
   categoryName?: string
   categorySlug?: string
   suitableFor: string[]
+  element: Element
   image: Img
 }
 
@@ -97,6 +102,7 @@ export const toCard = (product: Product): ProductCard => ({
   categoryName: product.category?.name,
   categorySlug: product.category?.slug,
   suitableFor: product.suitableFor,
+  element: product.element,
   image: product.heroImage,
 })
 

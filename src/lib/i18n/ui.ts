@@ -1,4 +1,5 @@
 import type { Locale } from '../content/types'
+import type { Element } from '../elements'
 import { defaultFields, type FormField, type LabelKey } from '../inquiry-fields'
 
 export type Dict = {
@@ -26,6 +27,10 @@ export type Dict = {
     filterCategory: string
     forLabel: string
     anyone: string
+    /** The five elements, as the second filter and a mark on each product. */
+    elementLabel: string
+    anyElement: string
+    elements: Record<Element, string>
     searchPlaceholder: string
     clear: string
     reset: string
@@ -35,6 +40,7 @@ export type Dict = {
     duration: string
     venue: string
     suitableFor: string
+    element: string
     facilities: string
     facilitator: string
     inquire: string
@@ -135,6 +141,9 @@ const en: Dict = {
     filterCategory: 'Category',
     forLabel: 'For',
     anyone: 'Anyone',
+    elementLabel: 'Element',
+    anyElement: 'Any',
+    elements: { earth: 'Earth', water: 'Water', fire: 'Fire', air: 'Air', ether: 'Space' },
     searchPlaceholder: 'Search',
     clear: 'Clear search',
     reset: 'Clear filters',
@@ -144,6 +153,7 @@ const en: Dict = {
     duration: 'Duration',
     venue: 'Venue',
     suitableFor: 'Suitable for',
+    element: 'Element',
     facilities: 'Facilities',
     facilitator: 'Facilitator',
     inquire: 'Inquire this experience',
@@ -246,6 +256,9 @@ const id: Dict = {
     filterCategory: 'Kategori',
     forLabel: 'Untuk',
     anyone: 'Siapa saja',
+    elementLabel: 'Unsur',
+    anyElement: 'Semua',
+    elements: { earth: 'Tanah', water: 'Air', fire: 'Api', air: 'Udara', ether: 'Ruang' },
     searchPlaceholder: 'Cari',
     clear: 'Hapus pencarian',
     reset: 'Hapus filter',
@@ -255,6 +268,7 @@ const id: Dict = {
     duration: 'Durasi',
     venue: 'Lokasi',
     suitableFor: 'Cocok untuk',
+    element: 'Unsur',
     facilities: 'Fasilitas',
     facilitator: 'Fasilitator',
     inquire: 'Tanyakan pengalaman ini',

@@ -1,0 +1,93 @@
+/* One weight, one colour, drawn — never filled. */
+.mark {
+  display: block;
+  height: 16px;
+  width: auto;
+  fill: none;
+  stroke: var(--emas-deep);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+
+.wave {
+  height: 14px;
+}
+
+.macron {
+  height: 14px;
+}
+
+.sprout {
+  height: 28px;
+}
+
+/* --- Divider: hairline, mark, hairline ---------------------------------- */
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 28px);
+  width: min(100%, 520px);
+  margin: clamp(30px, 4.5vh, 44px) auto;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hairline-strong));
+}
+
+/* The second line mirrors the first, so the two fade toward the edges. */
+.lineEnd {
+  background: linear-gradient(90deg, var(--hairline-strong), transparent);
+}
+
+/* Under a left-aligned heading the divider keeps to the left too. */
+.dividerStart {
+  margin-left: 0;
+  width: min(100%, 420px);
+}
+
+.dividerStart .line:first-child {
+  flex: 0 0 44px;
+  background: var(--hairline-strong);
+}
+
+/* --- Section opening: number, mark, label ------------------------------- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.sectionStart {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.number {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font: 400 clamp(38px, 4.6vw, 54px) / 0.9 var(--font-marcellus), serif;
+  color: var(--emas-deep);
+  letter-spacing: 0.02em;
+}
+
+.numberSign {
+  font-size: 0.34em;
+  letter-spacing: 0.2em;
+  transform: translateY(-0.9em);
+}
+
+.label {
+  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+}

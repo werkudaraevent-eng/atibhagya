@@ -5,6 +5,7 @@ import { Breadcrumb } from '@/components/site/Breadcrumb'
 import page from '@/components/site/Page.module.css'
 import type { Locale, Product, ProductCard } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
+import { ElementMark } from './ElementMark'
 import { ProductGrid } from './ProductCard'
 import styles from './ProductDetail.module.css'
 
@@ -55,6 +56,19 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
           />
           <h1 className={styles.title} data-headline>{product.title}</h1>
           {product.subtitle ? <p className={styles.subtitle}>{product.subtitle}</p> : null}
+
+          {/* The element's mark, as the pause between the title block and
+              the description: a short hairline drawing out from it. */}
+          <div className={styles.elementDivider}>
+            <span className={styles.elementLine} data-rule aria-hidden="true" />
+            <ElementMark
+              element={product.element}
+              size="medium"
+              label={`${t.element}: ${t.elements[product.element]}`}
+            />
+            <span className={`${styles.elementLine} ${styles.elementLineFade}`} data-rule aria-hidden="true" />
+          </div>
+
           <p className={styles.description}>{product.description}</p>
           <div className={styles.actions}>
             <Link href={inquiryHref} className={page.buttonPrimary}>

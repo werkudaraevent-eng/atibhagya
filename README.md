@@ -55,6 +55,19 @@ That settles one item on the content master's "confirm before publishing" list
 (who owns and operates each experience). Still open: which of them are
 currently active and bookable, and in which destinations.
 
+### The five elements
+
+Every experience carries one of the five elements of Panca Mahabhuta —
+earth, water, fire, air, space (`src/lib/elements.ts`). It is a field on
+the product, shown as a drawn mark beside the category on the listing and
+in the facts column on the page, and it is the catalogue's second filter
+("Element", beside "For"). Nothing is ever without one: the import guesses
+it from the catalogue text (fire for Agni Hotra, water for Melukat, air for
+a sound bath, space for a silent sit), a product with no guess takes its
+category's element, and the team corrects any of it in the CMS. The marks
+are the ornaments' single gold stroke: three flames, three waves, three
+peaks, three lines, a circle around a point.
+
 ## Sitemap
 
 Seven templates, exactly as the wireframe lists them.
@@ -586,6 +599,18 @@ preference. A two-line script in `<head>` applies the theme before first
 paint so nothing flashes, and the change itself cross-fades colours over
 half a second, then removes that blanket transition so it never touches
 the site's own motion.
+
+## Ornament
+
+Three marks, all taken from the wordmark, in `src/components/site/Ornament.tsx`:
+the **wave** under the A, the **macron** over the ā with its dot, and one
+that is not in the logo — a **sprout**, for growth, used sparingly. Single
+stroke, one weight, gold; they draw themselves in once (`data-draw`, GSAP
+DrawSVG) and then hold still. Two compositions: a **Divider** (hairline,
+mark, hairline) between a heading and what follows it, and a **SectionMark**
+(N° 01, mark, label) opening a section in place of a bare eyebrow. The
+rules that keep them from becoming wallpaper: derived from the logo only,
+one per section, drawn once and never looped.
 
 ## Motion
 

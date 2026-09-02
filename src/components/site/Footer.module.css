@@ -10,12 +10,10 @@
   margin: 0 auto;
 }
 
-/* A short gold rule at the top: a breath after the photograph, not a border. */
+/* The wave from the wordmark at the top: a breath after the photograph. */
 .rule {
-  display: block;
-  width: 44px;
-  height: 1px;
-  background: var(--emas);
+  height: 14px;
+  stroke: var(--emas);
   margin-bottom: clamp(44px, 7vh, 72px);
 }
 

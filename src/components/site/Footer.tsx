@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { Ornament } from '@/components/site/Ornament'
 import type { Locale, SiteContent } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
@@ -28,7 +29,7 @@ export function Footer({ site, dict, locale }: Props) {
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
-        <span className={styles.rule} data-rule aria-hidden="true" />
+        <Ornament mark="wave" className={styles.rule} />
 
         <div className={styles.upper}>
           <div className={styles.word}>

@@ -161,6 +161,22 @@ export const Products: CollectionConfig = {
       },
     },
     {
+      name: 'element',
+      type: 'select',
+      options: [
+        { label: 'Earth · Pertiwi', value: 'earth' },
+        { label: 'Water · Apah', value: 'water' },
+        { label: 'Fire · Teja', value: 'fire' },
+        { label: 'Air · Bayu', value: 'air' },
+        { label: 'Space · Akasa', value: 'ether' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description:
+          'Which of the five elements the experience belongs to. Shown as a mark on the listing and the page, and as the "Element" filter. Empty: guessed from the category.',
+      },
+    },
+    {
       name: 'slug',
       type: 'text',
       required: true,
