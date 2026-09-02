@@ -34,7 +34,7 @@ server. Three levels of setup are supported:
 | ------------------------- | ----------------------------------------------------------- |
 | unset                     | Marketing site only, rendered from the approved default copy |
 | `file:./atibhagya-dev.db` | Full CMS on SQLite — `/admin`, seeding, inquiries            |
-| `postgres://…`            | Production. Payload Cloud or any managed Postgres            |
+| `postgres://…`            | Staging and production (Neon). Schema by migration, never pushed — see *Deploying* |
 
 Load the approved copy into the CMS, in both locales:
 
@@ -457,6 +457,85 @@ Still open, and deliberate:
 - **A privacy notice is still missing.** The inquiry collects contact details
   and free text; Indonesia's PDP law and GDPR both expect a notice and a
   retention period. That is a legal call, not a code one.
+
+## Deploying
+
+Three environments, and content does not travel between them.
+
+| Environment | Branch | Database | Media | URL |
+| --- | --- | --- | --- | --- |
+| Preview | any branch / PR | Neon `staging` | `atibhagya-media-staging` | `*.vercel.app`, automatic |
+| Staging | `staging` | Neon `staging` | `atibhagya-media-staging` | `staging.atibhagya.com`, password-protected |
+| Production | `main` | Neon `main` | `atibhagya-media` | `atibhagya.com` |
+
+Code moves branch → `staging` → `main`. **Content does not**: products,
+photographs and form wording live in each environment's own database. The
+team edits content in the **production** CMS — drafts, preview and versions
+are the safety net — and staging exists to review *code*, on a copy of
+production data (Neon: reset the `staging` branch from `main`). Say this
+out loud before anyone types twenty products into staging.
+
+### Stack
+
+- **Vercel** (Pro — Hobby forbids commercial use and has no password
+  protection for staging). Build command: `npm run build:deploy`.
+- **Neon** Postgres, one project, branches `main` and `staging`.
+- **Cloudflare R2**, two buckets. Uploads go straight from the browser to
+  the bucket, so each bucket needs a CORS rule allowing `PUT` from its
+  site's origin:
+
+  ```json
+  [{ "AllowedOrigins": ["https://atibhagya.com"], "AllowedMethods": ["GET", "PUT"], "AllowedHeaders": ["*"], "MaxAgeSeconds": 3600 }]
+  ```
+
+- **Resend** (or any SMTP) for inquiry notifications; a separate key per
+  environment, and staging's recipient is the team, not the client.
+
+Variables per environment are listed and explained in
+[`.env.example`](.env.example). Secrets are entered in Vercel's environment
+settings; nothing goes in the repo.
+
+### Schema changes are migrations
+
+Locally, SQLite is reshaped automatically (`push`). Postgres never is. Every
+schema change — a new field, a renamed collection — becomes a migration
+file under `src/migrations`, and the production build applies pending ones
+before `next build`.
+
+To create one, point `DATABASE_URI` at a Postgres database (a Neon dev
+branch is ideal; never production) and run:
+
+```bash
+npm run migrate:create
+```
+
+Review the generated SQL, commit it with the config change, and the next
+deploy applies it. `npm run migrate:status` shows what is pending. The
+first migration of all is created the same way, against an empty database.
+
+### Only production is indexed
+
+`src/app/robots.ts` disallows everything unless the deployment is
+production (`src/lib/env.ts`: `VERCEL_ENV`, or `NODE_ENV` off Vercel), and
+every page carries `noindex` outside production as well.
+The sitemap (`/sitemap.xml`) lists both languages of every public page
+with `hreflang` alternates.
+
+### First deploy, in order
+
+1. Neon: create the project; note the `main` and `staging` connection strings.
+2. R2: second bucket `atibhagya-media-staging`; CORS on both; API token per bucket.
+3. Vercel: import the GitHub repo; add the `staging` environment (Settings →
+   Environments) tied to the `staging` branch; enter variables for
+   production and staging; set the build command; enable password
+   protection on staging.
+4. Locally, against the Neon `staging` branch: `npm run migrate:create`
+   (the initial migration), commit, push `staging`. Vercel builds, migrates,
+   deploys.
+5. On staging: create the first admin, `npm run import:products` against
+   the staging database, upload a photograph and a hero video, send an
+   inquiry, check the email arrives. Fix what does not.
+6. Merge to `main`; point the domain; repeat step 5's checks once.
 
 ## Light and dark
 

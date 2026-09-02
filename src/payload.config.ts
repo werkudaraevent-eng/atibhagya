@@ -30,7 +30,15 @@ import { SiteSettings } from './globals/SiteSettings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+/**
+ * The site's own origin. Set explicitly in production and staging; on a
+ * Vercel preview deployment it falls back to the URL Vercel assigns, so the
+ * admin's CORS, cookies and preview panel work on every branch without
+ * anyone configuring each one.
+ */
+const serverURL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
 
 const databaseURI = process.env.DATABASE_URI || ''
 
@@ -73,9 +81,27 @@ const storage = process.env.S3_BUCKET
     ]
   : []
 
+/**
+ * Two databases, two disciplines.
+ *
+ * Local work runs on SQLite with `push`: Payload reshapes the file to match
+ * the config as it changes, asking in the terminal when data would be lost.
+ * That is right for one developer and a throwaway file.
+ *
+ * Postgres — staging and production — never pushes. Every schema change is
+ * a migration file under `src/migrations`, created with
+ * `npm run migrate:create` against a Postgres database and committed, then
+ * applied by `npm run migrate` as the first step of the production build.
+ * A migration is reviewable, reversible and identical on staging and
+ * production; a push is none of those.
+ */
 const db = databaseURI.startsWith('file:')
   ? sqliteAdapter({ client: { url: databaseURI } })
-  : postgresAdapter({ pool: { connectionString: databaseURI } })
+  : postgresAdapter({
+      pool: { connectionString: databaseURI },
+      push: false,
+      migrationDir: path.resolve(dirname, 'migrations'),
+    })
 
 /**
  * Where the admin's preview panel should look.

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 
 import { RefreshOnSave } from '@/components/site/RefreshOnSave'
 import { THEME_SCRIPT } from '@/components/site/ThemeToggle'
+import { isProduction } from '@/lib/env'
 import { karla, marcellus } from '@/lib/fonts'
 import { locales, type Locale } from '@/lib/content/types'
 import '../globals.css'
@@ -13,6 +14,9 @@ export function generateStaticParams() {
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
+  // Belt and braces with robots.ts: a staging page that somehow gets
+  // crawled still tells the engine not to keep it.
+  ...(isProduction ? {} : { robots: { index: false, follow: false } }),
 }
 
 export default async function LocaleLayout({
