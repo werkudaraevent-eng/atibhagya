@@ -358,37 +358,45 @@
   gap: 8px;
 }
 
-.panelFoot .langLink {
+/* Written with the `.nav` prefix on purpose: the solid-header rules
+   (`.nav[data-tone='light'] .langLink`, and the scrolled equivalent) colour
+   these in ink, which on the navy curtain is invisible. Same specificity
+   plus one class beats them, whatever the header's state or the theme. */
+.nav .panelFoot .langLink {
   color: rgba(246, 243, 231, 0.5);
   font-size: 11px;
   letter-spacing: 0.18em;
 }
 
-.panelFoot .langLink:hover,
-.panelFoot .langCurrent {
+.nav .panelFoot .langLink:hover,
+.nav .panelFoot .langCurrent {
   color: var(--ivory-on-dark);
 }
 
-.panelFoot .langSep {
+.nav .panelFoot .langSep {
   color: rgba(246, 243, 231, 0.28);
 }
 
-.panelFoot .theme {
+.nav .panelFoot .lang {
+  border-left: none;
+}
+
+.nav .panelFoot .theme {
   margin-left: 0;
   color: rgba(246, 243, 231, 0.7);
 }
 
-.panelFoot .theme:hover {
+.nav .panelFoot .theme:hover {
   color: #fff;
 }
 
-.panelFoot .cta {
+.nav .panelFoot .cta {
   margin-left: auto;
   color: var(--ivory-on-dark);
   text-shadow: none;
 }
 
-.panelFoot .cta::after {
+.nav .panelFoot .cta::after {
   background: var(--emas);
 }
 

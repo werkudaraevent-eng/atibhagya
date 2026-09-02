@@ -550,7 +550,9 @@ npm run migrate:create:staging
 
 That swaps the staging database in for the one command only — local
 `DATABASE_URI` stays on SQLite, so a forgotten edit can never leave
-development writing to staging. Review the generated SQL, commit it with
+development writing to staging. The same swap serves the data scripts:
+`npm run import:products:staging` and `npm run seed:staging` run against
+staging, after the deploy carrying any new columns has gone green. Review the generated SQL, commit it with
 the config change, and the next deploy applies it.
 `npm run migrate:status:staging` shows what staging has pending.
 
