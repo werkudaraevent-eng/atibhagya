@@ -16,7 +16,18 @@ async function revalidate(paths: string[]) {
   }
 }
 
-const both = (path: string) => [path, `/id${path === '/' ? '' : path}`]
+/**
+ * The route for a path in each language.
+ *
+ * Every page lives under `/[locale]`, so the cache entry for the English
+ * home page is `/en`, not `/` — `/` is only a rewrite onto it. Revalidating
+ * `/` cleared nothing, and a publish took up to five minutes to show.
+ * The bare English path is included too, in case a proxy cached it.
+ */
+const both = (path: string) => {
+  const tail = path === '/' ? '' : path
+  return [`/en${tail}`, `/id${tail}`, path]
+}
 
 /** Product and journey documents: their own page, the listing, and home. */
 export const revalidateCatalogue =
@@ -34,11 +45,18 @@ export const revalidateCatalogue =
     return doc
   }
 
-/** Master data is shown inside product pages, so all of those go. */
+/**
+ * Master data — a venue, a facilitator, a photograph — appears on pages that
+ * cannot be enumerated from here, so every page under the locale layout is
+ * rebuilt on next request rather than a guessed subset.
+ */
 export const revalidateEverything: CollectionAfterChangeHook = async ({ doc }) => {
-  await revalidate(['/', '/id'])
-  await revalidate(both('/product'))
-  await revalidate(both('/journey'))
+  try {
+    const { revalidatePath } = await import('next/cache')
+    revalidatePath('/[locale]', 'layout')
+  } catch {
+    // Outside Next (scripts, tests): nothing to revalidate.
+  }
   return doc
 }
 
