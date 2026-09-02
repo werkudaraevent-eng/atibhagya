@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import type { Locale, SiteContent } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
@@ -12,76 +13,105 @@ type Props = {
   locale: Locale
 }
 
+/**
+ * The site's last word, not its site map.
+ *
+ * A luxury page closes the way it opened: with a sentence and a great deal
+ * of room. The closing line is set large in the serif and rises in a line
+ * at a time as it enters; the wordmark sits under it as a signature. What
+ * is left of navigation is two small columns to the right, and social links
+ * as one quiet line. The foot names the group and the place.
+ */
 export function Footer({ site, dict, locale }: Props) {
   const prefix = locale === 'id' ? '/id' : ''
 
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
-        <div className={styles.columns}>
-          <div className={styles.column}>
-            <div className={styles.label}>{dict.footer.enquiries}</div>
-            <a className={styles.link} href={`mailto:${site.email}`}>
-              {site.email}
-            </a>
-            <a
-              className={styles.link}
-              href={site.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {site.whatsappLabel}
-            </a>
-          </div>
+        <span className={styles.rule} data-rule aria-hidden="true" />
 
-          <div className={styles.column}>
-            <div className={styles.label}>{dict.footer.explore}</div>
-            <Link className={styles.link} href={`${prefix}/product`}>
-              {dict.nav.products}
-            </Link>
-            <Link className={styles.link} href={`${prefix}/journey`}>
-              {dict.nav.journeys}
-            </Link>
-            <Link className={styles.link} href={`${prefix}/about`}>
-              {dict.nav.about}
-            </Link>
-            <Link className={styles.link} href={`${prefix}/inquiry`}>
-              {dict.nav.inquiry}
-            </Link>
-          </div>
-
-          <div className={styles.column}>
-            <div className={styles.label}>{dict.footer.social}</div>
-            {site.social.map((item) => (
-              <a
-                key={item.href}
-                className={styles.link}
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-
-          <div className={styles.brand}>
+        <div className={styles.upper}>
+          <div className={styles.word}>
+            <p className={styles.closing} data-headline>
+              <Lines text={site.footerTagline} />
+            </p>
             <Image
               src="/logo-atibhagya-gold.png"
               alt="Atibhagya"
               width={154}
               height={38}
               className={styles.logo}
+              data-fade
             />
-            <p className={styles.tagline}>
-              <Lines text={site.footerTagline} />
-            </p>
+          </div>
+
+          <div className={styles.columns}>
+            <nav className={styles.column} aria-label={dict.footer.explore} data-fade>
+              <span className={styles.label}>{dict.footer.explore}</span>
+              <Link className={styles.link} href={`${prefix}/product`}>
+                {dict.nav.products}
+              </Link>
+              <Link className={styles.link} href={`${prefix}/journey`}>
+                {dict.nav.journeys}
+              </Link>
+              <Link className={styles.link} href={`${prefix}/about`}>
+                {dict.nav.about}
+              </Link>
+              <Link className={styles.link} href={`${prefix}/inquiry`}>
+                {dict.nav.inquiry}
+              </Link>
+            </nav>
+
+            <div className={styles.column} data-fade>
+              <span className={styles.label}>{dict.footer.enquiries}</span>
+              <a className={styles.link} href={`mailto:${site.email}`}>
+                {site.email}
+              </a>
+              <a
+                className={styles.link}
+                href={site.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {site.whatsappLabel}
+              </a>
+              {site.social.length ? (
+                <span className={styles.social}>
+                  {site.social.map((item, i) => (
+                    <span key={item.href}>
+                      {i > 0 ? <span className={styles.dot}> · </span> : null}
+                      <a
+                        className={styles.link}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item.label}
+                      </a>
+                    </span>
+                  ))}
+                </span>
+              ) : null}
+            </div>
           </div>
         </div>
 
-        <div className={styles.legal}>
-          <span>{site.footerLegal}</span>
-          {site.address ? <span>{site.address}</span> : null}
+        <div className={styles.foot} data-fade>
+          <span className={styles.legal}>
+            {site.footerLegal}
+            {site.parentBrand ? <span className={styles.group}> · {site.parentBrand}</span> : null}
+          </span>
+          <span className={styles.place}>
+            {site.address ? <span>{site.address}</span> : null}
+            <LanguageSwitcher
+              locale={locale}
+              label={dict.languageLabel}
+              className={styles.lang}
+              itemClassName={styles.langLink}
+              currentClassName={styles.langCurrent}
+              separatorClassName={styles.langSep}
+            />
+          </span>
         </div>
       </div>
     </footer>

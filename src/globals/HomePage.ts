@@ -1,5 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
+import { defaults } from '../lib/content/defaults'
+import { plain, prefillGlobal, rows, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
 import { videoFile, webImage } from '../lib/validate-media'
 
@@ -12,7 +14,30 @@ export const HomePage: GlobalConfig = {
   label: 'Home page',
   admin: { group: 'Pages' },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateGlobal(['/'])] },
+  hooks: {
+    // Every box shows what the site currently uses; see src/lib/prefill.ts.
+    afterRead: [
+      prefillGlobal({
+        metaTitle: text((l) => defaults(l).home.meta.title),
+        metaDescription: text((l) => defaults(l).home.meta.description),
+        heroEyebrow: text((l) => defaults(l).home.hero.eyebrow),
+        heroHeadline: text((l) => defaults(l).home.hero.headline),
+        heroStatement: text((l) => defaults(l).home.hero.statement),
+        heroCtaLabel: text((l) => defaults(l).home.hero.ctaLabel),
+        heroDarken: plain(() => Math.round(defaults('en').home.hero.darken * 100)),
+        whyEyebrow: text((l) => defaults(l).home.why.eyebrow),
+        whyHeadline: text((l) => defaults(l).home.why.headline),
+        whyBody: text((l) => defaults(l).home.why.body),
+        pillars: rows((l) => defaults(l).home.why.pillars),
+        featuredEyebrow: text((l) => defaults(l).home.featured.eyebrow),
+        featuredHeadline: text((l) => defaults(l).home.featured.headline),
+        ctaHeadline: text((l) => defaults(l).home.cta.headline),
+        ctaBody: text((l) => defaults(l).home.cta.body),
+        ctaLabel: text((l) => defaults(l).home.cta.label),
+      }),
+    ],
+    afterChange: [revalidateGlobal(['/'])],
+  },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.

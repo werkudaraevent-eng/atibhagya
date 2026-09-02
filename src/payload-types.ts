@@ -1374,7 +1374,7 @@ export interface About {
   createdAt?: string | null;
 }
 /**
- * Headings for the product and journey listings and the small label above each detail page. Leave a field empty to keep the approved wording.
+ * Headings for the product and journey listings and the small label above each detail page. Each box shows what the site currently says; change it, or clear it to return to the approved wording.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "catalogue".
@@ -1574,8 +1574,15 @@ export interface Site {
         id?: string | null;
       }[]
     | null;
+  /**
+   * The sentence the site ends on, set large in the footer. One thought, two lines at most; line breaks are kept.
+   */
   footerTagline?: string | null;
   footerLegal?: string | null;
+  /**
+   * Shown after the copyright line, e.g. "Werkudara Group". Leave empty to omit.
+   */
+  parentBrand?: string | null;
   /**
    * Every address here receives a copy of each new inquiry.
    */
@@ -1753,6 +1760,7 @@ export interface SiteSelect<T extends boolean = true> {
       };
   footerTagline?: T;
   footerLegal?: T;
+  parentBrand?: T;
   inquiryRecipients?:
     | T
     | {

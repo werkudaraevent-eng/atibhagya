@@ -127,6 +127,9 @@ const pathFor = (collection: string, slug: unknown, locale?: string) => {
   if (collection === 'about') return `${prefix}/preview/about`
   if (collection === 'inquiry-form') return `${prefix}/preview/inquiry`
   if (collection === 'catalogue') return `${prefix}/preview/catalogue`
+  // A category shows itself as a filter on the listing.
+  if (collection === 'product-categories') return `${prefix}/preview/catalogue`
+  // Site settings are the footer and contact on every page; home stands in.
   return `${prefix}/preview/home`
 }
 
@@ -154,8 +157,11 @@ export default buildConfig({
         { name: 'tablet', label: 'Tablet', width: 834, height: 1112 },
         { name: 'desktop', label: 'Desktop', width: 1440, height: 900 },
       ],
-      collections: ['products', 'journeys'],
-      globals: ['home', 'about', 'catalogue', 'inquiry-form'],
+      // Everything that has a page to show. Venues and facilitators appear
+      // inside product pages and have none of their own; media has its
+      // "where used" panel; inquiries and users are records, not pages.
+      collections: ['products', 'journeys', 'product-categories'],
+      globals: ['home', 'about', 'catalogue', 'inquiry-form', 'site'],
       url: ({ data, collectionConfig, globalConfig, locale }) =>
         `${serverURL}${pathFor(
           collectionConfig?.slug ?? globalConfig?.slug ?? 'home',

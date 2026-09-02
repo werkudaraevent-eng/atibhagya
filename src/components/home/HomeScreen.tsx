@@ -27,7 +27,7 @@ export async function HomeScreen({ locale, draft = false }: Props) {
 
   const [home, site, featured] = await Promise.all([
     getHome(locale, { draft }),
-    getSite(locale),
+    getSite(locale, { draft }),
     getFeaturedProducts(locale),
   ])
 

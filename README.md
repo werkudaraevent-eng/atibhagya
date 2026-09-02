@@ -279,6 +279,12 @@ They are both the seed source and the fallback: each getter in
 by field, so an empty CMS field — or a missing database — renders the approved
 line rather than a gap.
 
+The admin never shows that emptiness, though. An `afterRead` hook on every
+global (`src/lib/prefill.ts`) fills each empty field, on read, with exactly
+what the site is showing for it — in the locale being edited — so an editor
+sees the sentence to change rather than a blank box standing in for it. The
+first Publish makes the copy explicit; nothing on the site changes.
+
 ### Which images are editable
 
 Every image the site displays is a `media` upload chosen in the admin:
@@ -522,16 +528,18 @@ schema change — a new field, a renamed collection — becomes a migration
 file under `src/migrations`, and the production build applies pending ones
 before `next build`.
 
-To create one, point `DATABASE_URI` at a Postgres database (a Neon dev
-branch is ideal; never production) and run:
+To create one, put the Neon **staging** connection string in `.env` as
+`DATABASE_URI_STAGING` (once) and run:
 
 ```bash
-npm run migrate:create
+npm run migrate:create:staging
 ```
 
-Review the generated SQL, commit it with the config change, and the next
-deploy applies it. `npm run migrate:status` shows what is pending. The
-first migration of all is created the same way, against an empty database.
+That swaps the staging database in for the one command only — local
+`DATABASE_URI` stays on SQLite, so a forgotten edit can never leave
+development writing to staging. Review the generated SQL, commit it with
+the config change, and the next deploy applies it.
+`npm run migrate:status:staging` shows what staging has pending.
 
 ### Only production is indexed
 

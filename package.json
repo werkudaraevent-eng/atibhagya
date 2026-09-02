@@ -13,6 +13,8 @@
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
+    "migrate:create:staging": "tsx src/scripts/migrate-staging.ts migrate:create",
+    "migrate:status:staging": "tsx src/scripts/migrate-staging.ts migrate:status",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
     "typecheck": "tsc --noEmit",

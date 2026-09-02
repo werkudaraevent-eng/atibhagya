@@ -1,20 +1,5 @@
 import { getPayloadSafe } from '../payload'
-import {
-  aboutEn,
-  categoriesEn,
-  homeEn,
-  journeysEn,
-  productsEn,
-  siteEn,
-} from './defaults.en'
-import {
-  aboutId,
-  categoriesId,
-  homeId,
-  journeysId,
-  productsId,
-  siteId,
-} from './defaults.id'
+import { defaults } from './defaults'
 import { dict } from '../i18n/ui'
 import type { Dict } from '../i18n/ui'
 import {
@@ -40,15 +25,6 @@ import type {
 } from './types'
 
 type Any = Record<string, any>
-
-const defaults = (locale: Locale) => ({
-  site: locale === 'id' ? siteId : siteEn,
-  home: locale === 'id' ? homeId : homeEn,
-  about: locale === 'id' ? aboutId : aboutEn,
-  categories: locale === 'id' ? categoriesId : categoriesEn,
-  products: locale === 'id' ? productsId : productsEn,
-  journeys: locale === 'id' ? journeysId : journeysEn,
-})
 
 /** Keeps the approved copy when a CMS field has been left empty. */
 const or = <T>(value: T | null | undefined, fallback: T): T => {
@@ -205,13 +181,19 @@ const query = {
   where: publishedOnly,
 }
 
-export async function getSite(locale: Locale): Promise<SiteContent> {
+export async function getSite(locale: Locale, options: ReadOptions = {}): Promise<SiteContent> {
   const fallback = defaults(locale).site
   const payload = await getPayloadSafe()
   if (!payload) return fallback
 
   try {
-    const site = (await payload.findGlobal({ slug: 'site', locale, depth: 1, fallbackLocale: 'en' })) as Any
+    const site = (await payload.findGlobal({
+      slug: 'site',
+      locale,
+      depth: 1,
+      fallbackLocale: 'en',
+      draft: options.draft === true,
+    })) as Any
     return {
       email: or(site.email, fallback.email),
       phone: or(site.phone, fallback.phone),
@@ -224,6 +206,7 @@ export async function getSite(locale: Locale): Promise<SiteContent> {
       ),
       footerTagline: or(site.footerTagline, fallback.footerTagline),
       footerLegal: or(site.footerLegal, fallback.footerLegal),
+      parentBrand: typeof site.parentBrand === 'string' ? site.parentBrand : fallback.parentBrand,
       responseTime: or(site.responseTime, fallback.responseTime),
     }
   } catch {

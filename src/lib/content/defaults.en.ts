@@ -47,13 +47,14 @@ export const siteEn: SiteContent = {
   phone: '+62 811 0000 000',
   whatsapp: 'https://wa.me/628110000000',
   whatsappLabel: 'WhatsApp',
-  address: 'Indonesia',
+  address: 'Yogyakarta, Indonesia',
   social: [
     { label: 'Instagram', href: 'https://instagram.com/atibhagya' },
     { label: 'YouTube', href: 'https://youtube.com/@atibhagya' },
   ],
-  footerTagline: 'Wellbeing, rooted in Indonesia.',
-  footerLegal: 'Atibhagya © 2026. All rights reserved.',
+  footerTagline: 'Wellbeing, rooted\nin place and presence.',
+  footerLegal: '© 2026 Atibhagya. All rights reserved.',
+  parentBrand: 'Werkudara Group',
   responseTime: 'within two working days',
 }
 

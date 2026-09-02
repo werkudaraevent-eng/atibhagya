@@ -25,7 +25,10 @@ export async function AboutScreen({ locale, draft = false }: Props) {
   const t = dict(locale)
   const prefix = locale === 'id' ? '/id' : ''
 
-  const [about, site] = await Promise.all([getAbout(locale, { draft }), getSite(locale)])
+  const [about, site] = await Promise.all([
+    getAbout(locale, { draft }),
+    getSite(locale, { draft }),
+  ])
 
   return (
     <>

@@ -25,7 +25,7 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
   const [products, categories, site, copy] = await Promise.all([
     getProducts(locale),
     getCategories(locale),
-    getSite(locale),
+    getSite(locale, { draft }),
     getCatalogueCopy(locale, { draft }),
   ])
 

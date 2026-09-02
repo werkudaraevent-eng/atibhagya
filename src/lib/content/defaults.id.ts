@@ -25,9 +25,9 @@ import type {
 export const siteId: SiteContent = {
   ...siteEn,
   whatsappLabel: 'WhatsApp',
-  address: 'Indonesia',
-  footerTagline: 'Kesejahteraan, berakar di Indonesia.',
-  footerLegal: 'Atibhagya © 2026. Seluruh hak cipta dilindungi.',
+  address: 'Yogyakarta, Indonesia',
+  footerTagline: 'Kesejahteraan yang berakar\npada tempat dan kehadiran.',
+  footerLegal: '© 2026 Atibhagya. Seluruh hak cipta dilindungi.',
   responseTime: 'dalam dua hari kerja',
 }
 

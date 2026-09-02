@@ -12,12 +12,28 @@
   left: 0;
   right: 0;
   z-index: 60;
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  transition:
-    background 0.6s ease,
-    border-color 0.6s ease,
-    backdrop-filter 0.6s ease;
+}
+
+/**
+ * The header's surface lives on a pseudo-element, not on `.nav` itself.
+ *
+ * It carries a backdrop blur once the page has scrolled, and `backdrop-filter`
+ * turns whatever carries it into the containing block for `position: fixed`
+ * descendants — which the small-screen menu is. On `.nav` that pinned the
+ * menu to the header's own box, a hundred pixels tall, instead of the
+ * viewport. On a pseudo-element it affects nothing else.
+ */
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(var(--paper-rgb), 0.95), rgba(var(--paper-rgb), 0.82));
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.08);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
 }
 
 /* Tall and airy. A cramped header is the fastest way to look like a template. */
@@ -150,6 +166,8 @@
 }
 
 .progress {
+  position: relative;
+  z-index: 2;
   height: 2px;
   width: var(--scroll-progress, 0%);
   background: linear-gradient(90deg, var(--emas), var(--emas-deep));
@@ -157,11 +175,9 @@
 
 /* --- Over a light page, or scrolled past an immersive hero ------------- */
 
-.nav[data-tone='light'],
-:global(html[data-nav-solid]) .nav {
-  background: linear-gradient(180deg, rgba(var(--paper-rgb), 0.95), rgba(var(--paper-rgb), 0.82));
-  border-bottom-color: rgba(var(--ink-rgb), 0.08);
-  backdrop-filter: blur(10px);
+.nav[data-tone='light']::before,
+:global(html[data-nav-solid]) .nav::before {
+  opacity: 1;
 }
 
 /* On an ivory surface the header tightens up: the hero's generosity would
@@ -378,10 +394,9 @@
 
 /* While the curtain is up, the header sits on navy: white type, gold mark,
    no ivory surface — whatever tone or theme the page has. */
-.nav[data-menu-open] {
-  background: transparent;
-  border-bottom-color: transparent;
-  backdrop-filter: none;
+/* The surface goes while the curtain is up; the curtain is the surface. */
+.nav[data-menu-open]::before {
+  opacity: 0 !important;
 }
 
 .nav[data-menu-open] .logo {

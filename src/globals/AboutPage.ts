@@ -1,5 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
+import { defaults } from '../lib/content/defaults'
+import { prefillGlobal, rows, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
 import { webImage } from '../lib/validate-media'
 
@@ -12,7 +14,24 @@ export const AboutPage: GlobalConfig = {
   label: 'About page',
   admin: { group: 'Pages' },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateGlobal(['/about'])] },
+  hooks: {
+    // Every box shows what the site currently uses; see src/lib/prefill.ts.
+    afterRead: [
+      prefillGlobal({
+        metaTitle: text((l) => defaults(l).about.meta.title),
+        metaDescription: text((l) => defaults(l).about.meta.description),
+        eyebrow: text((l) => defaults(l).about.eyebrow),
+        headline: text((l) => defaults(l).about.headline),
+        lede: text((l) => defaults(l).about.lede),
+        body: rows((l) => defaults(l).about.body.map((paragraph) => ({ text: paragraph }))),
+        statement: text((l) => defaults(l).about.statement),
+        values: rows((l) => defaults(l).about.values),
+        ctaHeadline: text((l) => defaults(l).about.ctaHeadline),
+        ctaLabel: text((l) => defaults(l).about.ctaLabel),
+      }),
+    ],
+    afterChange: [revalidateGlobal(['/about'])],
+  },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.

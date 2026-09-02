@@ -30,7 +30,7 @@ export async function InquiryScreen({
     getProducts(locale),
     getJourneys(locale),
     getCategories(locale),
-    getSite(locale),
+    getSite(locale, { draft }),
     getInquiryCopy(locale, { draft }),
   ])
 

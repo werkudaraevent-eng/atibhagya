@@ -26,6 +26,8 @@ export type SiteContent = {
   social: NavLink[]
   footerTagline: string
   footerLegal: string
+  /** The group the brand belongs to, named in the footer's last line. */
+  parentBrand?: string
   responseTime: string
 }
 
