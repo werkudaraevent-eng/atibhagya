@@ -495,6 +495,26 @@ Variables per environment are listed and explained in
 [`.env.example`](.env.example). Secrets are entered in Vercel's environment
 settings; nothing goes in the repo.
 
+`NEXT_PUBLIC_SERVER_URL` must be the address people actually open. Without
+it, Payload falls back to Vercel's stable addresses — the production URL,
+or a branch's alias — never the per-deployment URL, which is a different
+host from the one in the address bar (a logout sent there clears nothing).
+
+### Git flow
+
+```
+feat/xyz ──PR──▶ staging ──PR──▶ main
+   │               │              │
+ preview      staging site    production
+```
+
+- Work on a branch (`feat/…`, `fix/…`). Every push gets a preview URL.
+- PR into `staging`; merging deploys the staging site for the team to review.
+- When staging is approved, PR `staging` → `main`; merging deploys production.
+- A hotfix goes `fix/…` → `main` directly, then `main` is merged back into
+  `staging` so the two never drift.
+- `main` is protected on GitHub: pull requests only, no direct pushes.
+
 ### Schema changes are migrations
 
 Locally, SQLite is reshaped automatically (`push`). Postgres never is. Every

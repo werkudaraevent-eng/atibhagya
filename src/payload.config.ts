@@ -31,14 +31,24 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 /**
- * The site's own origin. Set explicitly in production and staging; on a
- * Vercel preview deployment it falls back to the URL Vercel assigns, so the
- * admin's CORS, cookies and preview panel work on every branch without
- * anyone configuring each one.
+ * The site's own origin — what the admin calls to log in and out, what
+ * CORS and CSRF trust, where the preview panel points.
+ *
+ * It has to be the address people actually open. Set it explicitly where
+ * there is a domain. On Vercel, without one, fall back to the *stable*
+ * address — the project's production URL, or the branch alias
+ * (`atibhagya-git-staging-….vercel.app`) — never the per-deployment URL:
+ * that one is a different host from the alias in the address bar, so a
+ * logout sent there cleared nothing.
  */
+const vercelHost =
+  process.env.VERCEL_ENV === 'production'
+    ? process.env.VERCEL_PROJECT_PRODUCTION_URL
+    : process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL
+
 const serverURL =
   process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+  (vercelHost ? `https://${vercelHost}` : 'http://localhost:3000')
 
 const databaseURI = process.env.DATABASE_URI || ''
 
