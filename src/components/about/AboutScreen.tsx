@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import styles from '@/app/[locale]/about/about.module.css'
+import styles from '@/app/(site)/[locale]/about/about.module.css'
 import { CreditImage } from '@/components/CreditImage'
 import { Motion } from '@/components/Motion'
 import { Footer } from '@/components/site/Footer'

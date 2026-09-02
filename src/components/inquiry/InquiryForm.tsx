@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 
-import { submitInquiry } from '@/app/[locale]/inquiry/actions'
+import { submitInquiry } from '@/app/(site)/[locale]/inquiry/actions'
 import page from '@/components/site/Page.module.css'
 import type { Locale, SiteContent } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'

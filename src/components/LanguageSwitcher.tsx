@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment } from 'react'
 
-import { rememberScroll } from '@/components/site/RestoreScroll'
 import { locales, type Locale } from '@/lib/content/types'
 
 type Props = {
@@ -23,6 +22,8 @@ type Props = {
  * The URL strategy is `/` for English and `/id/…` for Indonesian, so the
  * counterpart is the current path with that prefix added or removed — the
  * guest keeps their place instead of being dropped back on the homepage.
+ * Both languages share one document, so this is an in-place navigation:
+ * `scroll={false}` keeps the reader exactly where they were on the page.
  */
 export function LanguageSwitcher({
   locale,
@@ -52,14 +53,10 @@ export function LanguageSwitcher({
           <Link
             href={hrefFor(code)}
             hrefLang={code}
+            scroll={false}
             aria-current={code === locale ? 'true' : undefined}
             className={code === locale ? `${itemClassName} ${currentClassName}` : itemClassName}
-            onClick={() => {
-              // A different root segment means a full page load; keep the
-              // reader's place through it.
-              if (code !== locale) rememberScroll()
-              onNavigate?.()
-            }}
+            onClick={onNavigate}
           >
             {code.toUpperCase()}
           </Link>

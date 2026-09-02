@@ -43,7 +43,16 @@ type Props = {
  */
 export function ThemeToggle({ toDark, toLight, className }: Props) {
   const maskId = useId()
-  const [theme, setTheme] = useState<Theme | null>(null)
+  // Read the document's theme on the client's first render, not after it,
+  // so a re-mounted toggle (a language switch re-renders the header) does
+  // not draw a sun for one frame and then eclipse it.
+  const [theme, setTheme] = useState<Theme | null>(() =>
+    typeof document === 'undefined'
+      ? null
+      : document.documentElement.dataset.theme === 'dark'
+        ? 'dark'
+        : 'light',
+  )
 
   useEffect(() => {
     const root = document.documentElement
@@ -89,6 +98,8 @@ export function ThemeToggle({ toDark, toLight, className }: Props) {
       aria-label={dark ? toLight : toDark}
       aria-pressed={dark}
       title={dark ? toLight : toDark}
+      // The server cannot know the theme; the client's first render does.
+      suppressHydrationWarning
     >
       <svg className={styles.icon} viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
         <mask id={maskId}>

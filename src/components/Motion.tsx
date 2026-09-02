@@ -54,11 +54,25 @@ function fresh(scope: ParentNode, selector: string): HTMLElement[] {
  * `gsap.matchMedia` carries the reduced-motion branch: under it every element
  * is simply set to its finished state, so the page is complete and still.
  */
+/** `/id/product/x` and `/product/x` are the same page in two languages. */
+const sansLocale = (path: string) => path.replace(/^\/id(?=\/|$)/, '') || '/'
+
+/** The last route this component set up, across navigations. */
+let lastRoute: string | null = null
+
 export function Motion() {
   const pathname = usePathname()
 
   useLayoutEffect(() => {
     let observer: MutationObserver | undefined
+
+    // Switching language re-renders the same page with other words. Playing
+    // every entrance again — headlines rising, images opening — would make
+    // the switch a flourish rather than a translation, so on that one kind
+    // of navigation the page arrives already settled.
+    const sameContent =
+      lastRoute !== null && lastRoute !== pathname && sansLocale(lastRoute) === sansLocale(pathname)
+    lastRoute = pathname
 
     const context = gsap.context(() => {
       const media = gsap.matchMedia()
@@ -144,15 +158,18 @@ export function Motion() {
             })
           }
 
-          /** Sets up every not-yet-enhanced element within `scope`. */
-          const enhance = (scope: ParentNode) => {
+          /**
+           * Sets up every not-yet-enhanced element within `scope`. With
+           * `animate` off, elements are simply placed in their finished state.
+           */
+          const enhance = (scope: ParentNode, animate = full) => {
             const headlines = fresh(scope, '[data-headline]')
             const fades = fresh(scope, '[data-fade]')
             const rules = fresh(scope, '[data-rule]')
             const opens = fresh(scope, '[data-open]')
             const rowtexts = fresh(scope, '[data-rowtext]')
 
-            if (!full) {
+            if (!animate) {
               // Nothing moves. Everything is simply present.
               gsap.set(headlines, { visibility: 'visible' })
               gsap.set([...fades, ...fresh(scope, '[data-reveal]')], { opacity: 1, y: 0 })
@@ -251,10 +268,10 @@ export function Motion() {
             })
           }
 
-          enhance(document)
+          enhance(document, full && !sameContent)
           buildIndex()
 
-          if (full) {
+          if (full && !sameContent) {
             // 4. The page arrives rather than cuts.
             //
             // The animation lands on <main>, never on the wrapper around it:
@@ -266,7 +283,10 @@ export function Motion() {
               { opacity: 0, y: 12 },
               { opacity: 1, y: 0, duration: 0.5, ease: EASE },
             )
+          }
 
+          // Scroll-driven effects belong to every visit, translation included.
+          if (full) {
             // The slow hero zoom, and the hero text drifting up as you leave it.
             gsap.utils.toArray<HTMLElement>('[data-zoom]').forEach((el) => {
               gsap.fromTo(

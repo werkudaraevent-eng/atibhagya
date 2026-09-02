@@ -267,64 +267,156 @@
   transition: color 0.4s ease;
 }
 
-/* The panel is navy in both themes: it is a curtain, not a page. */
+/* --- The menu on small screens ------------------------------------------
+   A curtain the height of the screen, navy in both themes, under the header.
+   The page cannot scroll beneath it; the header above it turns white so the
+   wordmark, Close and Inquiry read on the navy whatever the page's theme. */
+
+.inner {
+  position: relative;
+  z-index: 2;
+}
+
 .panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
   display: none;
   flex-direction: column;
-  gap: 22px;
-  padding: 26px clamp(20px, 4vw, 48px) 34px;
-  background: rgba(16, 34, 47, 0.97);
-  backdrop-filter: blur(10px);
+  justify-content: space-between;
+  padding: clamp(110px, 18vh, 150px) clamp(24px, 6vw, 40px) clamp(28px, 5vh, 44px);
+  background: #10222f;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
 }
 
-.panel a:not(.cta) {
+.panelOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The destinations, large and in the serif: a menu, not a list of tags. */
+.panelLinks {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 3vh, 24px);
+}
+
+.panelLinks a {
   color: var(--ivory-on-dark);
-  font: 400 12px/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font: 400 clamp(30px, 8.5vw, 44px) / 1.1 var(--font-marcellus), serif;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s var(--ease-out),
+    color 0.3s ease;
 }
 
-.panel .cta {
-  align-self: flex-start;
-  color: var(--emas-hover);
-  text-shadow: none;
+.panelOpen .panelLinks a {
+  opacity: 1;
+  transform: none;
 }
 
-/* Stacked in the panel, a left border and its indent make no sense. */
-.panel .lang {
+.panelLinks a:hover,
+.panelLinkActive {
+  color: var(--emas-hover) !important;
+}
+
+/* One quiet row at the foot: language, theme, and the way to write to us. */
+.panelFoot {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 5vw, 32px);
+  padding-top: 22px;
+  border-top: 1px solid rgba(246, 243, 231, 0.14);
+}
+
+.panelFoot .lang {
   border-left: none;
   padding-left: 0;
   margin-left: 0;
   gap: 8px;
 }
 
-.panel .langLink {
-  color: rgba(246, 243, 231, 0.55);
-  font-size: 12px;
-  letter-spacing: 0.2em;
+.panelFoot .langLink {
+  color: rgba(246, 243, 231, 0.5);
+  font-size: 11px;
+  letter-spacing: 0.18em;
 }
 
-.panel .langCurrent {
+.panelFoot .langLink:hover,
+.panelFoot .langCurrent {
   color: var(--ivory-on-dark);
 }
 
-.panel .theme {
+.panelFoot .langSep {
+  color: rgba(246, 243, 231, 0.28);
+}
+
+.panelFoot .theme {
   margin-left: 0;
   color: rgba(246, 243, 231, 0.7);
 }
 
-.panelOpen {
-  display: flex;
+.panelFoot .theme:hover {
+  color: #fff;
+}
+
+.panelFoot .cta {
+  margin-left: auto;
+  color: var(--ivory-on-dark);
+  text-shadow: none;
+}
+
+.panelFoot .cta::after {
+  background: var(--emas);
+}
+
+/* While the curtain is up, the header sits on navy: white type, gold mark,
+   no ivory surface — whatever tone or theme the page has. */
+.nav[data-menu-open] {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+}
+
+.nav[data-menu-open] .logo {
+  filter: none;
+}
+
+.nav[data-menu-open] .toggle,
+.nav[data-menu-open] .cta {
+  color: #fff;
+  text-shadow: none;
+}
+
+.nav[data-menu-open] .theme {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nav[data-menu-open] .cta::after {
+  background: var(--emas);
 }
 
 @media (max-width: 880px) {
   .links .link,
-  .links .lang {
+  .links .lang,
+  .links .theme {
     display: none;
   }
 
   .toggle {
     display: block;
+  }
+
+  /* Always in the tree on small screens, so its fade can play; hidden by
+     opacity and pointer-events until opened. */
+  .panel {
+    display: flex;
   }
 }
 

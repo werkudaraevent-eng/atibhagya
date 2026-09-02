@@ -314,7 +314,7 @@ outstanding work visible.
 
 `/inquiry` is a real URL that can be linked, shared and reloaded, and renders as
 a full page on a direct visit. Arriving from a product or journey is different:
-an intercepting route (`src/app/[locale]/@modal/(.)inquiry`) lifts the same form
+an intercepting route (`src/app/(site)/[locale]/@modal/(.)inquiry`) lifts the same form
 over the page instead of replacing it, so the visitor never loses their place.
 
 The CTA carries its context — `/inquiry?product=agni-hotra` — and the form opens
