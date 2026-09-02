@@ -144,6 +144,8 @@ export type HomeContent = {
     ctaLabel: string
     image: Img
     video?: string
+    /** 0–1: how far the photograph is toned down behind the type. */
+    darken: number
   }
   why: {
     eyebrow: string

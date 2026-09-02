@@ -1292,6 +1292,10 @@ export interface Home {
   heroCtaLabel?: string | null;
   heroImage?: (number | null) | Media;
   /**
+   * 0–100. How much the photograph is toned down behind the headline so white type stays legible. A dusk photograph with quiet sky needs 10–20; a bright, busy one like foliage or water in sun needs 45–60. Watch the preview while you change it.
+   */
+  heroDarken?: number | null;
+  /**
    * Optional. A short silent loop that plays over the hero image on larger screens; phones, slow connections and visitors who prefer reduced motion see the image instead, and it is the poster while the video loads. Export: MP4 (H.264), 1920×1080, 10–15 s, ~4 Mbps, no audio, under 12 MB.
    */
   heroVideoFile?: (number | null) | Media;
@@ -1607,6 +1611,7 @@ export interface HomeSelect<T extends boolean = true> {
   heroStatement?: T;
   heroCtaLabel?: T;
   heroImage?: T;
+  heroDarken?: T;
   heroVideoFile?: T;
   heroVideo?: T;
   whyEyebrow?: T;

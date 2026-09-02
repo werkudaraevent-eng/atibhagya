@@ -255,6 +255,10 @@ export async function getHome(locale: Locale, options: ReadOptions = {}): Promis
         statement: or(home.heroStatement, fallback.hero.statement),
         ctaLabel: or(home.heroCtaLabel, fallback.hero.ctaLabel),
         image: toImg(home.heroImage, fallback.hero.image),
+        darken:
+          typeof home.heroDarken === 'number'
+            ? Math.min(100, Math.max(0, home.heroDarken)) / 100
+            : fallback.hero.darken,
         // An uploaded file first; a URL only when there is no file.
         video:
           home.heroVideoFile && typeof home.heroVideoFile === 'object' && home.heroVideoFile.url

@@ -38,6 +38,18 @@ export const HomePage: GlobalConfig = {
             { name: 'heroCtaLabel', type: 'text', localized: true },
             { name: 'heroImage', type: 'upload', relationTo: 'media', validate: webImage },
             {
+              name: 'heroDarken',
+              type: 'number',
+              label: 'Darken photograph',
+              min: 0,
+              max: 100,
+              defaultValue: 35,
+              admin: {
+                description:
+                  '0–100. How much the photograph is toned down behind the headline so white type stays legible. A dusk photograph with quiet sky needs 10–20; a bright, busy one like foliage or water in sun needs 45–60. Watch the preview while you change it.',
+              },
+            },
+            {
               name: 'heroVideoFile',
               type: 'upload',
               relationTo: 'media',

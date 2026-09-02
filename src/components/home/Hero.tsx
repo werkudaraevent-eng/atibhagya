@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 
 import { CreditImage } from '@/components/CreditImage'
 import page from '@/components/site/Page.module.css'
@@ -18,7 +19,11 @@ type Props = {
  */
 export function Hero({ hero, ctaHref }: Props) {
   return (
-    <section className={styles.hero} id="top">
+    <section
+      className={styles.hero}
+      id="top"
+      style={{ '--hero-darken': hero.darken } as CSSProperties}
+    >
       <div className={styles.zoom} data-zoom>
         <CreditImage image={hero.image} sizes="100vw" priority />
         {hero.video ? <HeroVideo src={hero.video} poster={hero.image.src} /> : null}

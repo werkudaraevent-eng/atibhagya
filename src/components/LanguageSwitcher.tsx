@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment } from 'react'
 
+import { rememberScroll } from '@/components/site/RestoreScroll'
 import { locales, type Locale } from '@/lib/content/types'
 
 type Props = {
@@ -53,7 +54,12 @@ export function LanguageSwitcher({
             hrefLang={code}
             aria-current={code === locale ? 'true' : undefined}
             className={code === locale ? `${itemClassName} ${currentClassName}` : itemClassName}
-            onClick={onNavigate}
+            onClick={() => {
+              // A different root segment means a full page load; keep the
+              // reader's place through it.
+              if (code !== locale) rememberScroll()
+              onNavigate?.()
+            }}
           >
             {code.toUpperCase()}
           </Link>

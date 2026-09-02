@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { RefreshOnSave } from '@/components/site/RefreshOnSave'
+import { RestoreScroll } from '@/components/site/RestoreScroll'
 import { THEME_SCRIPT } from '@/components/site/ThemeToggle'
 import { isProduction } from '@/lib/env'
 import { karla, marcellus } from '@/lib/fonts'
@@ -53,6 +54,7 @@ export default async function LocaleLayout({
         <div data-page>{children}</div>
         {modal}
         <RefreshOnSave />
+        <RestoreScroll />
       </body>
     </html>
   )

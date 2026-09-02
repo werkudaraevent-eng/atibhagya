@@ -70,6 +70,7 @@ export const homeEn: HomeContent = {
       'Discover a more meaningful way to experience wellbeing through the living wisdom of Indonesia.',
     ctaLabel: 'Explore our experiences',
     image: img('Pura%20Ulun%20Danu%20Bratan%2C%202022.jpg', 1920, 'A temple at the water’s edge at dawn', 'Wikimedia Commons · CC BY-SA'),
+    darken: 0.35,
   },
   why: {
     eyebrow: 'Why Atibhagya',
