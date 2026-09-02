@@ -5,15 +5,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import type { Locale, SiteContent } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
-import { InquiryForm, type Choice } from './InquiryForm'
+import { InquiryForm, type Choices } from './InquiryForm'
 import styles from './InquiryModal.module.css'
 
 type Props = {
   locale: Locale
   dict: Dict
   site: SiteContent
-  products: Choice[]
-  journeys: Choice[]
+  choices: Choices
   initialProducts?: string[]
   initialJourneys?: string[]
   homeHref: string
@@ -147,13 +146,19 @@ export function InquiryModal({ homeHref, ...formProps }: Props) {
           <span className={styles.closeGlyph} aria-hidden="true" />
         </button>
 
-        <div className={styles.eyebrow}>{t.eyebrow}</div>
-        <h2 className={styles.headline} id="inquiry-title">
-          {t.headline}
-        </h2>
-        <p className={styles.lede}>{t.lede}</p>
-
-        <InquiryForm {...formProps} onDone={close} />
+        <InquiryForm
+          {...formProps}
+          onDone={close}
+          heading={
+            <>
+              <div className={styles.eyebrow}>{t.eyebrow}</div>
+              <h2 className={styles.headline} id="inquiry-title">
+                {t.headline}
+              </h2>
+              <p className={styles.lede}>{t.lede}</p>
+            </>
+          }
+        />
       </div>
     </div>
   )

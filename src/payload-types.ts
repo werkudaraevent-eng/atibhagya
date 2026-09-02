@@ -76,12 +76,28 @@ export interface Config {
     media: Media;
     posts: Post;
     users: User;
+    exports: Export;
+    imports: Import;
     'payload-kv': PayloadKv;
+    'payload-jobs': PayloadJob;
+    'payload-folders': FolderInterface;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    media: {
+      usedAsProductHero: 'products';
+      usedInProductGallery: 'products';
+      usedAsJourneyHero: 'journeys';
+      usedInJourneyGallery: 'journeys';
+      usedByVenues: 'venues';
+      usedByFacilitators: 'facilitators';
+    };
+    'payload-folders': {
+      documentsAndFolders: 'payload-folders' | 'media';
+    };
+  };
   collectionsSelect: {
     'product-categories': ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
@@ -92,7 +108,11 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    exports: ExportsSelect<false> | ExportsSelect<true>;
+    imports: ImportsSelect<false> | ImportsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
+    'payload-folders': PayloadFoldersSelect<false> | PayloadFoldersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -104,12 +124,14 @@ export interface Config {
   globals: {
     home: Home;
     about: About;
+    catalogue: Catalogue;
     'inquiry-form': InquiryForm;
     site: Site;
   };
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
+    catalogue: CatalogueSelect<false> | CatalogueSelect<true>;
     'inquiry-form': InquiryFormSelect<false> | InquiryFormSelect<true>;
     site: SiteSelect<false> | SiteSelect<true>;
   };
@@ -119,7 +141,14 @@ export interface Config {
   };
   user: User;
   jobs: {
-    tasks: unknown;
+    tasks: {
+      createCollectionExport: TaskCreateCollectionExport;
+      createCollectionImport: TaskCreateCollectionImport;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -239,6 +268,8 @@ export interface Venue {
   createdAt: string;
 }
 /**
+ * Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -256,6 +287,37 @@ export interface Media {
    * Link back to the source of the image, when a credit is required.
    */
   creditUrl?: string | null;
+  usedAsProductHero?: {
+    docs?: (number | Product)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  usedInProductGallery?: {
+    docs?: (number | Product)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  usedAsJourneyHero?: {
+    docs?: (number | Journey)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  usedInJourneyGallery?: {
+    docs?: (number | Journey)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  usedByVenues?: {
+    docs?: (number | Venue)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  usedByFacilitators?: {
+    docs?: (number | Facilitator)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -293,22 +355,6 @@ export interface Media {
       filename?: string | null;
     };
   };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "facilitators".
- */
-export interface Facilitator {
-  id: number;
-  name: string;
-  /**
-   * Title or role.
-   */
-  role?: string | null;
-  bio?: string | null;
-  photo?: (number | null) | Media;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * Multi-day itineraries. Days hold activities; an activity may point at a product, or stay custom.
@@ -390,6 +436,48 @@ export interface Journey {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "facilitators".
+ */
+export interface Facilitator {
+  id: number;
+  name: string;
+  /**
+   * Title or role.
+   */
+  role?: string | null;
+  bio?: string | null;
+  photo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders".
+ */
+export interface FolderInterface {
+  id: number;
+  name: string;
+  folder?: (number | null) | FolderInterface;
+  documentsAndFolders?: {
+    docs?: (
+      | {
+          relationTo?: 'payload-folders';
+          value: number | FolderInterface;
+        }
+      | {
+          relationTo?: 'media';
+          value: number | Media;
+        }
+    )[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  folderType?: 'media'[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "inquiries".
  */
 export interface Inquiry {
@@ -397,7 +485,10 @@ export interface Inquiry {
   name: string;
   email: string;
   phone?: string | null;
-  audience?: ('private' | 'group' | 'corporate') | null;
+  /**
+   * The choice made in the "Private / group" field. Its options are set on the inquiry form.
+   */
+  audience?: string | null;
   /**
    * Company or community.
    */
@@ -506,6 +597,81 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exports".
+ */
+export interface Export {
+  id: number;
+  name?: string | null;
+  format: 'csv' | 'json';
+  limit?: number | null;
+  page?: number | null;
+  sort?: string | null;
+  sortOrder?: ('asc' | 'desc') | null;
+  locale?: ('all' | 'en' | 'id') | null;
+  drafts?: ('yes' | 'no') | null;
+  selectionToUse?: ('currentSelection' | 'currentFilters' | 'all') | null;
+  fields?: string[] | null;
+  collectionSlug: string;
+  where?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "imports".
+ */
+export interface Import {
+  id: number;
+  collectionSlug: string;
+  importMode?: ('create' | 'update' | 'upsert') | null;
+  matchField?: string | null;
+  status?: ('pending' | 'completed' | 'partial' | 'failed') | null;
+  summary?: {
+    imported?: number | null;
+    updated?: number | null;
+    total?: number | null;
+    issues?: number | null;
+    issueDetails?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -520,6 +686,98 @@ export interface PayloadKv {
     | number
     | boolean
     | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'createCollectionExport' | 'createCollectionImport';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'createCollectionExport' | 'createCollectionImport') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -563,6 +821,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'payload-folders';
+        value: number | FolderInterface;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -781,6 +1043,13 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   credit?: T;
   creditUrl?: T;
+  usedAsProductHero?: T;
+  usedInProductGallery?: T;
+  usedAsJourneyHero?: T;
+  usedInJourneyGallery?: T;
+  usedByVenues?: T;
+  usedByFacilitators?: T;
+  folder?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -868,11 +1137,113 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "exports_select".
+ */
+export interface ExportsSelect<T extends boolean = true> {
+  name?: T;
+  format?: T;
+  limit?: T;
+  page?: T;
+  sort?: T;
+  sortOrder?: T;
+  locale?: T;
+  drafts?: T;
+  selectionToUse?: T;
+  fields?: T;
+  collectionSlug?: T;
+  where?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "imports_select".
+ */
+export interface ImportsSelect<T extends boolean = true> {
+  collectionSlug?: T;
+  importMode?: T;
+  matchField?: T;
+  status?: T;
+  summary?:
+    | T
+    | {
+        imported?: T;
+        updated?: T;
+        total?: T;
+        issues?: T;
+        issueDetails?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
   key?: T;
   data?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-folders_select".
+ */
+export interface PayloadFoldersSelect<T extends boolean = true> {
+  name?: T;
+  folder?: T;
+  documentsAndFolders?: T;
+  folderType?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -921,7 +1292,11 @@ export interface Home {
   heroCtaLabel?: string | null;
   heroImage?: (number | null) | Media;
   /**
-   * Optional MP4/WebM URL. Plays muted on loop over the hero image; the image is the fallback.
+   * Optional. A short silent loop that plays over the hero image on larger screens; phones, slow connections and visitors who prefer reduced motion see the image instead, and it is the poster while the video loads. Export: MP4 (H.264), 1920×1080, 10–15 s, ~4 Mbps, no audio, under 12 MB.
+   */
+  heroVideoFile?: (number | null) | Media;
+  /**
+   * …or a URL to an MP4/WebM hosted elsewhere. Ignored when a file is uploaded above.
    */
   heroVideo?: string | null;
   whyEyebrow?: string | null;
@@ -995,111 +1370,132 @@ export interface About {
   createdAt?: string | null;
 }
 /**
- * The words on the inquiry form. Leave a field empty to keep the approved wording.
+ * Headings for the product and journey listings and the small label above each detail page. Leave a field empty to keep the approved wording.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "catalogue".
+ */
+export interface Catalogue {
+  id: number;
+  /**
+   * The small label above the heading.
+   */
+  productsEyebrow?: string | null;
+  /**
+   * Line breaks are kept.
+   */
+  productsHeadline?: string | null;
+  productsIntro?: string | null;
+  /**
+   * The first step of the breadcrumb above a product title — it links back to the listing. Default "Product".
+   */
+  productDetailEyebrow?: string | null;
+  /**
+   * The small label above the heading.
+   */
+  journeysEyebrow?: string | null;
+  /**
+   * Line breaks are kept.
+   */
+  journeysHeadline?: string | null;
+  journeysIntro?: string | null;
+  /**
+   * The first step of the breadcrumb above a journey title — it links back to the listing. Default "Journey".
+   */
+  journeyDetailEyebrow?: string | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * The fields on the inquiry form and the words around them. Every box shows what the site currently says — change it, or clear it to return to the approved copy.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "inquiry-form".
  */
 export interface InquiryForm {
   id: number;
-  /**
-   * The small label above the heading, e.g. "01 / Inquiry".
-   */
-  eyebrow?: string | null;
-  headline?: string | null;
-  /**
-   * The line under the heading.
-   */
-  lede?: string | null;
-  /**
-   * Name
-   */
-  nameLabel?: string | null;
-  /**
-   * Email
-   */
-  emailLabel?: string | null;
-  /**
-   * Phone
-   */
-  phoneLabel?: string | null;
-  /**
-   * Private / group
-   */
-  audienceLabel?: string | null;
-  /**
-   * Company / community
-   */
-  organisationLabel?: string | null;
-  /**
-   * Participants
-   */
-  paxLabel?: string | null;
-  /**
-   * Preferred location
-   */
-  locationLabel?: string | null;
-  /**
-   * Date
-   */
-  dateLabel?: string | null;
-  /**
-   * Goal of activity
-   */
-  goalLabel?: string | null;
-  /**
-   * Notes
-   */
-  notesLabel?: string | null;
-  /**
-   * Interested activities
-   */
-  interestedLabel?: string | null;
-  /**
-   * The small line under "Interested activities".
-   */
-  interestedHint?: string | null;
-  /**
-   * The "+ Custom activity" control.
-   */
-  addCustomLabel?: string | null;
-  /**
-   * The submit button.
-   */
-  submitLabel?: string | null;
-  /**
-   * Only the wording is editable. The stored value stays fixed so past inquiries keep their meaning.
-   */
-  audienceOptions?:
+  fields?:
     | {
         /**
-         * Do not change once inquiries have been received.
+         * Untick to take this field off the form without losing its wording, options or rule — for a question you will want back later. Remove (in the row menu) deletes it; Versions can still restore an earlier form.
          */
-        value: 'private' | 'group' | 'corporate';
-        label: string;
-        id?: string | null;
-      }[]
-    | null;
-  questions?:
-    | {
-        label: string;
+        enabled?: boolean | null;
         /**
-         * The key the answer is stored under, e.g. dietary_needs. Letters, numbers and underscores. Changing it later orphans answers already collected.
+         * What this field is. "Standard" fields each have their own place on every inquiry (name, email, date…) and can appear once. A custom question is anything else you want to ask.
          */
-        name: string;
-        type: 'text' | 'textarea' | 'email' | 'tel' | 'number' | 'date' | 'select' | 'checkbox';
+        kind:
+          | 'custom'
+          | 'pick'
+          | 'ideas'
+          | 'name'
+          | 'email'
+          | 'phone'
+          | 'audience'
+          | 'organisation'
+          | 'pax'
+          | 'location'
+          | 'date'
+          | 'goal'
+          | 'notes';
         /**
-         * Two half-width questions sit side by side.
+         * What the visitor sees. Empty keeps the approved wording for a standard field.
          */
-        width?: ('full' | 'half') | null;
+        label?: string | null;
+        /**
+         * The list on the site that fills the dropdown. Products and journeys are stored as links to the real items; a category is stored by name.
+         */
+        source?: ('products' | 'journeys' | 'categories') | null;
+        /**
+         * Ticked: the visitor can add more than one, shown as chips. Unticked: a single dropdown.
+         */
+        multiple?: boolean | null;
+        /**
+         * Most guests know the month before the day; ask for the day only if planning needs it.
+         */
+        dateMode?: ('month' | 'date') | null;
+        /**
+         * Email is always required.
+         */
         required?: boolean | null;
+        width?: ('half' | 'full') | null;
+        /**
+         * Where the answer is stored, e.g. dietary_needs. Leave empty and it is made from the label on save. Lowercase letters, numbers and underscores. Changing it later orphans answers already collected.
+         */
+        name?: string | null;
+        type?:
+          | (
+              | 'text'
+              | 'textarea'
+              | 'email'
+              | 'tel'
+              | 'number'
+              | 'date'
+              | 'month'
+              | 'select'
+              | 'multiselect'
+              | 'checkbox'
+            )
+          | null;
+        /**
+         * Grey text inside the empty field.
+         */
         placeholder?: string | null;
         /**
          * A small line under the field.
          */
         help?: string | null;
+        showWhen?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
         /**
-         * The stored value stays fixed; only the label is safe to reword.
+         * The choices in the dropdown, in order. The value is what gets stored on each inquiry, so reword the label freely but leave the value alone once inquiries have arrived.
          */
         options?:
           | {
@@ -1111,6 +1507,31 @@ export interface InquiryForm {
         id?: string | null;
       }[]
     | null;
+  /**
+   * The small label above the heading.
+   */
+  eyebrow?: string | null;
+  headline?: string | null;
+  /**
+   * The line under the heading.
+   */
+  lede?: string | null;
+  /**
+   * The button that adds an "own idea".
+   */
+  addCustomLabel?: string | null;
+  /**
+   * The line above the form explaining the * mark. Default "Required".
+   */
+  requiredNote?: string | null;
+  /**
+   * The submit button.
+   */
+  submitLabel?: string | null;
+  /**
+   * The small word above the thank-you. Default "Received".
+   */
+  doneEyebrow?: string | null;
   doneHeading?: string | null;
   /**
    * Use {time} where the response time from Site settings should appear.
@@ -1186,6 +1607,7 @@ export interface HomeSelect<T extends boolean = true> {
   heroStatement?: T;
   heroCtaLabel?: T;
   heroImage?: T;
+  heroVideoFile?: T;
   heroVideo?: T;
   whyEyebrow?: T;
   whyHeadline?: T;
@@ -1245,43 +1667,43 @@ export interface AboutSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "catalogue_select".
+ */
+export interface CatalogueSelect<T extends boolean = true> {
+  productsEyebrow?: T;
+  productsHeadline?: T;
+  productsIntro?: T;
+  productDetailEyebrow?: T;
+  journeysEyebrow?: T;
+  journeysHeadline?: T;
+  journeysIntro?: T;
+  journeyDetailEyebrow?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "inquiry-form_select".
  */
 export interface InquiryFormSelect<T extends boolean = true> {
-  eyebrow?: T;
-  headline?: T;
-  lede?: T;
-  nameLabel?: T;
-  emailLabel?: T;
-  phoneLabel?: T;
-  audienceLabel?: T;
-  organisationLabel?: T;
-  paxLabel?: T;
-  locationLabel?: T;
-  dateLabel?: T;
-  goalLabel?: T;
-  notesLabel?: T;
-  interestedLabel?: T;
-  interestedHint?: T;
-  addCustomLabel?: T;
-  submitLabel?: T;
-  audienceOptions?:
+  fields?:
     | T
     | {
-        value?: T;
+        enabled?: T;
+        kind?: T;
         label?: T;
-        id?: T;
-      };
-  questions?:
-    | T
-    | {
-        label?: T;
+        source?: T;
+        multiple?: T;
+        dateMode?: T;
+        required?: T;
+        width?: T;
         name?: T;
         type?: T;
-        width?: T;
-        required?: T;
         placeholder?: T;
         help?: T;
+        showWhen?: T;
         options?:
           | T
           | {
@@ -1291,6 +1713,13 @@ export interface InquiryFormSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  eyebrow?: T;
+  headline?: T;
+  lede?: T;
+  addCustomLabel?: T;
+  requiredNote?: T;
+  submitLabel?: T;
+  doneEyebrow?: T;
   doneHeading?: T;
   doneBody?: T;
   doneContact?: T;
@@ -1342,6 +1771,67 @@ export interface CollectionsWidget {
     [k: string]: unknown;
   };
   width: 'full';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskCreateCollectionExport".
+ */
+export interface TaskCreateCollectionExport {
+  input: {
+    id: string;
+    name: string;
+    batchSize?: number | null;
+    collectionSlug:
+      | 'product-categories'
+      | 'products'
+      | 'journeys'
+      | 'venues'
+      | 'facilitators'
+      | 'inquiries'
+      | 'media'
+      | 'posts'
+      | 'users'
+      | 'exports'
+      | 'imports';
+    drafts?: ('yes' | 'no') | null;
+    exportCollection: string;
+    fields?: string[] | null;
+    format: 'csv' | 'json';
+    limit?: number | null;
+    locale?: string | null;
+    maxLimit?: number | null;
+    page?: number | null;
+    sort?: string | null;
+    userCollection?: string | null;
+    userID?: string | null;
+    where?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  output?: unknown;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskCreateCollectionImport".
+ */
+export interface TaskCreateCollectionImport {
+  input: {
+    importId: string;
+    importCollection: string;
+    userID?: string | null;
+    userCollection?: string | null;
+    batchSize?: number | null;
+    debug?: boolean | null;
+    defaultVersionStatus?: ('draft' | 'published') | null;
+    maxLimit?: number | null;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

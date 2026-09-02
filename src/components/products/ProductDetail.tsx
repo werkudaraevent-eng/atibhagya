@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { CreditImage } from '@/components/CreditImage'
+import { Breadcrumb } from '@/components/site/Breadcrumb'
 import page from '@/components/site/Page.module.css'
 import type { Locale, Product, ProductCard } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
@@ -33,12 +34,25 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
 
   return (
     <>
-      <header className={styles.head}>
-        <div className={page.container}>
-          <div className={page.eyebrow}>
-            {t.detailEyebrow}
-            {product.category ? ` / ${product.category.name}` : ''}
-          </div>
+      <header className={page.opening}>
+        <div className={page.openingText}>
+          {/* The eyebrow, made into a way back out: listing, then category
+              (filtered), then this page. */}
+          <Breadcrumb
+            label={dict.youAreHere}
+            trail={[
+              { label: t.detailEyebrow, href: `${prefix}/product` },
+              ...(product.category
+                ? [
+                    {
+                      label: product.category.name,
+                      href: `${prefix}/product?category=${encodeURIComponent(product.category.slug)}`,
+                    },
+                  ]
+                : []),
+              { label: product.title },
+            ]}
+          />
           <h1 className={styles.title} data-headline>{product.title}</h1>
           {product.subtitle ? <p className={styles.subtitle}>{product.subtitle}</p> : null}
           <p className={styles.description}>{product.description}</p>
@@ -48,71 +62,74 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
             </Link>
           </div>
         </div>
-      </header>
 
-      <div className={styles.hero} data-clip>
-        <div className={styles.para} data-para>
-          <CreditImage image={product.heroImage} sizes="100vw" priority />
+        <div className={page.openingMedia} data-open>
+          <div className={styles.para} data-para>
+            <CreditImage
+              image={product.heroImage}
+              sizes="(max-width: 860px) 100vw, 58vw"
+              priority
+            />
+          </div>
         </div>
-      </div>
+      </header>
 
       <section className={page.section}>
         <div className={page.container}>
-          {product.highlightText ? (
-            <figure className={styles.highlight} data-fade>
-              <span className={styles.highlightMark} aria-hidden="true">
-                &ldquo;
-              </span>
-              <blockquote className={styles.highlightText}>{product.highlightText}</blockquote>
-            </figure>
-          ) : null}
-
-          {programme.length || product.venues.length ? (
-            <div className={styles.programme}>
-              {product.venues.length ? (
-                <div data-fade>
-                  <div className={styles.blockKey}>{t.venue}</div>
-                  <ul className={styles.venueList}>
-                    {product.venues.map((venue) => (
-                      <li key={venue.id}>
-                        {venue.name}
-                        {venue.location ? ` · ${venue.location}` : ''}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+          {/* Narrative on the left, facts in one slim column on the right —
+              the brochure's arrangement. A single stack means a single
+              construction, so every rule and label lines up by definition. */}
+          <div className={styles.body}>
+            <div className={styles.narrative}>
+              {product.highlightText ? (
+                <figure className={styles.highlight} data-fade>
+                  <span className={styles.highlightMark} aria-hidden="true">
+                    &ldquo;
+                  </span>
+                  <blockquote className={styles.highlightText}>{product.highlightText}</blockquote>
+                </figure>
               ) : null}
 
-              {programme.length ? (
-                <div className={styles.facts} style={{ marginTop: 0 }}>
-                  {programme.map((fact) => (
-                    <div key={fact.key} className={styles.fact} data-fade>
-                      <div className={styles.factKey}>{fact.key}</div>
-                      {fact.value ? <div className={styles.factValue}>{fact.value}</div> : null}
-                      {fact.list ? (
-                        <ul className={styles.factList}>
-                          {fact.list.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </div>
-                  ))}
+              {product.whatToExpect ? (
+                <div className={styles.expect} data-fade>
+                  <h2 className={styles.expectTitle}>{t.whatToExpect}</h2>
+                  <p className={styles.expectBody}>{product.whatToExpect}</p>
                 </div>
               ) : null}
             </div>
-          ) : null}
 
-          {product.whatToExpect ? (
-            <div className={page.split} style={{ marginTop: 'clamp(56px, 9vh, 100px)' }}>
-              <h2 className={page.headlineSmall} data-fade>
-                {t.whatToExpect}
-              </h2>
-              <p className={page.body} data-fade>
-                {product.whatToExpect}
-              </p>
-            </div>
-          ) : null}
+            {programme.length || product.venues.length ? (
+              <aside className={styles.facts} aria-label={t.facilities}>
+                {product.venues.length ? (
+                  <div className={styles.fact} data-fade>
+                    <div className={styles.factKey}>{t.venue}</div>
+                    <ul className={styles.factList}>
+                      {product.venues.map((venue) => (
+                        <li key={venue.id}>
+                          {venue.name}
+                          {venue.location ? ` · ${venue.location}` : ''}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
+                {programme.map((fact) => (
+                  <div key={fact.key} className={styles.fact} data-fade>
+                    <div className={styles.factKey}>{fact.key}</div>
+                    {fact.value ? <div className={styles.factValue}>{fact.value}</div> : null}
+                    {fact.list ? (
+                      <ul className={styles.factList}>
+                        {fact.list.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                ))}
+              </aside>
+            ) : null}
+          </div>
 
           {product.gallery.length ? (
             <div className={styles.gallery}>

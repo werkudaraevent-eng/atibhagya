@@ -1,5 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateGlobal } from '../lib/revalidate'
+import { videoFile, webImage } from '../lib/validate-media'
+
 /**
  * Home is a singleton, per the ERD. It holds its own copy and chooses which
  * products to feature — it does not own them.
@@ -9,6 +12,7 @@ export const HomePage: GlobalConfig = {
   label: 'Home page',
   admin: { group: 'Pages' },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal(['/'])] },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.
@@ -32,13 +36,24 @@ export const HomePage: GlobalConfig = {
             },
             { name: 'heroStatement', type: 'textarea', localized: true },
             { name: 'heroCtaLabel', type: 'text', localized: true },
-            { name: 'heroImage', type: 'upload', relationTo: 'media' },
+            { name: 'heroImage', type: 'upload', relationTo: 'media', validate: webImage },
+            {
+              name: 'heroVideoFile',
+              type: 'upload',
+              relationTo: 'media',
+              filterOptions: { mimeType: { in: ['video/mp4', 'video/webm'] } },
+              validate: videoFile,
+              admin: {
+                description:
+                  'Optional. A short silent loop that plays over the hero image on larger screens; phones, slow connections and visitors who prefer reduced motion see the image instead, and it is the poster while the video loads. Export: MP4 (H.264), 1920×1080, 10–15 s, ~4 Mbps, no audio, under 12 MB.',
+              },
+            },
             {
               name: 'heroVideo',
               type: 'text',
               admin: {
                 description:
-                  'Optional MP4/WebM URL. Plays muted on loop over the hero image; the image is the fallback.',
+                  '…or a URL to an MP4/WebM hosted elsewhere. Ignored when a file is uploaded above.',
               },
             },
           ],
@@ -82,7 +97,7 @@ export const HomePage: GlobalConfig = {
             { name: 'ctaHeadline', type: 'text', localized: true },
             { name: 'ctaBody', type: 'textarea', localized: true },
             { name: 'ctaLabel', type: 'text', localized: true },
-            { name: 'ctaImage', type: 'upload', relationTo: 'media' },
+            { name: 'ctaImage', type: 'upload', relationTo: 'media', validate: webImage },
           ],
         },
         {

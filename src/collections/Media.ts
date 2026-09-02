@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 
 import type { CollectionConfig } from 'payload'
 
+import { revalidateEverything } from '../lib/revalidate'
 import { adminOnly, signedIn } from './Users'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -12,6 +13,8 @@ export const Media: CollectionConfig = {
   admin: {
     group: 'Content',
     useAsTitle: 'filename',
+    description:
+      'Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.',
   },
   access: {
     read: () => true,
@@ -19,6 +22,15 @@ export const Media: CollectionConfig = {
     update: signedIn,
     delete: adminOnly,
   },
+  // A replaced photograph appears wherever it is used.
+  hooks: { afterChange: [revalidateEverything] },
+  /**
+   * Folders are how the library is organised — Products, Journeys, Pages,
+   * Brand, or whatever the team finds natural. They are a filing system, not
+   * a record of use: the "Where this file is used" panel below is that, and
+   * it is computed, so it cannot drift out of date the way a typed tag would.
+   */
+  folders: true,
   upload: {
     /**
      * Uploads land in `public/media`, so Next serves them as static files and
@@ -36,7 +48,10 @@ export const Media: CollectionConfig = {
       { name: 'hero', width: 2400, height: undefined, position: 'centre' },
     ],
     focalPoint: true,
-    mimeTypes: ['image/*', 'video/*'],
+    // Only what the image pipeline can actually process. Sharp cannot decode
+    // BMP or TIFF, and `next/image` cannot optimise them, so accepting them
+    // produces an upload that saves but never renders.
+    mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'video/mp4', 'video/webm'],
   },
   fields: [
     {
@@ -62,6 +77,70 @@ export const Media: CollectionConfig = {
       admin: {
         description: 'Link back to the source of the image, when a credit is required.',
       },
+    },
+    {
+      type: 'collapsible',
+      label: 'Where this file is used',
+      admin: {
+        description:
+          'Worked out from the documents that point at this file, so it is always current. Home and About are page settings rather than documents and do not appear here.',
+      },
+      fields: [
+        {
+          name: 'usedAsProductHero',
+          label: 'Product hero image',
+          type: 'join',
+          collection: 'products',
+          on: 'heroImage',
+          maxDepth: 0,
+          admin: { defaultColumns: ['title', 'code', '_status'] },
+        },
+        {
+          name: 'usedInProductGallery',
+          label: 'Product gallery',
+          type: 'join',
+          collection: 'products',
+          on: 'gallery.image',
+          maxDepth: 0,
+          admin: { defaultColumns: ['title', 'code', '_status'] },
+        },
+        {
+          name: 'usedAsJourneyHero',
+          label: 'Journey hero image',
+          type: 'join',
+          collection: 'journeys',
+          on: 'heroImage',
+          maxDepth: 0,
+          admin: { defaultColumns: ['title', '_status'] },
+        },
+        {
+          name: 'usedInJourneyGallery',
+          label: 'Journey gallery',
+          type: 'join',
+          collection: 'journeys',
+          on: 'gallery.image',
+          maxDepth: 0,
+          admin: { defaultColumns: ['title', '_status'] },
+        },
+        {
+          name: 'usedByVenues',
+          label: 'Venues',
+          type: 'join',
+          collection: 'venues',
+          on: 'image',
+          maxDepth: 0,
+          admin: { defaultColumns: ['name'] },
+        },
+        {
+          name: 'usedByFacilitators',
+          label: 'Facilitators',
+          type: 'join',
+          collection: 'facilitators',
+          on: 'photo',
+          maxDepth: 0,
+          admin: { defaultColumns: ['name'] },
+        },
+      ],
     },
   ],
 }

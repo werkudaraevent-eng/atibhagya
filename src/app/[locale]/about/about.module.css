@@ -26,7 +26,7 @@
   margin: 0 0 clamp(28px, 4vh, 40px);
   max-width: 62ch;
   font: 300 15.5px/2.05 var(--font-karla), sans-serif;
-  color: rgba(16, 34, 47, 0.74);
+  color: rgba(var(--ink-rgb), 0.74);
 }
 
 .image {
@@ -53,7 +53,7 @@
   margin: clamp(56px, 9vh, 110px) auto 0;
   max-width: 22ch;
   font: 400 clamp(24px, 3vw, 38px) / 1.45 var(--font-marcellus), serif;
-  color: rgba(16, 34, 47, 0.85);
+  color: rgba(var(--ink-rgb), 0.85);
   text-wrap: balance;
 }
 

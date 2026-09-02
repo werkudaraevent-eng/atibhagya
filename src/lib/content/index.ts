@@ -16,7 +16,16 @@ import {
   siteId,
 } from './defaults.id'
 import { dict } from '../i18n/ui'
-import type { CustomQuestion, Dict } from '../i18n/ui'
+import type { Dict } from '../i18n/ui'
+import {
+  TEXT_KINDS,
+  fieldName,
+  isPickSource,
+  isTextKind,
+  readShowWhen,
+  type FieldType,
+  type FormField,
+} from '../inquiry-fields'
 import type {
   AboutContent,
   Facilitator,
@@ -210,13 +219,19 @@ export async function getSite(locale: Locale): Promise<SiteContent> {
   }
 }
 
-export async function getHome(locale: Locale): Promise<HomeContent> {
+export async function getHome(locale: Locale, options: ReadOptions = {}): Promise<HomeContent> {
   const fallback = defaults(locale).home
   const payload = await getPayloadSafe()
   if (!payload) return fallback
 
   try {
-    const home = (await payload.findGlobal({ slug: 'home', locale, depth: 2, fallbackLocale: 'en' })) as Any
+    const home = (await payload.findGlobal({
+      slug: 'home',
+      locale,
+      depth: 2,
+      fallbackLocale: 'en',
+      draft: options.draft === true,
+    })) as Any
     return {
       meta: {
         title: or(home.metaTitle, fallback.meta.title),
@@ -228,7 +243,11 @@ export async function getHome(locale: Locale): Promise<HomeContent> {
         statement: or(home.heroStatement, fallback.hero.statement),
         ctaLabel: or(home.heroCtaLabel, fallback.hero.ctaLabel),
         image: toImg(home.heroImage, fallback.hero.image),
-        video: or(home.heroVideo, undefined),
+        // An uploaded file first; a URL only when there is no file.
+        video:
+          home.heroVideoFile && typeof home.heroVideoFile === 'object' && home.heroVideoFile.url
+            ? localise(home.heroVideoFile.url)
+            : or(home.heroVideo, undefined),
       },
       why: {
         eyebrow: or(home.whyEyebrow, fallback.why.eyebrow),
@@ -257,13 +276,19 @@ export async function getHome(locale: Locale): Promise<HomeContent> {
   }
 }
 
-export async function getAbout(locale: Locale): Promise<AboutContent> {
+export async function getAbout(locale: Locale, options: ReadOptions = {}): Promise<AboutContent> {
   const fallback = defaults(locale).about
   const payload = await getPayloadSafe()
   if (!payload) return fallback
 
   try {
-    const about = (await payload.findGlobal({ slug: 'about', locale, depth: 1, fallbackLocale: 'en' })) as Any
+    const about = (await payload.findGlobal({
+      slug: 'about',
+      locale,
+      depth: 1,
+      fallbackLocale: 'en',
+      draft: options.draft === true,
+    })) as Any
     return {
       meta: {
         title: or(about.metaTitle, fallback.meta.title),
@@ -296,7 +321,11 @@ export async function getCategories(locale: Locale): Promise<ProductCategory[]> 
   if (!payload) return fallback
 
   try {
-    const found = await payload.find({ collection: 'product-categories', locale, ...query })
+    // Categories carry no drafts, so they have no `_status` — the shared
+    // published filter would be rejected as an unknown field, and the catch
+    // below would hand back the hardcoded fallback as if nothing were wrong.
+    const { where: _published, ...withoutStatus } = query
+    const found = await payload.find({ collection: 'product-categories', locale, ...withoutStatus })
     if (found.docs.length === 0) return fallback
     return found.docs.map((d: Any) => toCategory(d)!).filter(Boolean)
   } catch {
@@ -318,8 +347,19 @@ export async function getProducts(locale: Locale): Promise<Product[]> {
   }
 }
 
+/**
+ * Read options for a single document. `draft` is only ever set by the admin's
+ * preview route, which has already checked the caller is signed in.
+ */
+/** `draft: true` reads the latest saved draft; only the admin's preview routes do. */
+type ReadOptions = { draft?: boolean }
+
 /** One product, fetched by slug rather than by scanning the catalogue. */
-export async function getProduct(locale: Locale, slug: string): Promise<Product | null> {
+export async function getProduct(
+  locale: Locale,
+  slug: string,
+  { draft = false }: ReadOptions = {},
+): Promise<Product | null> {
   const fallbackList = defaults(locale).products
   const fallback = fallbackList.find((p) => p.slug === slug)
   const payload = await getPayloadSafe()
@@ -331,8 +371,9 @@ export async function getProduct(locale: Locale, slug: string): Promise<Product 
         locale,
         depth: 2,
         limit: 1,
+        draft,
         fallbackLocale: 'en',
-        where: { and: [{ slug: { equals: slug } }, publishedOnly] },
+        where: draft ? { slug: { equals: slug } } : { and: [{ slug: { equals: slug } }, publishedOnly] },
       })
       const doc = found.docs[0] as Any | undefined
       if (doc) return toProduct(doc, fallback ?? fallbackList[0])
@@ -358,7 +399,11 @@ export async function getJourneys(locale: Locale): Promise<Journey[]> {
   }
 }
 
-export async function getJourney(locale: Locale, slug: string): Promise<Journey | null> {
+export async function getJourney(
+  locale: Locale,
+  slug: string,
+  { draft = false }: ReadOptions = {},
+): Promise<Journey | null> {
   const fallbackList = defaults(locale).journeys
   const fallback = fallbackList.find((j) => j.slug === slug)
   const payload = await getPayloadSafe()
@@ -370,8 +415,9 @@ export async function getJourney(locale: Locale, slug: string): Promise<Journey 
         locale,
         depth: 2,
         limit: 1,
+        draft,
         fallbackLocale: 'en',
-        where: { and: [{ slug: { equals: slug } }, publishedOnly] },
+        where: draft ? { slug: { equals: slug } } : { and: [{ slug: { equals: slug } }, publishedOnly] },
       })
       const doc = found.docs[0] as Any | undefined
       if (doc) return toJourney(doc, fallback ?? fallbackList[0])
@@ -406,12 +452,74 @@ export async function getFeaturedProducts(locale: Locale): Promise<Product[]> {
   return featured.length ? featured.slice(0, 3) : all.slice(0, 3)
 }
 
+type CatalogueCopy = {
+  products: Pick<Dict['products'], 'eyebrow' | 'headline' | 'intro' | 'detailEyebrow'>
+  journeys: Pick<Dict['journeys'], 'eyebrow' | 'headline' | 'intro' | 'detailEyebrow'>
+}
+
 /**
- * The inquiry form's wording, with anything the team has written in the CMS
- * laid over the approved copy. Structure stays in code; only words come from
- * the admin.
+ * Headings for the product and journey pages. Collections have no document of
+ * their own to hold a page heading, so the `catalogue` global is that
+ * document; anything left empty there falls back to the approved copy.
  */
-export async function getInquiryCopy(locale: Locale): Promise<Dict['inquiry']> {
+export async function getCatalogueCopy(
+  locale: Locale,
+  options: ReadOptions = {},
+): Promise<CatalogueCopy> {
+  const d = dict(locale)
+  const fallback: CatalogueCopy = {
+    products: {
+      eyebrow: d.products.eyebrow,
+      headline: d.products.headline,
+      intro: d.products.intro,
+      detailEyebrow: d.products.detailEyebrow,
+    },
+    journeys: {
+      eyebrow: d.journeys.eyebrow,
+      headline: d.journeys.headline,
+      intro: d.journeys.intro,
+      detailEyebrow: d.journeys.detailEyebrow,
+    },
+  }
+  const payload = await getPayloadSafe()
+  if (!payload) return fallback
+
+  try {
+    const c = (await payload.findGlobal({
+      slug: 'catalogue',
+      locale,
+      depth: 0,
+      fallbackLocale: 'en',
+      draft: options.draft === true,
+    })) as Any
+    return {
+      products: {
+        eyebrow: or(c.productsEyebrow, fallback.products.eyebrow),
+        headline: or(c.productsHeadline, fallback.products.headline),
+        intro: or(c.productsIntro, fallback.products.intro),
+        detailEyebrow: or(c.productDetailEyebrow, fallback.products.detailEyebrow),
+      },
+      journeys: {
+        eyebrow: or(c.journeysEyebrow, fallback.journeys.eyebrow),
+        headline: or(c.journeysHeadline, fallback.journeys.headline),
+        intro: or(c.journeysIntro, fallback.journeys.intro),
+        detailEyebrow: or(c.journeyDetailEyebrow, fallback.journeys.detailEyebrow),
+      },
+    }
+  } catch {
+    return fallback
+  }
+}
+
+/**
+ * The inquiry form as the team has built it in the CMS — which fields, in
+ * what order, which are required — with the approved wording underneath
+ * anything left blank.
+ */
+export async function getInquiryCopy(
+  locale: Locale,
+  options: ReadOptions = {},
+): Promise<Dict['inquiry']> {
   const fallback = dict(locale).inquiry
   const payload = await getPayloadSafe()
   if (!payload) return fallback
@@ -422,50 +530,114 @@ export async function getInquiryCopy(locale: Locale): Promise<Dict['inquiry']> {
       locale,
       depth: 0,
       fallbackLocale: 'en',
+      // The admin's preview reads the draft; the public page never does.
+      draft: options.draft === true,
     })) as Any
 
-    const options = Array.isArray(copy.audienceOptions) && copy.audienceOptions.length
-      ? copy.audienceOptions
-          .filter((o: Any) => o?.value && o?.label)
-          .map((o: Any) => ({ value: o.value as string, label: o.label as string }))
-      : fallback.audienceOptions
+    const mapOptions = (list: unknown) =>
+      (Array.isArray(list) ? list : [])
+        .filter((o: Any) => o?.value && o?.label)
+        .map((o: Any) => ({ value: String(o.value), label: String(o.label) }))
 
-    const questions = (Array.isArray(copy.questions) ? copy.questions : [])
-      .filter((q: Any) => q?.name && q?.label)
-      .map((q: Any) => ({
-        name: String(q.name),
-        label: String(q.label),
-        type: (q.type ?? 'text') as CustomQuestion['type'],
-        required: Boolean(q.required),
-        width: (q.width ?? 'full') as CustomQuestion['width'],
-        placeholder: q.placeholder || undefined,
-        help: q.help || undefined,
-        options: (Array.isArray(q.options) ? q.options : [])
-          .filter((o: Any) => o?.value && o?.label)
-          .map((o: Any) => ({ value: String(o.value), label: String(o.label) })),
-      }))
+    // The form as configured. A built-in row without a label keeps the
+    // approved wording; a custom row without a key or label is skipped.
+    const fields = (Array.isArray(copy.fields) ? copy.fields : []).flatMap((row: Any): FormField[] => {
+      // Switched off in the CMS: kept there, not shown here.
+      if (row?.enabled === false) return []
+      const kind = String(row?.kind ?? '')
+
+      if (kind === 'custom') {
+        if (!row.name || !row.label) return []
+        return [
+          {
+            kind: 'custom',
+            name: String(row.name),
+            label: String(row.label),
+            type: (row.type ?? 'text') as FieldType,
+            required: Boolean(row.required),
+            width: (row.width ?? 'half') as FormField['width'],
+            placeholder: row.placeholder || undefined,
+            help: row.help || undefined,
+            options: mapOptions(row.options),
+          },
+        ]
+      }
+
+      const common = {
+        required: Boolean(row.required),
+        width: (row.width ?? 'half') as FormField['width'],
+        placeholder: row.placeholder || undefined,
+        help: row.help || undefined,
+        showWhen: readShowWhen(row.showWhen),
+      }
+
+      if (kind === 'pick') {
+        if (!isPickSource(row.source)) return []
+        const source = row.source
+        return [
+          {
+            ...common,
+            kind: 'pick',
+            name: fieldName('pick', source),
+            label: or(row.label, fallback[source]),
+            type: 'select',
+            options: [],
+            source,
+            multiple: row.multiple !== false,
+          },
+        ]
+      }
+
+      if (kind === 'ideas') {
+        return [
+          {
+            ...common,
+            kind: 'ideas',
+            name: 'ideas',
+            label: or(row.label, fallback.ideas),
+            type: 'text',
+            width: (row.width ?? 'full') as FormField['width'],
+            options: [],
+          },
+        ]
+      }
+
+      if (!isTextKind(kind)) return []
+      const spec = TEXT_KINDS[kind]
+      return [
+        {
+          ...common,
+          kind,
+          name: kind,
+          label: or(row.label, fallback[kind]),
+          // The date field asks for a month unless the team wants the day.
+          type: kind === 'date' && row.dateMode === 'date' ? 'date' : spec.type,
+          // Email is how the team replies; it stays required whatever the row says.
+          required: kind === 'email' ? true : Boolean(row.required),
+          width: (row.width ?? spec.width) as FormField['width'],
+          // The private/group dropdown carries its own choices; empty keeps
+          // the approved three.
+          options:
+            kind === 'audience'
+              ? mapOptions(row.options).length
+                ? mapOptions(row.options)
+                : fallback.audienceOptions
+              : [],
+        },
+      ]
+    })
 
     return {
       ...fallback,
-      questions,
+      // An unanswerable configuration (no email) falls back to the default form.
+      fields: fields.some((f) => f.kind === 'email') ? fields : fallback.fields,
       eyebrow: or(copy.eyebrow, fallback.eyebrow),
       headline: or(copy.headline, fallback.headline),
       lede: or(copy.lede, fallback.lede),
-      name: or(copy.nameLabel, fallback.name),
-      email: or(copy.emailLabel, fallback.email),
-      phone: or(copy.phoneLabel, fallback.phone),
-      audience: or(copy.audienceLabel, fallback.audience),
-      audienceOptions: options.length ? options : fallback.audienceOptions,
-      organisation: or(copy.organisationLabel, fallback.organisation),
-      pax: or(copy.paxLabel, fallback.pax),
-      location: or(copy.locationLabel, fallback.location),
-      date: or(copy.dateLabel, fallback.date),
-      goal: or(copy.goalLabel, fallback.goal),
-      notes: or(copy.notesLabel, fallback.notes),
-      interested: or(copy.interestedLabel, fallback.interested),
-      interestedHint: or(copy.interestedHint, fallback.interestedHint),
-      addCustom: or(copy.addCustomLabel, fallback.addCustom),
+      addIdea: or(copy.addCustomLabel, fallback.addIdea),
+      requiredNote: or(copy.requiredNote, fallback.requiredNote),
       submit: or(copy.submitLabel, fallback.submit),
+      doneEyebrow: or(copy.doneEyebrow, fallback.doneEyebrow),
       doneHeading: or(copy.doneHeading, fallback.doneHeading),
       doneBody: or(copy.doneBody, fallback.doneBody),
       doneContact: or(copy.doneContact, fallback.doneContact),

@@ -1,15 +1,28 @@
 'use server'
 
 import type { Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
-import { missingAnswers, validate, type InquiryDraft } from '@/lib/inquiries'
 import { getInquiryCopy } from '@/lib/content'
+import { dict } from '@/lib/i18n/ui'
+import { TEXT_KINDS } from '@/lib/inquiry-fields'
+import {
+  DRAFT_KEY,
+  PICK_KEY,
+  validate,
+  visibleFields,
+  type InquiryDraft,
+} from '@/lib/inquiries'
 import { getPayloadSafe } from '@/lib/payload'
 
 export type SubmitResult = { ok: true } | { ok: false; error: string }
 
 const trim = (value: unknown, max = 5000) =>
   (typeof value === 'string' ? value : '').trim().slice(0, max)
+
+const cleanSlugs = (slugs: unknown) =>
+  (Array.isArray(slugs) ? slugs : [])
+    .map((s) => trim(s, 120))
+    .filter(Boolean)
+    .slice(0, 20)
 
 /**
  * The form posts once. Validation runs again here because the client's copy of
@@ -30,18 +43,12 @@ export async function submitInquiry(
     return { ok: true }
   }
 
-  const errors = validate(draft, t.errors)
+  // The form is read from the CMS again here — the browser's copy of which
+  // fields exist and which are required is not something to take on trust.
+  const copy = await getInquiryCopy(locale)
+  const errors = validate(draft, copy.fields, t.errors)
   if (Object.keys(errors).length > 0) {
     return { ok: false, error: Object.values(errors)[0] as string }
-  }
-
-  // The questions are read from the CMS again here — the browser's copy of
-  // which ones are required is not something to take on trust.
-  const copy = await getInquiryCopy(locale)
-  const missing = missingAnswers(draft, copy.questions)
-  if (missing.length > 0) {
-    const question = copy.questions.find((q) => q.name === missing[0])
-    return { ok: false, error: `${question?.label ?? missing[0]} — ${t.errors.required}` }
   }
 
   const payload = await getPayloadSafe()
@@ -51,62 +58,78 @@ export async function submitInquiry(
   }
 
   try {
-    // Slugs come from the browser, so they are resolved to real ids here
-    // rather than trusted as references.
-    const resolve = async (collection: 'products' | 'journeys', slugs: string[]) => {
-      const wanted = slugs.map((s) => trim(s, 120)).filter(Boolean).slice(0, 20)
-      if (wanted.length === 0) return []
+    // Slugs come from the browser, so they are resolved to real documents
+    // here rather than trusted as references.
+    const resolve = async (
+      collection: 'products' | 'journeys' | 'product-categories',
+      slugs: string[],
+    ) => {
+      if (slugs.length === 0) return []
       const found = await payload.find({
         collection,
-        where: { slug: { in: wanted } },
+        where: { slug: { in: slugs } },
         limit: 20,
         depth: 0,
+        locale,
       })
-      return found.docs.map((d) => d.id)
+      return found.docs as { id: string | number; title?: string; name?: string }[]
     }
 
-    const [products, journeys] = await Promise.all([
-      resolve('products', draft.productSlugs),
-      resolve('journeys', draft.journeySlugs),
-    ])
+    const data: Record<string, unknown> = { locale }
+    const answers: { name: string; label: string; value: string }[] = []
 
-    const data: Record<string, unknown> = {
-      name: trim(draft.name, 120),
-      email: trim(draft.email, 200),
-      goal: trim(draft.goal, 2000),
-      locale,
-      products,
-      journeys,
-      customActivities: draft.customActivities
-        .map((label) => trim(label, 200))
-        .filter(Boolean)
-        .slice(0, 10)
-        .map((label) => ({ label })),
-      // The label is stored alongside the answer so rewording the question
-      // later does not rewrite what past visitors were actually asked.
-      answers: copy.questions
-        .map((q) => ({
-          name: q.name,
-          label: q.label,
-          value: trim(draft.answers?.[q.name], 2000),
-        }))
-        .filter((a) => a.value),
+    // Only what the form actually asked for is kept. A field the team has
+    // removed — or one hidden by its rule — cannot be smuggled in by an old
+    // draft or a crafted request.
+    for (const field of visibleFields(draft, copy.fields)) {
+      switch (field.kind) {
+        case 'custom': {
+          const value = trim(draft.answers?.[field.name], 2000)
+          if (value) answers.push({ name: field.name, label: field.label, value })
+          break
+        }
+
+        case 'ideas':
+          data.customActivities = (draft.customActivities ?? [])
+            .map((label) => trim(label, 200))
+            .filter(Boolean)
+            .slice(0, 10)
+            .map((label) => ({ label }))
+          break
+
+        case 'pick': {
+          const source = field.source ?? 'products'
+          const slugs = cleanSlugs(draft[PICK_KEY[source]])
+
+          if (source === 'products' || source === 'journeys') {
+            data[source] = (await resolve(source, slugs)).map((d) => d.id)
+          } else {
+            // Categories have no column of their own; the names are kept as
+            // an answer so the email and the record still say what was chosen.
+            const names = (await resolve('product-categories', slugs))
+              .map((d) => d.name ?? d.title ?? '')
+              .filter(Boolean)
+            if (names.length) {
+              answers.push({ name: field.name, label: field.label, value: names.join(', ') })
+            }
+          }
+          break
+        }
+
+        default: {
+          const value = trim(draft[DRAFT_KEY[field.kind]], TEXT_KINDS[field.kind].max)
+          if (value) data[DRAFT_KEY[field.kind]] = value
+        }
+      }
     }
 
-    const optional: [keyof InquiryDraft, number][] = [
-      ['phone', 40],
-      ['audience', 40],
-      ['organisation', 160],
-      ['pax', 40],
-      ['preferredLocation', 160],
-      ['preferredDate', 40],
-      ['notes', 5000],
-    ]
+    // The collection insists on a name; a form without that field stores the
+    // address in its place so the inquiry still has a title in the admin.
+    if (!data.name) data.name = data.email
 
-    for (const [key, max] of optional) {
-      const value = trim(draft[key], max)
-      if (value) data[key] = value
-    }
+    // The label is stored alongside each answer so rewording the question
+    // later does not rewrite what past visitors were actually asked.
+    data.answers = answers
 
     await payload.create({ collection: 'inquiries', data } as never)
 

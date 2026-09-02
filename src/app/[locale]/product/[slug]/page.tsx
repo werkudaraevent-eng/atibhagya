@@ -5,7 +5,7 @@ import { Motion } from '@/components/Motion'
 import { ProductDetail } from '@/components/products/ProductDetail'
 import { Footer } from '@/components/site/Footer'
 import { Nav } from '@/components/site/Nav'
-import { getProduct, getProducts, getSite } from '@/lib/content'
+import { getCatalogueCopy, getProduct, getProducts, getSite } from '@/lib/content'
 import { locales, toCard, type Locale } from '@/lib/content/types'
 import { dict } from '@/lib/i18n/ui'
 
@@ -51,10 +51,11 @@ export default async function ProductPage({
   const locale = raw as Locale
   const t = dict(locale)
 
-  const [product, site, all] = await Promise.all([
+  const [product, site, all, copy] = await Promise.all([
     getProduct(locale, slug),
     getSite(locale),
     getProducts(locale),
+    getCatalogueCopy(locale),
   ])
   if (!product) notFound()
 
@@ -71,7 +72,12 @@ export default async function ProductPage({
       <Nav locale={locale} dict={t} tone="light" />
 
       <main>
-        <ProductDetail product={product} locale={locale} dict={t} related={related} />
+        <ProductDetail
+          product={product}
+          locale={locale}
+          dict={{ ...t, products: { ...t.products, detailEyebrow: copy.products.detailEyebrow } }}
+          related={related}
+        />
       </main>
 
       <Footer site={site} dict={t} locale={locale} />

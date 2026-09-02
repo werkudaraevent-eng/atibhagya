@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateEverything } from '../lib/revalidate'
+import { webImage } from '../lib/validate-media'
 import { adminOnly, signedIn } from './Users'
 
 /**
@@ -19,10 +21,11 @@ export const Facilitators: CollectionConfig = {
     update: signedIn,
     delete: adminOnly,
   },
+  hooks: { afterChange: [revalidateEverything] },
   fields: [
     { name: 'name', type: 'text', required: true },
     { name: 'role', type: 'text', localized: true, admin: { description: 'Title or role.' } },
     { name: 'bio', type: 'textarea', localized: true },
-    { name: 'photo', type: 'upload', relationTo: 'media' },
+    { name: 'photo', type: 'upload', relationTo: 'media', validate: webImage },
   ],
 }

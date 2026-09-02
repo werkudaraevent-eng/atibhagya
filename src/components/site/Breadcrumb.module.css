@@ -1,0 +1,61 @@
+.nav {
+  font: 400 11px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Links read as the eyebrow always did; the gold is the affordance. */
+.link {
+  position: relative;
+  padding-bottom: 2px;
+  color: var(--emas-deep);
+  transition: color 0.35s ease;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease-out);
+}
+
+.link:hover {
+  color: var(--biru);
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+}
+
+/* A short hairline between steps: quieter than a glyph, and it does not
+   fight the letter-spacing the way a slash did. */
+.sep {
+  display: inline-block;
+  width: 1px;
+  height: 11px;
+  margin: 0 14px;
+  background: rgba(var(--ink-rgb), 0.22);
+  transform: translateY(-1px);
+}

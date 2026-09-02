@@ -64,7 +64,7 @@ export const homeEn: HomeContent = {
       'Atibhagya curates wellness experiences rooted in Indonesian wisdom, bringing together nature, mindful practices, cultural traditions, and contemporary hospitality.',
   },
   hero: {
-    eyebrow: '01 / Opening',
+    eyebrow: 'Atibhagya · Indonesia',
     headline: 'Wellness, rooted\nin place and presence.',
     statement:
       'Discover a more meaningful way to experience wellbeing through the living wisdom of Indonesia.',
@@ -72,7 +72,7 @@ export const homeEn: HomeContent = {
     image: img('Pura%20Ulun%20Danu%20Bratan%2C%202022.jpg', 1920, 'A temple at the water’s edge at dawn', 'Wikimedia Commons · CC BY-SA'),
   },
   why: {
-    eyebrow: '02 / Why Atibhagya',
+    eyebrow: 'Why Atibhagya',
     headline: 'A quieter way to design wellness.',
     body: 'Calm, grounded, cultured, and flexible across private, group, and corporate needs. We believe wellbeing is not found in one treatment or one moment — it is shaped through a series of intentional experiences.',
     pillars: [
@@ -91,7 +91,7 @@ export const homeEn: HomeContent = {
     ],
   },
   featured: {
-    eyebrow: '03 / Selected experiences',
+    eyebrow: 'Selected experiences',
     headline: 'Featured experiences',
   },
   cta: {
@@ -108,7 +108,7 @@ export const aboutEn: AboutContent = {
     description:
       'Atibhagya is a wellness experience brand inspired by the living wisdom of Indonesia.',
   },
-  eyebrow: '01 / About',
+  eyebrow: 'About Atibhagya',
   headline: 'A thoughtful way\nto experience wellness.',
   lede: 'Rooted in culture and nature, designed with contemporary restraint.',
   body: [
@@ -128,10 +128,14 @@ export const aboutEn: AboutContent = {
   ctaLabel: 'Talk to our team',
 }
 
+/** Mirrors the six categories the catalogue import creates. */
 export const categoriesEn: ProductCategory[] = [
-  { id: 'body-fit-care', slug: 'body-fit-care', name: 'Body Fit & Care' },
-  { id: 'mind-body-spirit', slug: 'mind-body-spirit', name: 'Mind, Body & Spirit' },
-  { id: 'corporate-group', slug: 'corporate-group', name: 'Corporate & Group' },
+  { id: 'rituals-ceremony', slug: 'rituals-ceremony', name: 'Rituals & Ceremony' },
+  { id: 'healing-sound', slug: 'healing-sound', name: 'Healing & Sound' },
+  { id: 'yoga-movement', slug: 'yoga-movement', name: 'Yoga & Movement' },
+  { id: 'spa-retreats', slug: 'spa-retreats', name: 'Spa & Retreats' },
+  { id: 'nature-nourishment', slug: 'nature-nourishment', name: 'Nature & Nourishment' },
+  { id: 'art-culture', slug: 'art-culture', name: 'Art & Culture' },
 ]
 
 export const venuesEn: Venue[] = [
@@ -159,7 +163,7 @@ export const productsEn: Product[] = [
     suitableFor: ['solo', 'group', 'corporate'],
     whatToExpect:
       'The ritual is prepared and led in its own cultural context. Guests are guided through the offering, the fire, and a period of quiet afterwards.',
-    category: cat('mind-body-spirit'),
+    category: cat('rituals-ceremony'),
     venues: venuesEn,
     facilitators: [],
     heroImage: { alt: 'Photography to come' },
@@ -176,7 +180,7 @@ export const productsEn: Product[] = [
     highlightText: 'Care as a tradition, not a service.',
     facilities: ['Herbal preparations', 'Traditional cloth'],
     suitableFor: ['solo', 'couple', 'group'],
-    category: cat('body-fit-care'),
+    category: cat('spa-retreats'),
     venues: [],
     facilitators: [],
     heroImage: { alt: 'Photography to come' },
@@ -193,7 +197,7 @@ export const productsEn: Product[] = [
     highlightText: 'Room to listen inward.',
     facilities: ['Guided session'],
     suitableFor: ['solo', 'group', 'corporate'],
-    category: cat('mind-body-spirit'),
+    category: cat('rituals-ceremony'),
     venues: [],
     facilitators: [],
     heroImage: { alt: 'Photography to come' },
@@ -210,7 +214,7 @@ export const productsEn: Product[] = [
     highlightText: 'Held, not performed.',
     facilities: ['Offering ritual', 'Traditional cloth'],
     suitableFor: ['solo', 'group'],
-    category: cat('mind-body-spirit'),
+    category: cat('rituals-ceremony'),
     venues: [],
     facilitators: [],
     heroImage: { alt: 'Photography to come' },
@@ -227,7 +231,7 @@ export const productsEn: Product[] = [
     highlightText: 'Aim with the heart, not the eye.',
     facilities: ['Equipment provided', 'Traditional cloth'],
     suitableFor: ['group', 'corporate', 'community'],
-    category: cat('body-fit-care'),
+    category: cat('spa-retreats'),
     venues: [],
     facilitators: [],
     heroImage: { alt: 'Photography to come' },
@@ -244,7 +248,7 @@ export const productsEn: Product[] = [
     highlightText: 'Gather with more attention.',
     facilities: ['Meeting setting', 'Guided sessions'],
     suitableFor: ['corporate', 'group'],
-    category: cat('corporate-group'),
+    category: cat('healing-sound'),
     venues: [],
     facilitators: [],
     heroImage: { alt: 'Photography to come' },

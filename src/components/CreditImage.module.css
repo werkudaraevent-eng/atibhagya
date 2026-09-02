@@ -39,17 +39,13 @@
   color: inherit;
 }
 
-/* Awaiting photography. */
+/* Awaiting photography. A plain tinted panel — the earlier hairline in the
+   middle read as a loading bar, which sent editors waiting for something that
+   was never going to arrive. */
 .empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: linear-gradient(160deg, #e7e2d5 0%, #ddd7c8 100%);
 }
 
 .emptyMark {
-  display: block;
-  width: 28px;
-  height: 1px;
-  background: rgba(16, 34, 47, 0.18);
+  display: none;
 }

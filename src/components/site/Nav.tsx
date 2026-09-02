@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { ThemeToggle } from '@/components/site/ThemeToggle'
 import type { Locale } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
 import styles from './Nav.module.css'
@@ -41,8 +42,8 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
           <Image
             src="/logo-atibhagya-gold.png"
             alt="Atibhagya"
-            width={106}
-            height={26}
+            width={138}
+            height={34}
             className={styles.logo}
             priority
           />
@@ -66,6 +67,12 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
             itemClassName={styles.langLink}
             currentClassName={styles.langCurrent}
             separatorClassName={styles.langSep}
+          />
+
+          <ThemeToggle
+            toDark={dict.theme.toDark}
+            toLight={dict.theme.toLight}
+            className={styles.theme}
           />
 
           <button
@@ -98,6 +105,11 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
           currentClassName={styles.langCurrent}
           separatorClassName={styles.langSep}
           onNavigate={() => setOpen(false)}
+        />
+        <ThemeToggle
+          toDark={dict.theme.toDark}
+          toLight={dict.theme.toLight}
+          className={styles.theme}
         />
         <Link href={inquiryHref} className={styles.cta} onClick={() => setOpen(false)}>
           {dict.nav.inquiry}

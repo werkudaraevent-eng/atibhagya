@@ -6,7 +6,7 @@ import { JourneyCards } from '@/components/journeys/JourneyCards'
 import { Footer } from '@/components/site/Footer'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
-import { getJourneys, getSite } from '@/lib/content'
+import { getCatalogueCopy, getJourneys, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
 import { dict } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
@@ -41,7 +41,11 @@ export default async function JourneyListPage({
   const locale = raw as Locale
   const t = dict(locale)
 
-  const [journeys, site] = await Promise.all([getJourneys(locale), getSite(locale)])
+  const [journeys, site, copy] = await Promise.all([
+    getJourneys(locale),
+    getSite(locale),
+    getCatalogueCopy(locale),
+  ])
   const opening = journeys[0]?.heroImage
 
   return (
@@ -59,11 +63,11 @@ export default async function JourneyListPage({
           ) : null}
           <div className={styles.openingScrim} />
           <div className={styles.openingContent} data-heroword>
-            <div className={styles.openingEyebrow}>{t.journeys.eyebrow}</div>
+            <div className={styles.openingEyebrow}>{copy.journeys.eyebrow}</div>
             <h1 className={styles.openingHeadline} data-headline>
-              <Lines text={t.journeys.headline} />
+              <Lines text={copy.journeys.headline} />
             </h1>
-            <p className={styles.openingLede}>{t.journeys.intro}</p>
+            <p className={styles.openingLede}>{copy.journeys.intro}</p>
           </div>
         </div>
 

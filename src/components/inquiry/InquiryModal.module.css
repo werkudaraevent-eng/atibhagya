@@ -75,7 +75,7 @@
   justify-content: center;
   border: 1px solid var(--hairline);
   border-radius: 50%;
-  background: rgba(246, 243, 231, 0.72);
+  background: rgba(var(--paper-rgb), 0.72);
   backdrop-filter: blur(6px);
   color: var(--biru);
   cursor: pointer;
@@ -89,7 +89,7 @@
 .close:hover {
   border-color: var(--emas-deep);
   color: var(--emas-deep);
-  background: rgba(246, 243, 231, 0.95);
+  background: rgba(var(--paper-rgb), 0.95);
   transform: rotate(90deg);
 }
 

@@ -46,7 +46,8 @@
   margin: 24px 0 0;
   max-width: 14em;
   font: 400 clamp(34px, 5vw, 72px) / 1.16 var(--font-marcellus), serif;
-  color: var(--ivory);
+  /* Over the photograph, always ivory — whatever the page theme. */
+  color: #f6f3e7;
   text-shadow: 0 4px 44px rgba(16, 34, 47, 0.5);
   text-wrap: balance;
 }

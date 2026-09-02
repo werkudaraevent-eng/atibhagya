@@ -119,10 +119,50 @@
   padding: clamp(120px, 18vh, 190px) clamp(24px, 5vw, 64px) clamp(48px, 8vh, 84px);
 }
 
+/**
+ * The opening of a detail page: the title column beside a tall photograph.
+ *
+ * This is the wireframe's 40/60 — image-led, asymmetric, and above the fold.
+ * Stacking the text and then a full-width photograph put the picture six
+ * hundred pixels down the page, so the first screen was mostly type with a
+ * sliver of image beneath it.
+ */
+.opening {
+  display: grid;
+  grid-template-columns: 42fr 58fr;
+  gap: clamp(32px, 5vw, 88px);
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: clamp(88px, 12vh, 124px) clamp(24px, 5vw, 64px) 0;
+}
+
+.openingText {
+  padding-bottom: clamp(24px, 4vh, 48px);
+}
+
+.openingMedia {
+  position: relative;
+  height: clamp(480px, calc(100svh - 128px), 820px);
+  overflow: hidden;
+}
+
 @media (max-width: 860px) {
   .split,
   .splitReverse {
     grid-template-columns: 1fr;
     gap: 32px;
+  }
+
+  /* Stacked, the photograph leads and the title follows it. */
+  .opening {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-top: 84px;
+  }
+
+  .openingMedia {
+    order: -1;
+    height: clamp(300px, 62vw, 460px);
   }
 }

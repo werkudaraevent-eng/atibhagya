@@ -5,6 +5,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { en } from '@payloadcms/translations/languages/en'
 import { id } from '@payloadcms/translations/languages/id'
@@ -21,6 +22,7 @@ import { Products } from './collections/Products'
 import { Users } from './collections/Users'
 import { Venues } from './collections/Venues'
 import { AboutPage } from './globals/AboutPage'
+import { CataloguePages } from './globals/CataloguePages'
 import { HomePage } from './globals/HomePage'
 import { InquiryFormCopy } from './globals/InquiryForm'
 import { SiteSettings } from './globals/SiteSettings'
@@ -53,6 +55,10 @@ const storage = process.env.S3_BUCKET
       s3Storage({
         collections: { media: true },
         bucket: process.env.S3_BUCKET,
+        // The browser sends the file to R2 itself, by signed URL, instead of
+        // through the server: Vercel caps a request body at 4.5 MB, which a
+        // hero video would never fit.
+        clientUploads: true,
         config: {
           endpoint: process.env.S3_ENDPOINT,
           region: process.env.S3_REGION || 'auto',
@@ -71,14 +77,21 @@ const db = databaseURI.startsWith('file:')
   ? sqliteAdapter({ client: { url: databaseURI } })
   : postgresAdapter({ pool: { connectionString: databaseURI } })
 
-/** Where a document can be seen on the live site. */
+/**
+ * Where the admin's preview panel should look.
+ *
+ * Products and journeys point at a staff-only route that reads the draft, so
+ * an unpublished change shows up as soon as it is saved. Pages are globals;
+ * their preview shows the published state until the change is published.
+ */
 const pathFor = (collection: string, slug: unknown, locale?: string) => {
   const prefix = locale === 'id' ? '/id' : ''
-  if (collection === 'products') return `${prefix}/product/${slug}`
-  if (collection === 'journeys') return `${prefix}/journey/${slug}`
-  if (collection === 'about') return `${prefix}/about`
-  if (collection === 'inquiry-form') return `${prefix}/inquiry`
-  return prefix || '/'
+  if (collection === 'products') return `${prefix}/preview/product/${slug}`
+  if (collection === 'journeys') return `${prefix}/preview/journey/${slug}`
+  if (collection === 'about') return `${prefix}/preview/about`
+  if (collection === 'inquiry-form') return `${prefix}/preview/inquiry`
+  if (collection === 'catalogue') return `${prefix}/preview/catalogue`
+  return `${prefix}/preview/home`
 }
 
 export default buildConfig({
@@ -106,7 +119,7 @@ export default buildConfig({
         { name: 'desktop', label: 'Desktop', width: 1440, height: 900 },
       ],
       collections: ['products', 'journeys'],
-      globals: ['home', 'about', 'inquiry-form'],
+      globals: ['home', 'about', 'catalogue', 'inquiry-form'],
       url: ({ data, collectionConfig, globalConfig, locale }) =>
         `${serverURL}${pathFor(
           collectionConfig?.slug ?? globalConfig?.slug ?? 'home',
@@ -132,7 +145,15 @@ export default buildConfig({
     Posts,
     Users,
   ],
-  globals: [HomePage, AboutPage, InquiryFormCopy, SiteSettings],
+  globals: [HomePage, AboutPage, CataloguePages, InquiryFormCopy, SiteSettings],
+  // The folder tree behind the media library. Scoped to media only, so it
+  // never appears on content collections where it would be noise — and
+  // without the separate "Browse by Folder" view in the sidebar: folders are
+  // made and used inside Media itself, one place rather than two.
+  folders: {
+    browseByFolder: false,
+    collectionSpecific: true,
+  },
   // URL strategy: `/` is English, `/id/…` is Indonesian.
   localization: {
     locales: [
@@ -164,8 +185,26 @@ export default buildConfig({
         },
       })
     : undefined,
-  plugins: storage,
+  plugins: [
+    ...storage,
+    // "Export" on the inquiries list: the current view — or a selection — as
+    // CSV (opens straight in Excel) or JSON. Runs synchronously and downloads
+    // straight away rather than saving a file first: there is no job runner
+    // to wait for, and nothing is written to a disk Vercel would wipe.
+    importExportPlugin({
+      collections: [
+        {
+          slug: 'inquiries',
+          // Inquiries arrive through the form, never from a spreadsheet.
+          import: false,
+          export: { disableJobsQueue: true, disableSave: true },
+        },
+      ],
+    }),
+  ],
   cors: [serverURL],
   csrf: [serverURL],
   sharp,
+  // Room for a hero video; photographs are a tenth of this.
+  upload: { limits: { fileSize: 30 * 1024 * 1024 } },
 })

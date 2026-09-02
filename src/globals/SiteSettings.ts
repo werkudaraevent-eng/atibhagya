@@ -1,5 +1,7 @@
 import type { FieldAccess, GlobalConfig } from 'payload'
 
+import { revalidateGlobal } from '../lib/revalidate'
+
 /** Internal addresses stay out of the public API response. */
 const staffOnly: FieldAccess = ({ req: { user } }) => Boolean(user)
 
@@ -9,6 +11,8 @@ export const SiteSettings: GlobalConfig = {
   label: 'Site settings',
   admin: { group: 'Pages' },
   access: { read: () => true },
+  // Footer and contact details sit on every page.
+  hooks: { afterChange: [revalidateGlobal(['/', '/product', '/journey', '/about', '/inquiry'])] },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.

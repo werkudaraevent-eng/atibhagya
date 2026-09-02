@@ -1,4 +1,5 @@
 import type { Locale } from '../content/types'
+import { defaultFields, type FormField, type LabelKey } from '../inquiry-fields'
 
 export type Dict = {
   nav: { products: string; journeys: string; about: string; inquiry: string }
@@ -6,6 +7,10 @@ export type Dict = {
   close: string
   languageLabel: string
   skipToContent: string
+  /** Accessible name of the breadcrumb landmark. */
+  youAreHere: string
+  /** The light/dark switch: what pressing it will do. */
+  theme: { toDark: string; toLight: string }
   readMore: string
   footer: { enquiries: string; explore: string; social: string }
   products: {
@@ -68,36 +73,45 @@ export type Dict = {
     date: string
     goal: string
     notes: string
-    interested: string
-    interestedHint: string
-    addCustom: string
-    customPlaceholder: string
+    /** Default labels of the pick fields, by source. */
+    products: string
+    journeys: string
+    categories: string
+    ideas: string
+    ideasPlaceholder: string
+    addIdea: string
+    /** The line above the form explaining the required mark. */
+    requiredNote: string
+    /** Token fields: typed text that matches nothing, and the collapsed chips. */
+    noMatch: string
+    moreChips: string
+    fewerChips: string
+    typeToSearch: string
     remove: string
     submit: string
     sending: string
     error: string
     errors: { name: string; email: string; emailInvalid: string; goal: string; required: string }
+    /** The small word above the thank-you, e.g. "Received". */
+    doneEyebrow: string
     doneHeading: string
     /** Template with a {time} placeholder — a plain string so the dictionary can cross into a client component. */
     doneBody: string
     doneContact: string
     doneBack: string
-    /** Questions the team has added in the CMS. Empty by default. */
-    questions: CustomQuestion[]
+    /**
+     * The form itself, in order. The CMS replaces this list; the labels above
+     * are the approved wording each built-in falls back to.
+     */
+    fields: FormField[]
   }
 }
 
-/** A question configured under Inquiries → Inquiry form. */
-export type CustomQuestion = {
-  name: string
-  label: string
-  type: 'text' | 'textarea' | 'email' | 'tel' | 'number' | 'date' | 'select' | 'checkbox'
-  required: boolean
-  width: 'full' | 'half'
-  placeholder?: string
-  help?: string
-  options: { value: string; label: string }[]
-}
+/** The built-in labels, and the default form assembled from them. */
+const inquiryFields = (labels: Record<LabelKey, string>) => ({
+  ...labels,
+  fields: defaultFields(labels),
+})
 
 const en: Dict = {
   nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry' },
@@ -105,10 +119,12 @@ const en: Dict = {
   close: 'Close',
   languageLabel: 'Language',
   skipToContent: 'Skip to content',
+  youAreHere: 'You are here',
+  theme: { toDark: 'Switch to dark mode', toLight: 'Switch to light mode' },
   readMore: 'Read more',
   footer: { enquiries: 'Enquiries', explore: 'Explore', social: 'Social' },
   products: {
-    eyebrow: '01 / Products',
+    eyebrow: 'The catalogue',
     headline: 'Explore practices\nfor body, mind, and connection.',
     intro: 'Experiences can stand alone or be combined into a complete journey.',
     all: 'All',
@@ -123,7 +139,7 @@ const en: Dict = {
     clear: 'Clear search',
     reset: 'Clear filters',
     related: 'Related experiences',
-    detailEyebrow: '01 / Product',
+    detailEyebrow: 'Product',
     whatToExpect: 'What to expect',
     duration: 'Duration',
     venue: 'Venue',
@@ -140,10 +156,10 @@ const en: Dict = {
     },
   },
   journeys: {
-    eyebrow: '01 / Journeys',
+    eyebrow: 'Journeys',
     headline: 'Wellness as a\njourney, not a menu.',
     intro: 'Curated multi-day or multi-stop experiences.',
-    detailEyebrow: '01 / Journey',
+    detailEyebrow: 'Journey',
     day: 'Day',
     overview: 'Journey overview',
     duration: 'Duration',
@@ -158,28 +174,37 @@ const en: Dict = {
   inquiry: {
     metaTitle: 'Inquiry · Atibhagya',
     metaDescription: 'A few details help us shape the right wellness experience.',
-    eyebrow: '01 / Inquiry',
+    eyebrow: 'Start a conversation',
     headline: 'Tell us what you need.',
     lede: 'A few details help us shape the right wellness experience.',
-    name: 'Name',
-    email: 'Email',
-    phone: 'Phone',
-    audience: 'Private / group',
+    ...inquiryFields({
+      name: 'Name',
+      email: 'Email',
+      phone: 'Phone',
+      audience: 'Private / group',
+      organisation: 'Company / community',
+      pax: 'Participants / pax',
+      location: 'Preferred location',
+      date: 'Date',
+      goal: 'Goal of activity',
+      notes: 'Notes',
+      products: 'Products you are interested in',
+      journeys: 'Journeys you are interested in',
+      categories: 'Categories you are interested in',
+      ideas: 'Anything else you have in mind',
+    }),
     audienceOptions: [
       { value: 'private', label: 'Private' },
       { value: 'group', label: 'Group' },
       { value: 'corporate', label: 'Corporate' },
     ],
-    organisation: 'Company / community',
-    pax: 'Participants / pax',
-    location: 'Preferred location',
-    date: 'Date',
-    goal: 'Goal of activity',
-    notes: 'Notes',
-    interested: 'Interested activities',
-    interestedHint: 'Add anything else you have in mind, or write your own.',
-    addCustom: '+ Custom activity',
-    customPlaceholder: 'Something else you have in mind',
+    ideasPlaceholder: 'Write your own, then add it',
+    addIdea: '+ Add',
+    requiredNote: 'Required',
+    noMatch: 'Nothing matches that',
+    moreChips: '+{n} more',
+    fewerChips: 'Show fewer',
+    typeToSearch: 'Type to search…',
     remove: 'Remove',
     submit: 'Submit inquiry',
     sending: 'Sending…',
@@ -191,11 +216,11 @@ const en: Dict = {
       goal: 'A sentence is plenty — it tells us what the journey is for.',
       required: 'we need this one.',
     },
-    doneHeading: 'Thank you. Your inquiry is on its way.',
+    doneEyebrow: 'Received',
+    doneHeading: 'Thank you — your inquiry is with us.',
     doneBody: 'One of our team will write back to you {time}.',
     doneContact: 'If it is urgent, reach us directly:',
     doneBack: 'Back to Atibhagya',
-    questions: [],
   },
 }
 
@@ -205,10 +230,12 @@ const id: Dict = {
   close: 'Tutup',
   languageLabel: 'Bahasa',
   skipToContent: 'Lompat ke konten',
+  youAreHere: 'Posisi Anda',
+  theme: { toDark: 'Ganti ke mode gelap', toLight: 'Ganti ke mode terang' },
   readMore: 'Selengkapnya',
   footer: { enquiries: 'Pertanyaan', explore: 'Jelajahi', social: 'Media sosial' },
   products: {
-    eyebrow: '01 / Pengalaman',
+    eyebrow: 'Katalog',
     headline: 'Jelajahi praktik\nuntuk raga, jiwa, dan keterhubungan.',
     intro: 'Setiap pengalaman bisa berdiri sendiri atau dirangkai menjadi satu perjalanan utuh.',
     all: 'Semua',
@@ -223,7 +250,7 @@ const id: Dict = {
     clear: 'Hapus pencarian',
     reset: 'Hapus filter',
     related: 'Pengalaman terkait',
-    detailEyebrow: '01 / Pengalaman',
+    detailEyebrow: 'Pengalaman',
     whatToExpect: 'Yang akan Anda alami',
     duration: 'Durasi',
     venue: 'Lokasi',
@@ -240,10 +267,10 @@ const id: Dict = {
     },
   },
   journeys: {
-    eyebrow: '01 / Perjalanan',
+    eyebrow: 'Perjalanan',
     headline: 'Wellness sebagai\nperjalanan, bukan daftar menu.',
     intro: 'Pengalaman terkurasi lintas hari dan lintas tempat.',
-    detailEyebrow: '01 / Perjalanan',
+    detailEyebrow: 'Perjalanan',
     day: 'Hari',
     overview: 'Ringkasan perjalanan',
     duration: 'Durasi',
@@ -258,28 +285,37 @@ const id: Dict = {
   inquiry: {
     metaTitle: 'Kontak · Atibhagya',
     metaDescription: 'Beberapa detail membantu kami membentuk pengalaman wellness yang tepat.',
-    eyebrow: '01 / Kontak',
+    eyebrow: 'Mulai percakapan',
     headline: 'Ceritakan apa yang Anda butuhkan.',
     lede: 'Beberapa detail membantu kami membentuk pengalaman wellness yang tepat.',
-    name: 'Nama',
-    email: 'Email',
-    phone: 'Telepon',
-    audience: 'Privat / kelompok',
+    ...inquiryFields({
+      name: 'Nama',
+      email: 'Email',
+      phone: 'Telepon',
+      audience: 'Privat / kelompok',
+      organisation: 'Perusahaan / komunitas',
+      pax: 'Jumlah peserta',
+      location: 'Lokasi yang diinginkan',
+      date: 'Tanggal',
+      goal: 'Tujuan kegiatan',
+      notes: 'Catatan',
+      products: 'Pengalaman yang diminati',
+      journeys: 'Perjalanan yang diminati',
+      categories: 'Kategori yang diminati',
+      ideas: 'Hal lain yang Anda pikirkan',
+    }),
     audienceOptions: [
       { value: 'private', label: 'Privat' },
       { value: 'group', label: 'Kelompok' },
       { value: 'corporate', label: 'Korporat' },
     ],
-    organisation: 'Perusahaan / komunitas',
-    pax: 'Jumlah peserta',
-    location: 'Lokasi yang diinginkan',
-    date: 'Tanggal',
-    goal: 'Tujuan kegiatan',
-    notes: 'Catatan',
-    interested: 'Pengalaman yang diminati',
-    interestedHint: 'Tambahkan yang lain, atau tulis sendiri.',
-    addCustom: '+ Aktivitas sendiri',
-    customPlaceholder: 'Hal lain yang Anda pikirkan',
+    ideasPlaceholder: 'Tulis sendiri, lalu tambahkan',
+    addIdea: '+ Tambah',
+    requiredNote: 'Wajib diisi',
+    noMatch: 'Tidak ada yang cocok',
+    moreChips: '+{n} lagi',
+    fewerChips: 'Tampilkan lebih sedikit',
+    typeToSearch: 'Ketik untuk mencari…',
     remove: 'Hapus',
     submit: 'Kirim',
     sending: 'Mengirim…',
@@ -291,11 +327,11 @@ const id: Dict = {
       goal: 'Satu kalimat sudah cukup — itu memberi tahu kami tujuan perjalanannya.',
       required: 'bagian ini perlu diisi.',
     },
-    doneHeading: 'Terima kasih. Pesan Anda sedang menuju kami.',
+    doneEyebrow: 'Diterima',
+    doneHeading: 'Terima kasih — pesan Anda sudah sampai.',
     doneBody: 'Salah satu dari tim kami akan membalas {time}.',
     doneContact: 'Jika mendesak, hubungi kami langsung:',
     doneBack: 'Kembali ke Atibhagya',
-    questions: [],
   },
 }
 

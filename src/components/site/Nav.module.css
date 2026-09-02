@@ -1,23 +1,33 @@
+/**
+ * Over the hero the nav has no surface of its own.
+ *
+ * The earlier dark gradient band was the reason it read as a "bar" laid on top
+ * of the photograph rather than type sitting in it. Legibility now comes from
+ * the hero's own scrim plus a soft text-shadow, so the header belongs to the
+ * image. The ivory surface only appears once the page has scrolled past it.
+ */
 .nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 60;
-  background: linear-gradient(180deg, rgba(16, 34, 47, 0.35), rgba(16, 34, 47, 0));
-  border-bottom: 1px solid rgba(255, 255, 255, 0);
+  background: transparent;
+  border-bottom: 1px solid transparent;
   transition:
-    background 0.5s ease,
-    border-color 0.5s ease,
-    backdrop-filter 0.5s ease;
+    background 0.6s ease,
+    border-color 0.6s ease,
+    backdrop-filter 0.6s ease;
 }
 
+/* Tall and airy. A cramped header is the fastest way to look like a template. */
 .inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: clamp(20px, 4vw, 56px);
-  padding: 18px clamp(20px, 4vw, 48px);
+  padding: clamp(22px, 3.4vh, 36px) clamp(24px, 4.5vw, 64px);
+  transition: padding 0.6s var(--ease-out);
 }
 
 .logoLink {
@@ -26,25 +36,32 @@
   flex: none;
 }
 
+/* The wordmark is the anchor of the header, so it is the largest thing in it. */
 .logo {
-  height: 26px;
+  height: 34px;
   width: auto;
-  transition: filter 0.4s ease;
+  filter: drop-shadow(0 1px 10px rgba(16, 34, 47, 0.35));
+  transition:
+    filter 0.5s ease,
+    height 0.6s var(--ease-out);
 }
 
 .links {
   display: flex;
   align-items: center;
-  gap: clamp(18px, 2.6vw, 38px);
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.2em;
+  gap: clamp(20px, 2.8vw, 42px);
+  font: 400 11px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .link {
-  color: #fff;
-  transition: color 0.4s ease;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 14px rgba(16, 34, 47, 0.45);
+  transition:
+    color 0.4s ease,
+    text-shadow 0.4s ease;
 }
 
 .link:hover,
@@ -52,24 +69,46 @@
   color: var(--emas-hover);
 }
 
+/**
+ * The call to action is a word with a gold rule, not a box.
+ *
+ * A boxed button here sat directly above the boxed button in the hero — two
+ * identical outlines on one screen, so neither led. The hero keeps the box;
+ * the nav keeps a rule that lengthens on hover.
+ */
 .cta {
+  position: relative;
   display: inline-block;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 6px 0;
   color: #fff;
-  padding: 11px 22px;
-  font: 500 10px/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.22em;
+  font: 500 11px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  text-shadow: 0 1px 14px rgba(16, 34, 47, 0.45);
   transition:
     color 0.4s ease,
-    border-color 0.4s ease,
+    text-shadow 0.4s ease;
+}
+
+.cta::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 26px;
+  height: 1px;
+  background: var(--emas);
+  transition:
+    width 0.55s var(--ease-out),
     background 0.4s ease;
 }
 
 .cta:hover {
-  background: var(--emas-deep);
-  border-color: var(--emas-deep);
-  color: var(--ivory);
+  color: var(--emas-hover);
+}
+
+.cta:hover::after {
+  width: 100%;
 }
 
 /**
@@ -120,44 +159,65 @@
 
 .nav[data-tone='light'],
 :global(html[data-nav-solid]) .nav {
-  background: linear-gradient(180deg, rgba(246, 243, 231, 0.95), rgba(246, 243, 231, 0.82));
-  border-bottom-color: rgba(16, 34, 47, 0.08);
+  background: linear-gradient(180deg, rgba(var(--paper-rgb), 0.95), rgba(var(--paper-rgb), 0.82));
+  border-bottom-color: rgba(var(--ink-rgb), 0.08);
   backdrop-filter: blur(10px);
 }
 
-.nav[data-tone='light'] .link,
-.nav[data-tone='light'] .toggle,
-:global(html[data-nav-solid]) .link,
-:global(html[data-nav-solid]) .toggle {
-  color: var(--biru);
-}
-
-.nav[data-tone='light'] .link:hover,
-.nav[data-tone='light'] .linkActive,
-:global(html[data-nav-solid]) .link:hover,
-:global(html[data-nav-solid]) .linkActive {
-  color: var(--emas-deep);
-}
-
-.nav[data-tone='light'] .cta,
-:global(html[data-nav-solid]) .cta {
-  color: var(--emas-deep);
-  border-color: var(--emas-deep);
-}
-
-.nav[data-tone='light'] .cta:hover,
-:global(html[data-nav-solid]) .cta:hover {
-  color: var(--ivory);
+/* On an ivory surface the header tightens up: the hero's generosity would
+   read as dead space above a page of text. */
+.nav[data-tone='light'] .inner,
+:global(html[data-nav-solid]) .inner {
+  padding-top: 18px;
+  padding-bottom: 18px;
 }
 
 .nav[data-tone='light'] .logo,
 :global(html[data-nav-solid]) .logo {
+  height: 28px;
   filter: brightness(0.55) sepia(0.4);
 }
 
+/* On the dark ground the gold wordmark needs no darkening. */
+:global(html[data-theme='dark']) .nav[data-tone='light'] .logo,
+:global(html[data-theme='dark'][data-nav-solid]) .logo {
+  filter: none;
+}
+
+.nav[data-tone='light'] .link,
+.nav[data-tone='light'] .toggle,
+.nav[data-tone='light'] .cta,
+:global(html[data-nav-solid]) .link,
+:global(html[data-nav-solid]) .toggle,
+:global(html[data-nav-solid]) .cta {
+  color: var(--biru);
+  text-shadow: none;
+}
+
+.nav[data-tone='light'] .link:hover,
+.nav[data-tone='light'] .linkActive,
+.nav[data-tone='light'] .cta:hover,
+:global(html[data-nav-solid]) .link:hover,
+:global(html[data-nav-solid]) .linkActive,
+:global(html[data-nav-solid]) .cta:hover {
+  color: var(--emas-deep);
+}
+
+.nav[data-tone='light'] .cta::after,
+:global(html[data-nav-solid]) .cta::after {
+  background: var(--emas-deep);
+}
+
 .nav[data-tone='light'] .langLink,
-:global(html[data-nav-solid]) .langLink {
-  color: rgba(16, 34, 47, 0.45);
+.nav[data-tone='light'] .theme,
+:global(html[data-nav-solid]) .langLink,
+:global(html[data-nav-solid]) .theme {
+  color: rgba(var(--ink-rgb), 0.55);
+}
+
+.nav[data-tone='light'] .theme:hover,
+:global(html[data-nav-solid]) .theme:hover {
+  color: var(--emas-deep);
 }
 
 .nav[data-tone='light'] .langLink:hover,
@@ -169,12 +229,27 @@
 
 .nav[data-tone='light'] .langSep,
 :global(html[data-nav-solid]) .langSep {
-  color: rgba(16, 34, 47, 0.26);
+  color: rgba(var(--ink-rgb), 0.26);
 }
 
 .nav[data-tone='light'] .lang,
 :global(html[data-nav-solid]) .lang {
-  border-left-color: rgba(16, 34, 47, 0.16);
+  border-left-color: rgba(var(--ink-rgb), 0.16);
+}
+
+/* --- The light / dark switch --------------------------------------------
+   Sits with the language switch: a utility, drawn in the same quiet ink. */
+
+.theme {
+  display: inline-flex;
+  align-items: center;
+  margin-left: clamp(10px, 1.2vw, 18px);
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.4s ease;
+}
+
+.theme:hover {
+  color: #fff;
 }
 
 /* --- Small screens ---------------------------------------------------- */
@@ -192,6 +267,7 @@
   transition: color 0.4s ease;
 }
 
+/* The panel is navy in both themes: it is a curtain, not a page. */
 .panel {
   display: none;
   flex-direction: column;
@@ -202,7 +278,7 @@
 }
 
 .panel a:not(.cta) {
-  color: var(--ivory);
+  color: var(--ivory-on-dark);
   font: 400 12px/1 var(--font-karla), sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -210,8 +286,8 @@
 
 .panel .cta {
   align-self: flex-start;
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.8);
+  color: var(--emas-hover);
+  text-shadow: none;
 }
 
 /* Stacked in the panel, a left border and its indent make no sense. */
@@ -229,7 +305,12 @@
 }
 
 .panel .langCurrent {
-  color: var(--ivory);
+  color: var(--ivory-on-dark);
+}
+
+.panel .theme {
+  margin-left: 0;
+  color: rgba(246, 243, 231, 0.7);
 }
 
 .panelOpen {

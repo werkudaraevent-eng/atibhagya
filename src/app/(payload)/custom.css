@@ -1,0 +1,18 @@
+/*
+ * Adjustments to the Payload admin.
+ *
+ * Payload's own styles sit in the `payload-default` cascade layer; anything
+ * here is unlayered and so wins without needing to out-specify it.
+ */
+
+/* Live preview takes 60% of the screen by default and cannot be dragged.
+   The form is what the editor is working in — give it the larger share. */
+.live-preview-window {
+  width: 40%;
+}
+
+@media (max-width: 1024px) {
+  .live-preview-window {
+    width: 100%;
+  }
+}

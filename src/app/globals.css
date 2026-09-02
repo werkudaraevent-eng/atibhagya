@@ -1,5 +1,16 @@
+/*
+ * Palette — see design_handoff_atibhagya_website/README.md § Design Tokens.
+ *
+ * Two roles run through everything: `--biru` is the ink, `--ivory` the
+ * paper. Dark mode swaps the roles rather than inventing a second palette —
+ * the paper becomes the brand navy, the ink becomes ivory, and the gold is
+ * lifted a step so it still reads on the darker ground. The `-rgb` pairs
+ * exist so translucent ink and paper (hairlines, captions, veils) follow
+ * the swap too.
+ */
 :root {
-  /* Palette — see design_handoff_atibhagya_website/README.md § Design Tokens */
+  color-scheme: light;
+
   --biru: #10222f;
   --biru-footer: #0d1c27;
   --ivory: #f6f3e7;
@@ -9,16 +20,49 @@
   --emas-deep: #a97b2a;
   --emas-hover: #e3bd72;
 
-  --ink-body: rgba(16, 34, 47, 0.65);
-  --ink-label: rgba(16, 34, 47, 0.55);
-  --ink-caption: rgba(16, 34, 47, 0.45);
-  --hairline: rgba(16, 34, 47, 0.2);
-  --hairline-strong: rgba(16, 34, 47, 0.25);
+  --ink-rgb: 16, 34, 47;
+  --paper-rgb: 246, 243, 231;
+
+  --ink-body: rgba(var(--ink-rgb), 0.65);
+  --ink-label: rgba(var(--ink-rgb), 0.55);
+  --ink-caption: rgba(var(--ink-rgb), 0.45);
+  --hairline: rgba(var(--ink-rgb), 0.2);
+  --hairline-strong: rgba(var(--ink-rgb), 0.25);
 
   --radius: 2px;
   --radius-pill: 20px;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+
+  --biru: #ece7da;
+  --biru-footer: #0a1219;
+  --ivory: #0f1b25;
+  --ivory-2: #15242f;
+  --emas: #d4a95a;
+  --emas-deep: #c9a052;
+  --emas-hover: #e6c47c;
+
+  --ink-rgb: 236, 231, 218;
+  --paper-rgb: 15, 27, 37;
+
+  --ink-body: rgba(var(--ink-rgb), 0.72);
+  --ink-label: rgba(var(--ink-rgb), 0.55);
+  --ink-caption: rgba(var(--ink-rgb), 0.45);
+  --hairline: rgba(var(--ink-rgb), 0.18);
+  --hairline-strong: rgba(var(--ink-rgb), 0.24);
+}
+
+/* The swap itself is quiet: surfaces and type cross-fade, nothing snaps. */
+html[data-theme-transition] body,
+html[data-theme-transition] body * {
+  transition:
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease !important;
 }
 
 *,
@@ -82,7 +126,7 @@ textarea:focus {
 }
 
 ::placeholder {
-  color: rgba(16, 34, 47, 0.35);
+  color: rgba(var(--ink-rgb), 0.35);
 }
 
 /* Visible focus for keyboard users — the design has no focus ring of its own. */

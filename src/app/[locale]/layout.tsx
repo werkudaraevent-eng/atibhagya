@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { RefreshOnSave } from '@/components/site/RefreshOnSave'
+import { THEME_SCRIPT } from '@/components/site/ThemeToggle'
 import { karla, marcellus } from '@/lib/fonts'
 import { locales, type Locale } from '@/lib/content/types'
 import '../globals.css'
@@ -31,7 +33,14 @@ export default async function LocaleLayout({
       lang={locale}
       data-scroll-behavior="smooth"
       className={`${marcellus.variable} ${karla.variable}`}
+      // The theme script below sets `data-theme` before React runs; React
+      // must not treat that attribute as a mismatch.
+      suppressHydrationWarning
     >
+      <head>
+        {/* Applies the remembered (or system) theme before first paint. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         <noscript>
           {/* Without JS nothing would ever animate in, so show everything. */}
@@ -39,6 +48,7 @@ export default async function LocaleLayout({
         </noscript>
         <div data-page>{children}</div>
         {modal}
+        <RefreshOnSave />
       </body>
     </html>
   )

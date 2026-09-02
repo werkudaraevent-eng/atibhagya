@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import type { Locale, ProductCard, ProductCategory } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
@@ -29,10 +29,26 @@ const normalise = (value: string) =>
 
 export function ProductBrowser({ products, categories, locale, dict }: Props) {
   const t = dict.products
+
   const [category, setCategory] = useState<string | null>(null)
   const [audience, setAudience] = useState('')
   const [term, setTerm] = useState('')
   const [shown, setShown] = useState(PAGE)
+
+  // A product page's breadcrumb links back here with `?category=`, so the
+  // listing opens already narrowed to where the reader came from.
+  //
+  // Read from `window.location` after mount, deliberately not via
+  // `useSearchParams`: that hook needs a Suspense boundary on a static page,
+  // and a boundary makes React hydrate this subtree late — after GSAP has
+  // already written inline styles onto the rows — which fails hydration.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('category')
+    if (requested && categories.some((c) => c.slug === requested)) {
+      setCategory(requested)
+      setShown(PAGE)
+    }
+  }, [categories])
 
   const audiences = useMemo(() => {
     const present = new Set<string>()

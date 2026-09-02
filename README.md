@@ -170,6 +170,10 @@ limit.
 - **Atibhagya branding** on the login screen and nav, not Payload's.
 - **Preview** on every product and journey opens the real page; **live preview**
   puts it in a panel beside the form at mobile, tablet and desktop widths.
+  Every preview target — products, journeys, home, about, the catalogue
+  headings and the inquiry form — is a staff-only `/preview/…` route that
+  reads the **draft**, so Save Draft is enough to see a change; the public
+  routes read published content only.
 - **Bahasa Indonesia** is available for the whole admin UI. Each editor picks
   their own language in the account menu, so the choice is per-person rather
   than forced on everyone.
@@ -248,7 +252,24 @@ Storage.
 
 Local disk is fine for development and for any host with a persistent
 filesystem. It is **not** fine on Vercel, whose filesystem is read-only and
-ephemeral — an uploaded photo would vanish on the next deploy.
+ephemeral — an uploaded photo would vanish on the next deploy. With object
+storage on, uploads go **from the browser straight to the bucket** by signed
+URL (`clientUploads`), which is also what lets a hero video past Vercel's
+4.5 MB request cap.
+
+### The hero video
+
+Home → Hero → **Hero video** takes an upload (MP4 H.264 or WebM) or, failing
+that, a URL. The brief the field gives the team: 1920×1080, 10–15 seconds, no
+audio, around 4 Mbps, **under 12 MB** — the validator refuses anything larger
+or anything that is not a video, and the upload ceiling overall is 30 MB.
+
+What visitors get is decided on their side, not ours: the video is left out
+entirely — not loaded and paused, left out — on screens under 820px, when the
+browser reports Save-Data or a 2G-class connection, and for anyone who
+prefers reduced motion. They see the hero photograph, which is also the
+video's poster while it loads. Where it does play it is muted, looped,
+`preload="metadata"`, and fades in over the photograph once frames are ready.
 
 ### How content resolves
 
@@ -311,36 +332,75 @@ short fade with no movement.
 Submissions land in the `inquiries` collection, which is where the team reads,
 replies to and moves them through New → Contacted → Qualified → Closed.
 
-**The form's wording** is editable under Inquiries → Inquiry form: the
-heading, every field label, the private/group option labels, and the
-confirmation screen — in both locales. Anything left empty falls back to the
-approved copy in `src/lib/i18n/ui.ts`.
+**The form is built** under Inquiries → Inquiry form → Fields. Every field is
+a row: drag to reorder, remove, relabel, mark required, and choose full or
+half width (two halves sit side by side). Each row also has an **On the
+form** switch — off keeps the wording, options and rule but takes the field
+off the site, for questions that come and go; Remove deletes the row, and
+Versions can restore an earlier form. A row is one of:
 
-**Your own questions** can be added under the same global: label, key, type
-(short text, long text, email, phone, number, date, choose-one, yes/no),
-required or not, full or half width, placeholder and help line. Choose-one
-questions carry their own options. Answers are stored on each inquiry and
-included in the notification email.
+- a **text kind** — name, email, phone, private/group, organisation,
+  participants, location, date, goal, notes — each stored in its own column
+  on the inquiry, which is what the admin list, the notification email, the
+  status workflow and the CTA prefill are built on;
+- **Choose from the site** — a searchable combobox fed by a list the site
+  already has: products, journeys or product categories, as one choice or
+  several. Typing filters the list (seventy-three products are not something
+  to scroll); the choices sit inside the field as chips, collapsing behind
+  "+n more" past four. Built on Downshift, headless, so the look is the
+  form's own and the keyboard and screen-reader behaviour is not ours to get
+  wrong. Products and journeys are stored as links to the real documents; a
+  category by name. Add one row per list you want to ask about;
+- **Own ideas** — free text the visitor adds as many of as they like;
+- a **custom question** with its own key, type (short text, long text, email,
+  phone, number, date, month, choose one, choose several, yes/no), options,
+  placeholder and help line, stored by key.
 
-Two deliberate limits:
+With no rows saved, the approved default form in `src/lib/i18n/ui.ts` is
+shown — and shown *as rows*, labels and options filled in, so what the site
+does is always visible and editable rather than implied by an empty list.
+Rules enforced on save: the form always has an Email field (it is how the
+team replies), no kind or source appears twice, and every custom question has
+a unique key.
 
-- **The core fields stay fixed** — name, email, phone, private/group,
-  organisation, participants, location, date, goal, notes, and the interested
-  products and journeys. They are what the notification, the admin columns, the
-  status workflow and the CTA prefill are built on. A fully generic form
-  builder would store loose key/value pairs and lose all four; in particular
-  the prefill, which is a relationship to real products, cannot survive it.
-- **Layout is width, not free placement.** A question is full or half width and
-  falls in order after Notes. Free-form layout in a CMS reliably produces a
-  worse form than a constrained one, and restraint is the whole point here.
+Dropdowns — the private/group field and any custom choose-one — carry their
+own options on the row: a label per locale and a stored value. The heading
+and the confirmation screen are edited in the same global. Anything left
+empty falls back to the approved copy.
 
-Each answer stores the question's wording as it stood when the inquiry arrived,
-so rewording a question later does not rewrite what past visitors were asked.
-Required answers are re-checked on the server — the browser's copy of which
-questions are required is not taken on trust.
+**Show only when…** gives a row one rule: it appears only while another
+field's answer is one of the chosen values — Participants only for Group or
+Corporate, a "please specify" only after a Yes. Triggers are the form's own
+choice fields (private/group, custom choose-one / choose-several / yes-no),
+read live from the form so a row just added is already offered; the values
+offered are that trigger's options. A hidden field is neither required nor
+stored, and the rule is evaluated again on the server. Deliberately one rule
+per field, no AND/OR: the moment a form builder grows a rules engine the
+people it was built for stop using it.
 
-Live preview covers the inquiry form, so the page can be watched while the
-wording and questions are edited.
+Each custom answer stores the question's wording as it stood when the inquiry
+arrived, so rewording it later does not rewrite what past visitors were asked.
+Validation runs again on the server against the configuration as it is read
+from the CMS — the browser's copy of which fields exist and which are required
+is not taken on trust, and a field the team has removed is not stored even if
+an old draft still carries it.
+
+Live preview covers the inquiry form and reads the draft, so the page can be
+watched while fields, rules and wording are edited, before anything is
+published. The panel refreshes on Save Draft, not on every keystroke.
+
+**The list keeps itself current.** A Refresh control sits above the inquiries
+table, and the table re-fetches on its own once a minute while it is on
+screen, so a new inquiry appears without anyone reloading.
+
+**Export to Excel** sits in the same bar: a real `.xlsx` (built with
+`exceljs` at `/export/inquiries`, staff only) of the ticked rows or of
+everything — one row per inquiry, one column per question including each
+custom one by its label, products and journeys by title, header frozen,
+filters on. The list's ⋯ menu also offers Payload's own export
+(`@payloadcms/plugin-import-export`) for CSV or JSON with a choice of
+columns; it downloads directly and writes nothing to disk, which matters on
+Vercel.
 
 **Who gets told** is set in the CMS, under Site settings → Inquiry
 notifications. Add as many recipients as you like; each one receives a copy.
@@ -397,6 +457,28 @@ Still open, and deliberate:
 - **A privacy notice is still missing.** The inquiry collects contact details
   and free text; Indonesia's PDP law and GDPR both expect a notice and a
   retention period. That is a legal call, not a code one.
+
+## Light and dark
+
+The palette is two roles, ink (`--biru`) and paper (`--ivory`), plus gold.
+Dark mode swaps the roles rather than adding a second palette: under
+`html[data-theme='dark']` the paper becomes the brand navy, the ink becomes
+ivory, and the gold is lifted a step so it still carries on the darker
+ground. Translucent ink and paper — hairlines, captions, the nav's veil, the
+dialog's backdrop — are written as `rgba(var(--ink-rgb), …)` /
+`rgba(var(--paper-rgb), …)` so they follow the swap. What sits on a
+photograph (hero type, scrims, the ghost button, the mobile menu curtain)
+is fixed and does not change with the theme, because the photograph does
+not.
+
+The switch is in the header beside EN · ID: a sun that a shadow slides
+across until only a crescent is left, the rays folding away — the same
+motion in reverse to come back. The choice is kept in `localStorage`
+(`atibhagya:theme`); until one is made the site follows the system
+preference. A two-line script in `<head>` applies the theme before first
+paint so nothing flashes, and the change itself cross-fades colours over
+half a second, then removes that blanket transition so it never touches
+the site's own motion.
 
 ## Motion
 

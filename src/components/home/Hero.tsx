@@ -5,6 +5,7 @@ import page from '@/components/site/Page.module.css'
 import type { HomeContent } from '@/lib/content/types'
 import { Lines } from '@/lib/text'
 import styles from './Hero.module.css'
+import { HeroVideo } from './HeroVideo'
 
 type Props = {
   hero: HomeContent['hero']
@@ -20,9 +21,7 @@ export function Hero({ hero, ctaHref }: Props) {
     <section className={styles.hero} id="top">
       <div className={styles.zoom} data-zoom>
         <CreditImage image={hero.image} sizes="100vw" priority />
-        {hero.video ? (
-          <video className={styles.video} src={hero.video} autoPlay muted loop playsInline />
-        ) : null}
+        {hero.video ? <HeroVideo src={hero.video} poster={hero.image.src} /> : null}
       </div>
 
       <div className={styles.scrim} />

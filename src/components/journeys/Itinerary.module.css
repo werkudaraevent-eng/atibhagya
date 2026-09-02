@@ -65,7 +65,7 @@
   grid-template-columns: 72px 1fr;
   gap: 20px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(16, 34, 47, 0.08);
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.08);
   align-items: baseline;
 }
 

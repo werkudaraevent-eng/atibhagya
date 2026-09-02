@@ -1,44 +1,73 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { submitInquiry } from '@/app/[locale]/inquiry/actions'
 import page from '@/components/site/Page.module.css'
 import type { Locale, SiteContent } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
+import { TEXT_KINDS, type FormField, type PickSource } from '@/lib/inquiry-fields'
 import {
+  DRAFT_KEY,
   DRAFT_STORAGE_KEY,
+  PICK_KEY,
   emptyDraft,
-  missingAnswers,
+  readField,
   validate,
+  visibleFields,
   type FieldErrors,
   type InquiryDraft,
 } from '@/lib/inquiries'
 import styles from './InquiryForm.module.css'
+import { ChoiceSelect } from './ChoiceSelect'
+import { TokenSelect } from './TokenSelect'
 
 export type Choice = { slug: string; title: string }
+
+/** "Products you are interested in" → "Products": the recap keys stay short. */
+const shortKey = (label: string) => label.split(/\s+you\s|\syang\s/i)[0].trim()
+
+/** The lists on the site a "choose from the site" field can draw on. */
+export type Choices = Record<PickSource, Choice[]>
 
 type Props = {
   locale: Locale
   dict: Dict
   site: SiteContent
-  products: Choice[]
-  journeys: Choice[]
+  choices: Choices
   /** Prefill carried by the CTA from a product or journey page. */
   initialProducts?: string[]
   initialJourneys?: string[]
   onDone?: () => void
+  /**
+   * The invitation above the form — eyebrow, headline, lede. It belongs to
+   * the form, so it leaves with the form once the inquiry has been sent and
+   * the thank-you stands alone.
+   */
+  heading?: ReactNode
+  /** Wraps the form and the thank-you alike, e.g. the page's narrow column. */
+  frameClassName?: string
+  /** Extra room above the thank-you where the heading used to be. */
+  doneClassName?: string
 }
 
+/**
+ * The inquiry form, rendered from the field list the team built in the CMS.
+ * Text kinds write to their own key on the draft; picks hold slugs from one
+ * of the site's lists; ideas are the visitor's own words; custom questions
+ * are answered by name.
+ */
 export function InquiryForm({
   locale,
   dict,
   site,
-  products,
-  journeys,
+  choices,
   initialProducts = [],
   initialJourneys = [],
   onDone,
+  heading,
+  frameClassName,
+  doneClassName,
 }: Props) {
   const t = dict.inquiry
   const [draft, setDraft] = useState<InquiryDraft>({
@@ -47,11 +76,10 @@ export function InquiryForm({
     journeySlugs: initialJourneys,
   })
   const [errors, setErrors] = useState<FieldErrors>({})
-  const [answerErrors, setAnswerErrors] = useState<string[]>([])
   const [formError, setFormError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
-  const [custom, setCustom] = useState('')
+  const [idea, setIdea] = useState('')
   const trapRef = useRef<HTMLInputElement>(null)
   const doneRef = useRef<HTMLHeadingElement>(null)
   const skipFirstSave = useRef(true)
@@ -61,13 +89,12 @@ export function InquiryForm({
     try {
       const stored = window.localStorage.getItem(DRAFT_STORAGE_KEY)
       if (!stored) return
-      const saved = JSON.parse(stored) as InquiryDraft
-      setDraft((current) => ({
+      const saved = JSON.parse(stored) as Partial<InquiryDraft>
+      setDraft(() => ({
         ...emptyDraft,
         ...saved,
         productSlugs: [...new Set([...initialProducts, ...(saved.productSlugs ?? [])])],
         journeySlugs: [...new Set([...initialJourneys, ...(saved.journeySlugs ?? [])])],
-        ...(current.productSlugs.length ? {} : {}),
       }))
     } catch {
       // A corrupt draft is not worth interrupting anyone over.
@@ -93,40 +120,57 @@ export function InquiryForm({
     if (done) doneRef.current?.focus()
   }, [done])
 
+  // The private/group choices come from the CMS. If the draft (or the default)
+  // names one that no longer exists, fall to the first real choice rather than
+  // send a value the team has removed.
+  const audienceField = t.fields.find((f) => f.kind === 'audience')
+  const audienceChoices = audienceField?.options.length
+    ? audienceField.options
+    : t.audienceOptions
+  useEffect(() => {
+    if (!audienceField) return
+    if (audienceChoices.some((o) => o.value === draft.audience)) return
+    const first = audienceChoices[0]?.value ?? ''
+    setDraft((current) => ({ ...current, audience: first }))
+  }, [audienceField, audienceChoices, draft.audience])
+
+  const clearError = (name: string) =>
+    setErrors((current) => ({ ...current, [name]: undefined }))
+
   const set = <K extends keyof InquiryDraft>(key: K, value: InquiryDraft[K]) => {
     setDraft((current) => ({ ...current, [key]: value }))
-    setErrors((current) => ({ ...current, [key]: undefined }))
   }
 
-  const addProduct = (slug: string) => {
-    if (!slug || draft.productSlugs.includes(slug)) return
-    set('productSlugs', [...draft.productSlugs, slug])
+  /** Writes a text field's value to wherever that kind lives on the draft. */
+  const write = (field: FormField, value: string) => {
+    if (field.kind === 'custom') {
+      setDraft((current) => ({
+        ...current,
+        answers: { ...current.answers, [field.name]: value },
+      }))
+    } else if (field.kind !== 'pick' && field.kind !== 'ideas') {
+      set(DRAFT_KEY[field.kind], value)
+    }
+    clearError(field.name)
   }
 
-  const addJourney = (slug: string) => {
-    if (!slug || draft.journeySlugs.includes(slug)) return
-    set('journeySlugs', [...draft.journeySlugs, slug])
-  }
-
-  const addCustom = () => {
-    const label = custom.trim()
+  const addIdea = () => {
+    const label = idea.trim()
     if (!label || draft.customActivities.includes(label)) return
     set('customActivities', [...draft.customActivities, label])
-    setCustom('')
+    setIdea('')
+    clearError('ideas')
   }
 
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     if (submitting) return
 
-    const found = validate(draft, t.errors)
-    const missing = missingAnswers(draft, t.questions)
-    if (Object.keys(found).length > 0 || missing.length > 0) {
+    const found = validate(draft, t.fields, t.errors)
+    if (Object.keys(found).length > 0) {
       setErrors(found)
-      setAnswerErrors(missing)
       return
     }
-    setAnswerErrors([])
 
     setSubmitting(true)
     setFormError(null)
@@ -147,47 +191,272 @@ export function InquiryForm({
   }
 
   if (done) {
+    // What they asked for, read back: the picks by title, and the month.
+    const titles = (source: PickSource, slugs: string[]) =>
+      slugs.map((s) => choices[source]?.find((c) => c.slug === s)?.title ?? s)
+    const recap: { key: string; value: string }[] = [
+      { key: t.products, value: titles('products', draft.productSlugs).join(', ') },
+      { key: t.journeys, value: titles('journeys', draft.journeySlugs).join(', ') },
+      { key: t.categories, value: titles('categories', draft.categorySlugs).join(', ') },
+      { key: t.ideas, value: draft.customActivities.join(', ') },
+      { key: t.date, value: draft.preferredDate },
+    ].filter((row) => row.value)
+
     return (
-      <div className={styles.done}>
-        <div className={styles.doneMark} aria-hidden="true">
-          &ldquo;
+      <div className={doneClassName}>
+        <div className={frameClassName}>
+          <div className={`${styles.done} ${styles.appear}`}>
+            <div className={styles.doneEyebrow}>{t.doneEyebrow}</div>
+            <h2 className={styles.doneHeading} id="inquiry-title" tabIndex={-1} ref={doneRef}>
+              {t.doneHeading}
+            </h2>
+            <p className={styles.doneBody}>{t.doneBody.replace('{time}', site.responseTime)}</p>
+
+            {recap.length ? (
+              <dl className={styles.doneRecap}>
+                {recap.map((row) => (
+                  <div key={row.key} className={styles.doneRecapRow}>
+                    <dt className={styles.doneRecapKey}>{shortKey(row.key)}</dt>
+                    <dd>{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+
+            <p className={styles.doneContact}>
+              {t.doneContact} <a href={`mailto:${site.email}`}>{site.email}</a>
+            </p>
+            {onDone ? (
+              <button type="button" className={styles.doneBack} onClick={onDone}>
+                {t.doneBack}
+              </button>
+            ) : null}
+          </div>
         </div>
-        <h2 className={styles.doneHeading} tabIndex={-1} ref={doneRef}>
-          {t.doneHeading}
-        </h2>
-        <p className={styles.doneBody}>{t.doneBody.replace('{time}', site.responseTime)}</p>
-        <p className={styles.doneContact}>
-          {t.doneContact} <a href={`mailto:${site.email}`}>{site.email}</a>
-        </p>
-        <div className={styles.doneRule} />
-        {onDone ? (
-          <button type="button" className={styles.doneBack} onClick={onDone}>
-            {t.doneBack}
-          </button>
-        ) : null}
       </div>
     )
   }
 
-  const chips = [
-    ...draft.productSlugs.map((slug) => ({
-      key: `p:${slug}`,
-      label: products.find((p) => p.slug === slug)?.title ?? slug,
-      remove: () => set('productSlugs', draft.productSlugs.filter((s) => s !== slug)),
-    })),
-    ...draft.journeySlugs.map((slug) => ({
-      key: `j:${slug}`,
-      label: journeys.find((j) => j.slug === slug)?.title ?? slug,
-      remove: () => set('journeySlugs', draft.journeySlugs.filter((s) => s !== slug)),
-    })),
-    ...draft.customActivities.map((label) => ({
-      key: `c:${label}`,
-      label,
-      remove: () => set('customActivities', draft.customActivities.filter((l) => l !== label)),
-    })),
-  ]
+  const renderError = (name: string) =>
+    errors[name] ? (
+      <span className={styles.error} role="alert">
+        {errors[name]}
+      </span>
+    ) : null
+
+  /** The chosen items, drawn inside the field's own line. */
+  const renderChips = (items: { key: string; label: string; remove: () => void }[]) =>
+    items.map((chip) => (
+      <span key={chip.key} className={styles.chip}>
+        {chip.label}
+        <button
+          type="button"
+          className={styles.chipRemove}
+          onClick={chip.remove}
+          aria-label={`${t.remove}: ${chip.label}`}
+        >
+          ×
+        </button>
+      </span>
+    ))
+
+  // A field with a rule only mounts once its trigger allows it, so its
+  // mount is the moment to ease it in rather than have it snap into place.
+  const widthClass = (field: FormField) =>
+    [styles.field, field.width === 'full' ? styles.wide : '', field.showWhen ? styles.appear : '']
+      .filter(Boolean)
+      .join(' ')
+
+  const shown = visibleFields(draft, t.fields)
+
+  /** The label, with a quiet gold mark when the field must be filled. */
+  const renderLabel = (field: FormField) => (
+    <span className={styles.label}>
+      {field.label}
+      {field.required ? (
+        <span className={styles.required} aria-hidden="true">
+          *
+        </span>
+      ) : null}
+    </span>
+  )
+
+  const anyRequired = shown.some((f) => f.required)
+
+  const tokenLabels = {
+    removeLabel: t.remove,
+    emptyLabel: t.noMatch,
+    moreLabel: t.moreChips,
+    fewerLabel: t.fewerChips,
+  }
+
+  /**
+   * A field fed by one of the site's lists: a searchable combobox, with the
+   * choices as chips inside it when several are allowed.
+   */
+  const renderPick = (field: FormField) => {
+    const source = field.source ?? 'products'
+    const key = PICK_KEY[source]
+
+    return (
+      <div key={field.name} className={widthClass(field)}>
+        <TokenSelect
+          label={field.label}
+          options={(choices[source] ?? []).map((c) => ({ value: c.slug, label: c.title }))}
+          selected={draft[key]}
+          multiple={field.multiple !== false}
+          required={field.required}
+          invalid={Boolean(errors[field.name])}
+          placeholder={field.placeholder ?? t.typeToSearch}
+          onChange={(values) => {
+            set(key, values)
+            clearError(field.name)
+          }}
+          {...tokenLabels}
+        />
+        {field.help ? <span className={styles.hint}>{field.help}</span> : null}
+        {renderError(field.name)}
+      </div>
+    )
+  }
+
+  /** Free text, as many entries as the visitor likes. */
+  const renderIdeas = (field: FormField) => (
+    <div key={field.name} className={widthClass(field)}>
+      {renderLabel(field)}
+
+      <div className={styles.tokens} aria-invalid={errors[field.name] ? true : undefined}>
+        {renderChips(
+          draft.customActivities.map((label) => ({
+            key: label,
+            label,
+            remove: () => set('customActivities', draft.customActivities.filter((l) => l !== label)),
+          })),
+        )}
+        <input
+          className={styles.input}
+          type="text"
+          placeholder={field.placeholder ?? t.ideasPlaceholder}
+          value={idea}
+          aria-label={field.label}
+          onChange={(e) => setIdea(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault()
+              addIdea()
+            }
+          }}
+        />
+        <button type="button" className={styles.addButton} onClick={addIdea}>
+          {t.addIdea}
+        </button>
+      </div>
+
+      {field.help ? <span className={styles.hint}>{field.help}</span> : null}
+      {renderError(field.name)}
+    </div>
+  )
+
+  /** A custom "choose several": the picked values live in one answer, comma-joined. */
+  const renderMultiselect = (field: FormField) => (
+    <div key={field.name} className={widthClass(field)}>
+      <TokenSelect
+        label={field.label}
+        options={field.options}
+        selected={readField(draft, field).split(', ').filter(Boolean)}
+        required={field.required}
+        invalid={Boolean(errors[field.name])}
+        placeholder={field.placeholder ?? t.typeToSearch}
+        onChange={(values) => write(field, values.join(', '))}
+        {...tokenLabels}
+      />
+      {field.help ? <span className={styles.hint}>{field.help}</span> : null}
+      {renderError(field.name)}
+    </div>
+  )
+
+  /**
+   * One choice from a short list — the private/group field, or a custom
+   * "choose one". The private/group field has no empty choice: it is a
+   * preference, and the first choice is the honest default. A custom one
+   * starts blank.
+   */
+  const renderChoice = (field: FormField) => (
+    <div key={field.name} className={widthClass(field)}>
+      <ChoiceSelect
+        label={field.label}
+        options={field.kind === 'audience' ? audienceChoices : field.options}
+        value={readField(draft, field)}
+        required={field.required}
+        invalid={Boolean(errors[field.name])}
+        placeholder={field.kind === 'audience' ? undefined : (field.placeholder ?? '—')}
+        onChange={(value) => write(field, value)}
+      />
+      {field.help ? <span className={styles.hint}>{field.help}</span> : null}
+      {renderError(field.name)}
+    </div>
+  )
+
+  const renderField = (field: FormField) => {
+    if (field.kind === 'pick') return renderPick(field)
+    if (field.kind === 'ideas') return renderIdeas(field)
+    if (field.type === 'multiselect') return renderMultiselect(field)
+    if (field.type === 'select') return renderChoice(field)
+
+    const value = readField(draft, field)
+    const invalid = errors[field.name] ? true : undefined
+    const autoComplete = field.kind === 'custom' ? undefined : TEXT_KINDS[field.kind].autoComplete
+
+    return (
+      <label key={field.name} className={widthClass(field)}>
+        {renderLabel(field)}
+
+        {field.type === 'textarea' ? (
+          <textarea
+            className={styles.textarea}
+            rows={field.kind === 'goal' ? 4 : 3}
+            value={value}
+            placeholder={field.placeholder}
+            aria-invalid={invalid}
+            aria-required={field.required || undefined}
+            onChange={(e) => write(field, e.target.value)}
+          />
+        ) : field.type === 'checkbox' ? (
+          <span className={styles.checkbox}>
+            <input
+              type="checkbox"
+              checked={value === 'yes'}
+              aria-invalid={invalid}
+              onChange={(e) => write(field, e.target.checked ? 'yes' : '')}
+            />
+            <span>{field.placeholder ?? ''}</span>
+          </span>
+        ) : (
+          <input
+            className={styles.input}
+            type={field.type}
+            autoComplete={autoComplete}
+            value={value}
+            placeholder={field.placeholder}
+            aria-invalid={invalid}
+            aria-required={field.required || undefined}
+            onChange={(e) => write(field, e.target.value)}
+          />
+        )}
+
+        {field.help ? <span className={styles.hint}>{field.help}</span> : null}
+        {renderError(field.name)}
+      </label>
+    )
+  }
 
   return (
+    <>
+      {/* On its own, as a single child: an element handed in from a server
+          component and placed straight into a list of siblings draws React's
+          missing-key warning, though nothing is actually a list. */}
+      {heading ? <div>{heading}</div> : null}
+      <div className={frameClassName}>
     <form className={styles.form} onSubmit={onSubmit} noValidate>
       {/* Off-screen rather than display:none — plenty of bots skip hidden
           fields but fill anything they can read. */}
@@ -201,293 +470,16 @@ export function InquiryForm({
         aria-hidden="true"
       />
 
-      <div className={styles.grid}>
-        <label className={styles.field}>
-          <span className={styles.label}>{t.name}</span>
-          <input
-            className={styles.input}
-            type="text"
-            autoComplete="name"
-            value={draft.name}
-            onChange={(e) => set('name', e.target.value)}
-            aria-invalid={errors.name ? true : undefined}
-            required
-          />
-          {errors.name ? (
-            <span className={styles.error} role="alert">
-              {errors.name}
-            </span>
-          ) : null}
-        </label>
+      {anyRequired ? (
+        <p className={styles.requiredNote}>
+          <span className={styles.required} aria-hidden="true">
+            *
+          </span>{' '}
+          {t.requiredNote}
+        </p>
+      ) : null}
 
-        <label className={styles.field}>
-          <span className={styles.label}>{t.email}</span>
-          <input
-            className={styles.input}
-            type="email"
-            autoComplete="email"
-            value={draft.email}
-            onChange={(e) => set('email', e.target.value)}
-            aria-invalid={errors.email ? true : undefined}
-            required
-          />
-          {errors.email ? (
-            <span className={styles.error} role="alert">
-              {errors.email}
-            </span>
-          ) : null}
-        </label>
-
-        <label className={styles.field}>
-          <span className={styles.label}>{t.phone}</span>
-          <input
-            className={styles.input}
-            type="tel"
-            autoComplete="tel"
-            value={draft.phone}
-            onChange={(e) => set('phone', e.target.value)}
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span className={styles.label}>{t.audience}</span>
-          <select
-            className={styles.select}
-            value={draft.audience}
-            onChange={(e) => set('audience', e.target.value)}
-          >
-            {t.audienceOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={styles.field}>
-          <span className={styles.label}>{t.organisation}</span>
-          <input
-            className={styles.input}
-            type="text"
-            autoComplete="organization"
-            value={draft.organisation}
-            onChange={(e) => set('organisation', e.target.value)}
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span className={styles.label}>{t.pax}</span>
-          <input
-            className={styles.input}
-            type="text"
-            value={draft.pax}
-            onChange={(e) => set('pax', e.target.value)}
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span className={styles.label}>{t.location}</span>
-          <input
-            className={styles.input}
-            type="text"
-            value={draft.preferredLocation}
-            onChange={(e) => set('preferredLocation', e.target.value)}
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span className={styles.label}>{t.date}</span>
-          <input
-            className={styles.input}
-            type="month"
-            value={draft.preferredDate}
-            onChange={(e) => set('preferredDate', e.target.value)}
-          />
-        </label>
-
-        <label className={`${styles.field} ${styles.wide}`}>
-          <span className={styles.label}>{t.goal}</span>
-          <textarea
-            className={styles.textarea}
-            rows={4}
-            value={draft.goal}
-            onChange={(e) => set('goal', e.target.value)}
-            aria-invalid={errors.goal ? true : undefined}
-            required
-          />
-          {errors.goal ? (
-            <span className={styles.error} role="alert">
-              {errors.goal}
-            </span>
-          ) : null}
-        </label>
-
-        <label className={`${styles.field} ${styles.wide}`}>
-          <span className={styles.label}>{t.notes}</span>
-          <textarea
-            className={styles.textarea}
-            rows={3}
-            value={draft.notes}
-            onChange={(e) => set('notes', e.target.value)}
-          />
-        </label>
-
-        {/* Questions the team added in the CMS. */}
-        {t.questions.map((question) => {
-          const value = draft.answers[question.name] ?? ''
-          const invalid = answerErrors.includes(question.name)
-          const setAnswer = (next: string) => {
-            setDraft((current) => ({
-              ...current,
-              answers: { ...current.answers, [question.name]: next },
-            }))
-            setAnswerErrors((current) => current.filter((n) => n !== question.name))
-          }
-
-          return (
-            <label
-              key={question.name}
-              className={
-                question.width === 'half' ? styles.field : `${styles.field} ${styles.wide}`
-              }
-            >
-              <span className={styles.label}>{question.label}</span>
-
-              {question.type === 'textarea' ? (
-                <textarea
-                  className={styles.textarea}
-                  rows={3}
-                  value={value}
-                  placeholder={question.placeholder}
-                  aria-invalid={invalid || undefined}
-                  onChange={(e) => setAnswer(e.target.value)}
-                />
-              ) : question.type === 'select' ? (
-                <select
-                  className={styles.select}
-                  value={value}
-                  aria-invalid={invalid || undefined}
-                  onChange={(e) => setAnswer(e.target.value)}
-                >
-                  <option value="" />
-                  {question.options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              ) : question.type === 'checkbox' ? (
-                <span className={styles.checkbox}>
-                  <input
-                    type="checkbox"
-                    checked={value === 'yes'}
-                    onChange={(e) => setAnswer(e.target.checked ? 'yes' : '')}
-                  />
-                  <span>{question.placeholder ?? ''}</span>
-                </span>
-              ) : (
-                <input
-                  className={styles.input}
-                  type={question.type}
-                  value={value}
-                  placeholder={question.placeholder}
-                  aria-invalid={invalid || undefined}
-                  onChange={(e) => setAnswer(e.target.value)}
-                />
-              )}
-
-              {question.help ? <span className={styles.hint}>{question.help}</span> : null}
-              {invalid ? (
-                <span className={styles.error} role="alert">
-                  {dict.inquiry.errors.required}
-                </span>
-              ) : null}
-            </label>
-          )
-        })}
-
-        <fieldset className={styles.activities}>
-          <legend className={styles.label}>{t.interested}</legend>
-          <p className={styles.hint}>{t.interestedHint}</p>
-
-          {chips.length ? (
-            <div className={styles.chips}>
-              {chips.map((chip) => (
-                <span key={chip.key} className={styles.chip}>
-                  {chip.label}
-                  <button
-                    type="button"
-                    className={styles.chipRemove}
-                    onClick={chip.remove}
-                    aria-label={`${t.remove}: ${chip.label}`}
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-          ) : null}
-
-          <div className={styles.adders}>
-            <label className={styles.adder}>
-              <span className={styles.label}>{dict.nav.products}</span>
-              <select
-                className={styles.select}
-                value=""
-                onChange={(e) => addProduct(e.target.value)}
-              >
-                <option value="" />
-                {products
-                  .filter((p) => !draft.productSlugs.includes(p.slug))
-                  .map((p) => (
-                    <option key={p.slug} value={p.slug}>
-                      {p.title}
-                    </option>
-                  ))}
-              </select>
-            </label>
-
-            <label className={styles.adder}>
-              <span className={styles.label}>{dict.nav.journeys}</span>
-              <select
-                className={styles.select}
-                value=""
-                onChange={(e) => addJourney(e.target.value)}
-              >
-                <option value="" />
-                {journeys
-                  .filter((j) => !draft.journeySlugs.includes(j.slug))
-                  .map((j) => (
-                    <option key={j.slug} value={j.slug}>
-                      {j.title}
-                    </option>
-                  ))}
-              </select>
-            </label>
-
-            <label className={styles.adder}>
-              <span className={styles.label}>{t.addCustom}</span>
-              <input
-                className={styles.input}
-                type="text"
-                placeholder={t.customPlaceholder}
-                value={custom}
-                onChange={(e) => setCustom(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    addCustom()
-                  }
-                }}
-              />
-            </label>
-
-            <button type="button" className={styles.addButton} onClick={addCustom}>
-              {t.addCustom}
-            </button>
-          </div>
-        </fieldset>
-      </div>
+      <div className={styles.grid}>{shown.map(renderField)}</div>
 
       {formError ? (
         <p className={`${styles.error} ${styles.formError}`} role="alert">
@@ -505,5 +497,7 @@ export function InquiryForm({
         </button>
       </div>
     </form>
+      </div>
+    </>
   )
 }

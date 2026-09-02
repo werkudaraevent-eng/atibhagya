@@ -52,6 +52,9 @@ const nextConfig = {
           { source: `/${s}`, destination: `/en/${s}` },
           { source: `/${s}/:slug`, destination: `/en/${s}/:slug` },
         ]),
+        // The admin's draft preview, English locale.
+        { source: '/preview/:section/:slug', destination: '/en/preview/:section/:slug' },
+        { source: '/preview/:section', destination: '/en/preview/:section' },
       ],
       afterFiles: [],
       fallback: [],

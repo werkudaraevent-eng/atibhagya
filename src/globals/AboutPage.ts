@@ -1,5 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateGlobal } from '../lib/revalidate'
+import { webImage } from '../lib/validate-media'
+
 /**
  * About is the most reading-heavy page and stays a singleton: one calm block,
  * then another, then a reflective statement.
@@ -9,6 +12,7 @@ export const AboutPage: GlobalConfig = {
   label: 'About page',
   admin: { group: 'Pages' },
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal(['/about'])] },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.
@@ -31,7 +35,7 @@ export const AboutPage: GlobalConfig = {
       labels: { singular: 'Paragraph block', plural: 'Paragraph blocks' },
       fields: [{ name: 'text', type: 'textarea', required: true, localized: true }],
     },
-    { name: 'image', type: 'upload', relationTo: 'media' },
+    { name: 'image', type: 'upload', relationTo: 'media', validate: webImage },
     {
       name: 'statement',
       type: 'textarea',

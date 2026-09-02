@@ -27,6 +27,10 @@ export const Inquiries: CollectionConfig = {
     group: 'Inquiries',
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'audience', 'preferredDate', 'status', 'createdAt'],
+    components: {
+      // A Refresh control, and a quiet re-fetch every minute.
+      beforeListTable: ['@/admin/RefreshList#RefreshList'],
+    },
   },
   access: {
     create: () => false,
@@ -76,19 +80,20 @@ export const Inquiries: CollectionConfig = {
           ...(doc.customActivities ?? []).map((c: { label?: string }) => c.label),
         ].filter(Boolean)
 
+        // Only what was asked and answered. A field the team has removed from
+        // the form should not show up as a row of dashes.
         const lines = [
           `${doc.name} · ${doc.email}`,
           doc.phone ? `Phone / WhatsApp: ${doc.phone}` : null,
           doc.organisation ? `Company / community: ${doc.organisation}` : null,
           '',
-          `Type: ${doc.audience ?? '—'}`,
-          `Participants: ${doc.pax ?? '—'}`,
-          `Preferred location: ${doc.preferredLocation ?? '—'}`,
-          `Preferred date: ${doc.preferredDate ?? '—'}`,
+          doc.audience ? `Type: ${doc.audience}` : null,
+          doc.pax ? `Participants: ${doc.pax}` : null,
+          doc.preferredLocation ? `Preferred location: ${doc.preferredLocation}` : null,
+          doc.preferredDate ? `Preferred date: ${doc.preferredDate}` : null,
+          interested.length ? `Interested in: ${interested.join(', ')}` : null,
           '',
-          `Interested in: ${interested.join(', ') || '—'}`,
-          '',
-          `Goal: ${doc.goal ?? '—'}`,
+          doc.goal ? `Goal: ${doc.goal}` : null,
           doc.notes ? `Notes: ${doc.notes}` : null,
           ...((doc.answers ?? []) as { name?: string; label?: string; value?: string }[])
             .filter((a) => a.value)
@@ -130,12 +135,12 @@ export const Inquiries: CollectionConfig = {
         { name: 'phone', type: 'text', maxLength: 40 },
         {
           name: 'audience',
-          type: 'select',
-          options: [
-            { label: 'Private', value: 'private' },
-            { label: 'Group', value: 'group' },
-            { label: 'Corporate', value: 'corporate' },
-          ],
+          type: 'text',
+          maxLength: 40,
+          admin: {
+            description:
+              'The choice made in the "Private / group" field. Its options are set on the inquiry form.',
+          },
         },
         {
           name: 'organisation',
@@ -179,9 +184,9 @@ export const Inquiries: CollectionConfig = {
     },
     {
       type: 'collapsible',
-      label: 'Your own questions',
+      label: 'Custom questions',
       admin: {
-        description: 'Answers to the questions configured under Inquiries → Inquiry form.',
+        description: 'Answers to the custom questions configured under Inquiries → Inquiry form.',
       },
       fields: [
         {

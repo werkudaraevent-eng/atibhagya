@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateEverything } from '../lib/revalidate'
 import { adminOnly, signedIn } from './Users'
 
 /**
@@ -20,6 +21,7 @@ export const ProductCategories: CollectionConfig = {
     update: signedIn,
     delete: adminOnly,
   },
+  hooks: { afterChange: [revalidateEverything] },
   defaultSort: 'order',
   fields: [
     { name: 'name', type: 'text', required: true, localized: true },

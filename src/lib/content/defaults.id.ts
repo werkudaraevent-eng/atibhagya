@@ -39,14 +39,14 @@ export const homeId: HomeContent = {
   },
   hero: {
     ...homeEn.hero,
-    eyebrow: '01 / Pembuka',
+    eyebrow: 'Atibhagya · Indonesia',
     headline: 'Wellness yang berakar\npada tempat dan kehadiran.',
     statement:
       'Temukan cara yang lebih bermakna untuk merasakan kesejahteraan melalui kearifan Indonesia yang hidup.',
     ctaLabel: 'Jelajahi pengalaman kami',
   },
   why: {
-    eyebrow: '02 / Mengapa Atibhagya',
+    eyebrow: 'Mengapa Atibhagya',
     headline: 'Cara yang lebih tenang dalam merancang wellness.',
     body: 'Tenang, membumi, berbudaya, dan lentur untuk kebutuhan privat, kelompok, maupun korporat. Kami percaya kesejahteraan tidak lahir dari satu perawatan atau satu momen — ia dibentuk melalui rangkaian pengalaman yang disengaja.',
     pillars: [
@@ -65,7 +65,7 @@ export const homeId: HomeContent = {
     ],
   },
   featured: {
-    eyebrow: '03 / Pengalaman pilihan',
+    eyebrow: 'Pengalaman pilihan',
     headline: 'Pengalaman pilihan',
   },
   cta: {
@@ -83,7 +83,7 @@ export const aboutId: AboutContent = {
     description:
       'Atibhagya adalah brand pengalaman wellness yang terinspirasi kearifan Indonesia yang hidup.',
   },
-  eyebrow: '01 / Tentang',
+  eyebrow: 'Tentang Atibhagya',
   headline: 'Cara yang lebih penuh pertimbangan\nuntuk merasakan wellness.',
   lede: 'Berakar pada budaya dan alam, dirancang dengan kesederhanaan kontemporer.',
   body: [
@@ -102,9 +102,12 @@ export const aboutId: AboutContent = {
 }
 
 export const categoriesId: ProductCategory[] = [
-  { ...categoriesEn[0], name: 'Tubuh & Perawatan' },
-  { ...categoriesEn[1], name: 'Raga, Jiwa & Batin' },
-  { ...categoriesEn[2], name: 'Korporat & Kelompok' },
+  { ...categoriesEn[0], name: 'Ritual & Upacara' },
+  { ...categoriesEn[1], name: 'Penyembuhan & Bunyi' },
+  { ...categoriesEn[2], name: 'Yoga & Gerak' },
+  { ...categoriesEn[3], name: 'Spa & Retret' },
+  { ...categoriesEn[4], name: 'Alam & Nutrisi' },
+  { ...categoriesEn[5], name: 'Seni & Budaya' },
 ]
 
 export const venuesId: Venue[] = venuesEn
@@ -123,7 +126,7 @@ export const productsId: Product[] = [
     facilities: ['Ritual persembahan', 'Kain tradisional', 'Bantal mata'],
     whatToExpect:
       'Ritual disiapkan dan dipimpin dalam konteks budayanya sendiri. Tamu dituntun melalui persembahan, api, dan keheningan sesudahnya.',
-    category: catId('mind-body-spirit'),
+    category: catId('rituals-ceremony'),
   },
   {
     ...productsEn[1],
@@ -133,7 +136,7 @@ export const productsId: Product[] = [
       'Rangkaian spa ritual Jawa yang otentik, bersumber dari tradisi keraton dan dijalankan sebagai sebuah laku, bukan daftar perawatan.',
     highlightText: 'Perawatan sebagai tradisi, bukan layanan.',
     facilities: ['Ramuan herbal', 'Kain tradisional'],
-    category: catId('body-fit-care'),
+    category: catId('spa-retreats'),
   },
   {
     ...productsEn[2],
@@ -143,7 +146,7 @@ export const productsId: Product[] = [
       'Praktik meditasi yang dipandu dalam tradisi Jawa, membuka ruang untuk mendengarkan ke dalam dan kembali pada keseimbangan.',
     highlightText: 'Ruang untuk mendengarkan ke dalam.',
     facilities: ['Sesi terpandu'],
-    category: catId('mind-body-spirit'),
+    category: catId('rituals-ceremony'),
   },
   {
     ...productsEn[3],
@@ -153,7 +156,7 @@ export const productsId: Product[] = [
       'Ritus penyucian yang dijalankan sebagaimana ia dijalankan turun-temurun, dengan konteks budaya yang dijelaskan, bukan dijadikan hiasan.',
     highlightText: 'Dijaga, bukan dipertunjukkan.',
     facilities: ['Ritual persembahan', 'Kain tradisional'],
-    category: catId('mind-body-spirit'),
+    category: catId('rituals-ceremony'),
   },
   {
     ...productsEn[4],
@@ -162,7 +165,7 @@ export const productsId: Product[] = [
       'Panahan tradisional Jawa yang dilakukan sambil duduk dan ditarik dari hati — sebuah latihan ketenangan, napas, dan perhatian; bukan soal ketepatan bidikan.',
     highlightText: 'Membidik dengan rasa, bukan dengan mata.',
     facilities: ['Peralatan disediakan', 'Kain tradisional'],
-    category: catId('body-fit-care'),
+    category: catId('spa-retreats'),
   },
   {
     ...productsEn[5],
@@ -172,7 +175,7 @@ export const productsId: Product[] = [
       'Kesejahteraan yang dirangkai ke dalam cara sebuah tim berkumpul: sesi yang lebih tenang, tempo yang dipertimbangkan, dan ruang untuk kejernihan di sela jam kerja.',
     highlightText: 'Berkumpul dengan perhatian lebih.',
     facilities: ['Ruang pertemuan', 'Sesi terpandu'],
-    category: catId('corporate-group'),
+    category: catId('healing-sound'),
   },
 ]
 

@@ -1,5 +1,5 @@
 import { InquiryModal } from '@/components/inquiry/InquiryModal'
-import { getInquiryCopy, getJourneys, getProducts, getSite } from '@/lib/content'
+import { getCategories, getInquiryCopy, getJourneys, getProducts, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
 import { dict } from '@/lib/i18n/ui'
 
@@ -24,9 +24,10 @@ export default async function InterceptedInquiryPage({
   const { product, journey } = await searchParams
   const locale = raw as Locale
 
-  const [products, journeys, site, copy] = await Promise.all([
+  const [products, journeys, categories, site, copy] = await Promise.all([
     getProducts(locale),
     getJourneys(locale),
+    getCategories(locale),
     getSite(locale),
     getInquiryCopy(locale),
   ])
@@ -36,8 +37,11 @@ export default async function InterceptedInquiryPage({
       locale={locale}
       dict={{ ...dict(locale), inquiry: copy }}
       site={site}
-      products={products.map((p) => ({ slug: p.slug, title: p.title }))}
-      journeys={journeys.map((j) => ({ slug: j.slug, title: j.title }))}
+      choices={{
+        products: products.map((p) => ({ slug: p.slug, title: p.title })),
+        journeys: journeys.map((j) => ({ slug: j.slug, title: j.title })),
+        categories: categories.map((c) => ({ slug: c.slug, title: c.name })),
+      }}
       initialProducts={asArray(product)}
       initialJourneys={asArray(journey)}
       homeHref={locale === 'id' ? '/id' : '/'}

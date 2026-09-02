@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateCatalogue } from '../lib/revalidate'
+import { webImage } from '../lib/validate-media'
 import { adminOnly, signedIn } from './Users'
 
 /**
@@ -36,6 +38,7 @@ export const Products: CollectionConfig = {
   },
 
   defaultSort: 'order',
+  hooks: { afterChange: [revalidateCatalogue('product')] },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.
@@ -109,12 +112,14 @@ export const Products: CollectionConfig = {
         {
           label: 'Media',
           fields: [
-            { name: 'heroImage', type: 'upload', relationTo: 'media' },
+            { name: 'heroImage', type: 'upload', relationTo: 'media', validate: webImage },
             {
               name: 'gallery',
               type: 'array',
               maxRows: 8,
-              fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
+              fields: [
+                { name: 'image', type: 'upload', relationTo: 'media', required: true, validate: webImage },
+              ],
               admin: { description: 'Fewer and larger. One main image plus detail and place shots.' },
             },
           ],
