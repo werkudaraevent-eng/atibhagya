@@ -525,6 +525,28 @@ Three environments, and content does not travel between them.
 | Staging | `staging` | Neon `staging` | `atibhagya-media-staging` | `staging.atibhagya.com`, password-protected |
 | Production | `main` | Neon `main` | `atibhagya-media` | `atibhagya.com` |
 
+### Working together
+
+```
+feature/<task>  ──PR + CI──▶  staging  ──PR + CI──▶  main
+   (one per task)          (test on the staging alias)  (production)
+```
+
+- Nobody commits straight to `staging` or `main`. Branch from `staging`
+  (`feature/journal-page`, `fix/footer-spacing`), open a pull request into
+  `staging`. CI runs; Vercel posts a preview URL on the PR.
+- Merging into `staging` updates the staging alias — that is where the CMS,
+  the form and the pages get a real test.
+- A release is a pull request `staging` → `main`, merged by the owner once
+  staging is clean. Production builds from `main` and applies migrations.
+- The PR template carries the checklist (migration file, import map, no
+  secrets). A bot comment appears when schema files change without a
+  migration. `CODEOWNERS` asks for the owner's review on migrations, the
+  CMS config, security headers and the workflows.
+- Collaborators get the **Write** role, no production secrets, and work
+  locally on SQLite from `.env.example`. Only the staging connection string
+  is shared, and only with whoever creates migrations.
+
 Code moves branch → `staging` → `main`. **Content does not**: products,
 photographs and form wording live in each environment's own database. The
 team edits content in the **production** CMS — drafts, preview and versions
@@ -539,7 +561,11 @@ out loud before anyone types twenty products into staging.
   first, then the build. Migrations run only for production and the `staging`
   branch; a preview build of any other branch skips them, so a migration file
   still being worked on cannot reshape the staging database from a side branch.
-- **Neon** Postgres, one project, branches `main` and `staging`.
+- **Neon** Postgres, one project, branches `production` and `staging`.
+  When creating a branch, set **Auto-delete** to **Never** — the dialog
+  defaults to "After 1 day", and a branch that expires takes its role and
+  endpoint with it (the admin then fails with "password authentication
+  failed" while the public site quietly serves the built-in content).
 - **Cloudflare R2**, two buckets. Uploads go straight from the browser to
   the bucket, so each bucket needs a CORS rule allowing `PUT` from its
   site's origin:
