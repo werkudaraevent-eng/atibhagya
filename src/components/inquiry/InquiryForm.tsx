@@ -357,6 +357,7 @@ export function InquiryForm({
         <input
           className={styles.input}
           type="text"
+          name="idea"
           placeholder={field.placeholder ?? t.ideasPlaceholder}
           value={idea}
           aria-label={field.label}
@@ -435,6 +436,7 @@ export function InquiryForm({
         {field.type === 'textarea' ? (
           <textarea
             className={styles.textarea}
+            name={field.name}
             rows={field.kind === 'goal' ? 4 : 3}
             value={value}
             placeholder={field.placeholder}
@@ -446,6 +448,7 @@ export function InquiryForm({
           <span className={styles.checkbox}>
             <input
               type="checkbox"
+              name={field.name}
               checked={value === 'yes'}
               aria-invalid={invalid}
               onChange={(e) => write(field, e.target.checked ? 'yes' : '')}
@@ -456,6 +459,7 @@ export function InquiryForm({
           <input
             className={styles.input}
             type={field.type}
+            name={field.name}
             autoComplete={autoComplete}
             value={value}
             placeholder={field.placeholder}
