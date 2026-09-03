@@ -41,8 +41,14 @@ export const Media: CollectionConfig = {
       ({ req }) => {
         const file = req.file
         if (!file || !file.mimetype?.startsWith('image/')) return
-        if (file.size <= MAX_IMAGE_BYTES) return
-        const mb = (file.size / 1_048_576).toFixed(1)
+        // A browser-to-R2 upload arrives without `size`; the bytes Payload
+        // fetched back are the reliable measure. Unknown means let it through.
+        const bytes =
+          typeof file.size === 'number' && file.size > 0
+            ? file.size
+            : (file.data?.length ?? 0)
+        if (bytes === 0 || bytes <= MAX_IMAGE_BYTES) return
+        const mb = (bytes / 1_048_576).toFixed(1)
         throw new APIError(
           `"${file.name}" is ${mb} MB. Photographs must be under 4 MB: export at 2400px on the long edge, JPEG quality 80, and upload that instead.`,
           400,
