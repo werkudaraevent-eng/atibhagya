@@ -1,9 +1,11 @@
 import { InquiryForm } from '@/components/inquiry/InquiryForm'
+import { Motion } from '@/components/Motion'
 import { Footer } from '@/components/site/Footer'
 import { Divider } from '@/components/site/Ornament'
 import ornament from '@/components/site/Ornament.module.css'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
+import form from '@/components/inquiry/InquiryForm.module.css'
 import { getCategories, getInquiryCopy, getJourneys, getProducts, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
 import { dict } from '@/lib/i18n/ui'
@@ -38,6 +40,10 @@ export async function InquiryScreen({
 
   return (
     <>
+      {/* Draws the divider under the lede and the rest of the page's motion;
+          without it the ornament stays at its hidden start state and the
+          space it occupies reads as a gap. */}
+      <Motion />
       <Nav locale={locale} dict={t} tone="light" />
 
       <main id="main">
@@ -56,7 +62,7 @@ export async function InquiryScreen({
             // The invitation is handed to the form so it leaves with it once
             // the inquiry has been sent; the thank-you then takes its place.
             heading={
-              <header className={page.pageHead}>
+              <header className={`${page.pageHead} ${form.head}`}>
                 <div className={page.narrow}>
                   <div className={page.eyebrow}>{copy.eyebrow}</div>
                   <h1 className={page.headline}>{copy.headline}</h1>
