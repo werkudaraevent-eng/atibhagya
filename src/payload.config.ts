@@ -118,12 +118,19 @@ export default buildConfig({
   serverURL,
   admin: {
     user: Users.slug,
+    // Initials, not Gravatar: the default would send a hash of every staff
+    // member's email to a third party on each admin page, and it is the one
+    // image origin the Content-Security-Policy would otherwise have to open.
+    avatar: 'default',
     importMap: {
       baseDir: path.resolve(dirname),
     },
     meta: {
       titleSuffix: ' · Atibhagya',
       description: 'Atibhagya content management',
+      // The site declares its icon through Next's metadata; the admin has
+      // its own document and would otherwise ask for /favicon.ico and 404.
+      icons: [{ rel: 'icon', type: 'image/png', url: '/icon.png' }],
     },
     components: {
       graphics: {

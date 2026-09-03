@@ -182,12 +182,16 @@ export function Motion() {
             const draws = fresh(scope, '[data-draw]')
 
             if (!animate) {
-              // Nothing moves. Everything is simply present.
-              gsap.set(headlines, { visibility: 'visible' })
-              gsap.set([...fades, ...fresh(scope, '[data-reveal]')], { opacity: 1, y: 0 })
-              gsap.set(rules, { scaleX: 1 })
-              gsap.set(opens, { clipPath: 'inset(0% 0% 0% 0%)' })
-              gsap.set(draws, { opacity: 1, drawSVG: '100%' })
+              // Nothing moves. Everything is simply present. (An empty list
+              // is skipped: GSAP warns "target not found" for one.)
+              const settle = (targets: HTMLElement[], vars: gsap.TweenVars) => {
+                if (targets.length) gsap.set(targets, vars)
+              }
+              settle(headlines, { visibility: 'visible' })
+              settle([...fades, ...fresh(scope, '[data-reveal]')], { opacity: 1, y: 0 })
+              settle(rules, { scaleX: 1 })
+              settle(opens, { clipPath: 'inset(0% 0% 0% 0%)' })
+              settle(draws, { opacity: 1, drawSVG: '100%' })
               return
             }
 
