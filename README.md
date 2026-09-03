@@ -505,6 +505,11 @@ sample catalogue cached as if it were real.
   top of the file, and a lifecycle rule on that bucket. Try a restore on a
   Neon branch once, before it matters.
 
+**Who changed what.** Every save stamps *Last edited by* on the document
+(sidebar, list columns) and on the version it creates, and the Versions tab
+lists it beside the date. Comparing two versions of the inquiry form names
+each field row ("03 · Phone — On the form: yes → no") rather than "Item 03".
+
 **Data notice.** The line under the submit button (Inquiries → Inquiry form →
 Other wording → Data notice) says what happens to what a visitor writes.
 Indonesia's PDP law (UU 27/2022) expects it. Still open: a retention period

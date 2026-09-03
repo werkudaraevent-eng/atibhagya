@@ -1,6 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
-import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
+import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { plain, prefillGlobal, rows, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
@@ -13,7 +13,7 @@ import { videoFile, webImage } from '../lib/validate-media'
 export const HomePage: GlobalConfig = {
   slug: 'home',
   label: 'Home page',
-  admin: { group: 'Pages' },
+  admin: { group: 'Pages', components: versionsView },
   access: { read: () => true },
   hooks: {
     // Every box shows what the site currently uses; see src/lib/prefill.ts.

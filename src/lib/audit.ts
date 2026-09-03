@@ -21,6 +21,14 @@ export const updatedBy: Field = {
   },
 }
 
+/**
+ * The Versions tab with a "Last edited by" column — for every collection and
+ * global that keeps versions. Spread into `admin.components`.
+ */
+export const versionsView = {
+  views: { edit: { versions: { Component: '@/admin/VersionsView#VersionsView' } } },
+} as const
+
 export const stampUpdatedBy: CollectionBeforeChangeHook = ({ data, req }) => {
   if (req.user) data.updatedBy = req.user.id
   return data

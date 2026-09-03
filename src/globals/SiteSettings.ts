@@ -1,6 +1,6 @@
 import type { FieldAccess, GlobalConfig } from 'payload'
 
-import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
+import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { plain, prefillGlobal, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
@@ -12,7 +12,7 @@ const staffOnly: FieldAccess = ({ req: { user } }) => Boolean(user)
 export const SiteSettings: GlobalConfig = {
   slug: 'site',
   label: 'Site settings',
-  admin: { group: 'Pages' },
+  admin: { group: 'Pages', components: versionsView },
   access: { read: () => true },
   // Footer and contact details sit on every page.
   hooks: {

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { stampUpdatedBy, updatedBy } from '../lib/audit'
+import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
 import { revalidateCatalogue } from '../lib/revalidate'
 import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
@@ -27,6 +27,7 @@ export const Products: CollectionConfig = {
     pagination: { defaultLimit: 25, limits: [25, 50, 100] },
     description: 'Each experience in the catalogue. The reference code matches the printed catalogue.',
     preview: (doc) => `${serverURL}/product/${doc.slug}`,
+    components: versionsView,
   },
   access: {
     read: ({ req: { user } }) => {

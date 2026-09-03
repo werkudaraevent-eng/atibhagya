@@ -1,6 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
-import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
+import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { dict } from '../lib/i18n/ui'
 import { prefillGlobal, text as shows } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
@@ -27,6 +27,7 @@ export const CataloguePages: GlobalConfig = {
     group: 'Pages',
     description:
       'Headings for the product and journey listings and the small label above each detail page. Each box shows what the site currently says; change it, or clear it to return to the approved wording.',
+    components: versionsView,
   },
   access: { read: () => true },
   hooks: {

@@ -51,12 +51,10 @@ export const Users: CollectionConfig = {
   access: {
     // Only an admin hands out accounts.
     create: adminOnly,
-    // An editor sees only their own record; an admin sees everyone.
-    read: ({ req: { user } }) => {
-      if (!user) return false
-      if (isAdmin(user)) return true
-      return { id: { equals: user.id } }
-    },
+    // Anyone signed in can see who the team is — names and addresses, so
+    // "Last edited by" resolves for everyone, not only for admins. Only an
+    // admin can change anyone but themselves.
+    read: signedIn,
     update: ({ req: { user } }) => {
       if (!user) return false
       if (isAdmin(user)) return true

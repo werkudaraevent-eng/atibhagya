@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { stampUpdatedBy, updatedBy } from '../lib/audit'
+import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
 import { revalidateCatalogue } from '../lib/revalidate'
 import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
@@ -24,6 +24,7 @@ export const Journeys: CollectionConfig = {
     listSearchableFields: ['title', 'positioning', 'slug'],
     description: 'Multi-day itineraries. Days hold activities; an activity may point at a product, or stay custom.',
     preview: (doc) => `${serverURL}/journey/${doc.slug}`,
+    components: versionsView,
   },
   access: {
     read: ({ req: { user } }) => {
