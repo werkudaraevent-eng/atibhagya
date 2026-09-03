@@ -71,7 +71,7 @@ export default async function ProductPage({
       <Motion />
       <Nav locale={locale} dict={t} tone="light" />
 
-      <main>
+      <main id="main">
         <ProductDetail
           product={product}
           locale={locale}

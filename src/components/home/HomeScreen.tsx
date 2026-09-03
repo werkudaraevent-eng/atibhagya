@@ -37,7 +37,7 @@ export async function HomeScreen({ locale, draft = false }: Props) {
       <Motion />
       <Nav locale={locale} dict={t} />
 
-      <main>
+      <main id="main">
         <Hero hero={home.hero} ctaHref={`${prefix}/product`} />
         <Why why={home.why} />
 

@@ -40,7 +40,7 @@ export async function InquiryScreen({
     <>
       <Nav locale={locale} dict={t} tone="light" />
 
-      <main>
+      <main id="main">
         <section className={page.section} style={{ paddingTop: 0 }}>
           <InquiryForm
             locale={locale}

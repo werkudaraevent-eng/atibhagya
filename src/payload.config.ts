@@ -246,6 +246,15 @@ export default buildConfig({
   ],
   cors: [serverURL],
   csrf: [serverURL],
+  // The site reads through the Local API and the admin through REST; nothing
+  // speaks GraphQL. Off, so there is no introspectable schema and no
+  // deeply-nested query for a stranger to run.
+  graphQL: { disable: true },
+  // How far a request may ask relationships to be populated. The site never
+  // needs more than two levels; capping it keeps `/api/products?depth=10`
+  // from turning one request into a hundred joins.
+  defaultDepth: 1,
+  maxDepth: 3,
   sharp,
   // Room for a hero video; photographs are a tenth of this.
   upload: { limits: { fileSize: 30 * 1024 * 1024 } },

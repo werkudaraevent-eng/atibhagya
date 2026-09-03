@@ -45,7 +45,7 @@ export default async function JourneyPreviewPage({
       <Motion />
       <Nav locale={locale} dict={t} tone="light" />
 
-      <main>
+      <main id="main">
         <header className={page.opening}>
           <div className={page.openingText}>
             <Breadcrumb

@@ -38,7 +38,7 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
 
       <CatalogueIndex />
 
-      <main>
+      <main id="main">
         <header className={page.pageHead}>
           <div className={page.container}>
             <div className={page.eyebrow}>{copy.products.eyebrow}</div>

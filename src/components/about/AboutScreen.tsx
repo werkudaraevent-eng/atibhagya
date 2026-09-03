@@ -37,7 +37,7 @@ export async function AboutScreen({ locale, draft = false }: Props) {
       <Nav locale={locale} dict={t} tone="light" />
 
       {/* A centred column, but one left edge inside it. */}
-      <main>
+      <main id="main">
         <header className={page.pageHead}>
           <div className={styles.centred}>
             <div className={page.eyebrow}>{about.eyebrow}</div>

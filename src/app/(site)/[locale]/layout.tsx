@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 
 import { HtmlLang } from '@/components/site/HtmlLang'
 import { locales, type Locale } from '@/lib/content/types'
+import { dict } from '@/lib/i18n/ui'
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -28,6 +29,11 @@ export default async function LocaleLayout({
   return (
     <>
       <HtmlLang locale={locale as Locale} />
+      {/* For the keyboard: straight past the header to the page. Visible
+          only while it has focus. Every page's <main> carries id="main". */}
+      <a href="#main" className="skipLink">
+        {dict(locale as Locale).skipToContent}
+      </a>
       <div data-page>{children}</div>
       {modal}
     </>

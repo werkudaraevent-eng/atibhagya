@@ -53,7 +53,7 @@ export default async function JourneyListPage({
       <Motion />
       <Nav locale={locale} dict={t} />
 
-      <main>
+      <main id="main">
         {/* Journey is the most experiential content type, so it opens full width. */}
         <div className={styles.opening}>
           {opening ? (

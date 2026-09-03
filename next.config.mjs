@@ -1,5 +1,48 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
+/** The origin the browser PUTs uploads to, when uploads go straight to R2. */
+const s3Origin = (() => {
+  try {
+    return process.env.S3_ENDPOINT ? new URL(process.env.S3_ENDPOINT).origin : ''
+  } catch {
+    return ''
+  }
+})()
+
+/**
+ * Content-Security-Policy.
+ *
+ * Pages are static and cached, so there is no per-request nonce to hand to
+ * Next's own inline scripts; `'unsafe-inline'` stays for scripts and styles.
+ * What the policy does lock down is everything else: no script, frame,
+ * connection or plugin from any origin but our own and Cloudflare's bot
+ * check — and no embedding of this site anywhere else.
+ *
+ * It ships as Report-Only until CSP_ENFORCE=1 is set, so a violation shows
+ * up in the browser console on staging rather than as a broken page.
+ */
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://challenges.cloudflare.com`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://upload.wikimedia.org https://commons.wikimedia.org",
+  "media-src 'self' blob:",
+  "font-src 'self' data:",
+  `connect-src 'self' https://challenges.cloudflare.com${s3Origin ? ` ${s3Origin}` : ''}${isDev ? ' ws: wss:' : ''}`,
+  // Our own pages (the admin's live preview) and the bot check.
+  "frame-src 'self' https://challenges.cloudflare.com",
+  "worker-src 'self' blob:",
+  "frame-ancestors 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  ...(isDev ? [] : ['upgrade-insecure-requests']),
+].join('; ')
+
+const cspHeader = process.env.CSP_ENFORCE === '1' ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -10,8 +53,6 @@ const nextConfig = {
       { protocol: 'https', hostname: 'upload.wikimedia.org' },
     ],
   },
-  // Baseline hardening. A full Content-Security-Policy is the next step and
-  // needs a nonce pass over Next's inline scripts — see README § Security.
   async headers() {
     return [
       {
@@ -20,6 +61,7 @@ const nextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
@@ -28,6 +70,7 @@ const nextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload',
           },
+          { key: cspHeader, value: csp },
         ],
       },
     ]

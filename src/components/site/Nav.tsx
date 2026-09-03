@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeToggle } from '@/components/site/ThemeToggle'
@@ -25,14 +25,39 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname() || '/'
   const prefix = locale === 'id' ? '/id' : ''
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
-  // The open menu covers the page; the page should not scroll beneath it.
+  // The open menu covers the page: the page must not scroll beneath it, and
+  // the keyboard belongs to the menu — Escape closes it, focus moves to its
+  // first destination and comes back to the button when it closes.
   useEffect(() => {
     if (!open) return
-    const previous = document.documentElement.style.overflow
-    document.documentElement.style.overflow = 'hidden'
+    const root = document.documentElement
+    const gap = window.innerWidth - root.clientWidth
+    const previousOverflow = root.style.overflow
+    const previousPadding = root.style.paddingRight
+    root.style.overflow = 'hidden'
+    if (gap > 0) root.style.paddingRight = `${gap}px`
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+
+    // After the curtain has begun to rise, so the focus ring lands on a
+    // visible link rather than on one still fading in.
+    const focus = window.setTimeout(() => {
+      panelRef.current?.querySelector<HTMLElement>('a')?.focus()
+    }, 120)
+
     return () => {
-      document.documentElement.style.overflow = previous
+      root.style.overflow = previousOverflow
+      root.style.paddingRight = previousPadding
+      document.removeEventListener('keydown', onKeyDown)
+      window.clearTimeout(focus)
+      // Only when focus was inside the menu: a navigation moves it elsewhere.
+      if (panelRef.current?.contains(document.activeElement)) toggleRef.current?.focus()
     }
   }, [open])
 
@@ -94,6 +119,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
           />
 
           <button
+            ref={toggleRef}
             type="button"
             className={styles.toggle}
             aria-expanded={open}
@@ -111,6 +137,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
 
       {/* Small screens: the menu as a full-height curtain under the header. */}
       <div
+        ref={panelRef}
         id="nav-panel"
         className={open ? `${styles.panel} ${styles.panelOpen}` : styles.panel}
         aria-hidden={!open}

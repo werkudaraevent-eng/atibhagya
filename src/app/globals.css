@@ -216,6 +216,28 @@ textarea:focus {
   }
 }
 
+/* Off the top of the page until the keyboard reaches it; then a small navy
+   tab in the corner, above the header. */
+.skipLink {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 12px 18px;
+  background: #10222f;
+  color: #f6f3e7;
+  font: 500 11px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transform: translateY(calc(-100% - 20px));
+  transition: transform 0.25s var(--ease-out);
+}
+
+.skipLink:focus-visible {
+  transform: none;
+  outline-color: var(--emas);
+}
+
 .visuallyHidden {
   position: absolute;
   width: 1px;

@@ -51,7 +51,7 @@ export default async function ProductPreviewPage({
     <>
       <Motion />
       <Nav locale={locale} dict={t} tone="light" />
-      <main>
+      <main id="main">
         <ProductDetail
           product={product}
           locale={locale}

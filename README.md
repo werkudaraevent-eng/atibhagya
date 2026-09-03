@@ -462,20 +462,38 @@ Verified against the running app:
 | `posts` | Public reads are filtered to `_status: published`; drafts are staff-only |
 | Notification email | The visitor's name is stripped of CR/LF before it reaches the subject line |
 | Field lengths | Capped on every free-text field |
-| Spam | Off-screen honeypot; a filled trap gets a success screen and is never stored |
-| Headers | `nosniff`, `SAMEORIGIN`, `strict-origin-when-cross-origin`, a closed `Permissions-Policy`, and HSTS |
+| Spam | Three layers: an off-screen honeypot (a filled trap gets a success screen and is never stored); five submissions per address per ten minutes, after which the form asks the visitor to wait; and Cloudflare Turnstile when its keys are set — invisible unless Cloudflare has a question, verified again on the server |
+| Sessions | The admin cookie is `Secure` on every HTTPS deployment and `SameSite=Lax`; five wrong passwords lock the account for ten minutes; a session lasts two hours |
+| API surface | GraphQL is off. REST populates one level by default and never more than three, so `?depth=10` cannot turn one request into a hundred joins |
+| Headers | `nosniff`, `SAMEORIGIN`, `strict-origin-when-cross-origin`, `Cross-Origin-Opener-Policy`, a closed `Permissions-Policy`, HSTS, and a Content-Security-Policy (below) |
 | Images | `remotePatterns` is limited to the two Wikimedia hosts, so the optimizer cannot be used as an open proxy |
-| XSS | No `dangerouslySetInnerHTML` anywhere; all visitor text renders as React children |
+| XSS | No `dangerouslySetInnerHTML` with visitor text anywhere; all of it renders as React children |
+| Drafts | The inquiry draft lives in `sessionStorage`, so a name and phone number typed on a shared computer are gone when the tab closes |
+
+**Content-Security-Policy.** Pages are static and cached, so there is no
+per-request nonce for Next's inline scripts; `'unsafe-inline'` stays for
+scripts and styles. Everything else is locked to our own origin plus
+Cloudflare's bot check: no third-party script, frame, connection or plugin,
+and no embedding of the site elsewhere (`frame-ancestors 'self'`). It ships
+as `Content-Security-Policy-Report-Only` until `CSP_ENFORCE=1` is set — a
+violation shows in the browser console rather than as a broken page. Turn it
+on for staging, click through the site and the admin (including an upload),
+and when the console stays clean set it for production.
+
+**The rate limit is per serverless instance.** It stops a burst from one
+address; a distributed flood needs the host's firewall. On Vercel: Firewall →
+Rules → rate-limit `POST` to `/inquiry` and `/id/inquiry`. Behind Cloudflare:
+a rate-limiting rule on the same paths, and Cloudflare Access in front of
+`/admin` so the login page is never reachable from an unknown network.
 
 Still open, and deliberate:
 
-- **No Content-Security-Policy yet.** It needs a nonce pass over Next's inline
-  scripts. Worth doing before launch.
-- **No rate limiting** beyond the honeypot. Put the form behind the host's WAF
-  (Vercel's, or Cloudflare Turnstile) if it starts drawing abuse.
 - **A privacy notice is still missing.** The inquiry collects contact details
   and free text; Indonesia's PDP law and GDPR both expect a notice and a
   retention period. That is a legal call, not a code one.
+- **Backups.** Neon keeps point-in-time history for as long as its plan
+  allows; R2 has no versioning. A scheduled `pg_dump` to a separate bucket,
+  and a periodic sync of the media bucket, are the next step.
 
 ## Deploying
 
@@ -497,7 +515,10 @@ out loud before anyone types twenty products into staging.
 ### Stack
 
 - **Vercel** (Pro — Hobby forbids commercial use and has no password
-  protection for staging). Build command: `npm run build:deploy`.
+  protection for staging). Build command: `npm run build:deploy` — migrations
+  first, then the build. Migrations run only for production and the `staging`
+  branch; a preview build of any other branch skips them, so a migration file
+  still being worked on cannot reshape the staging database from a side branch.
 - **Neon** Postgres, one project, branches `main` and `staging`.
 - **Cloudflare R2**, two buckets. Uploads go straight from the browser to
   the bucket, so each bucket needs a CORS rule allowing `PUT` from its

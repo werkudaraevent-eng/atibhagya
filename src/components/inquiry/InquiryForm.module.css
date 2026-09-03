@@ -221,6 +221,15 @@
   color: var(--emas-deep);
 }
 
+/* The bot check's box, on the rare occasion it shows; empty otherwise. */
+.verify {
+  margin-top: 26px;
+}
+
+.verify:empty {
+  display: none;
+}
+
 .actions {
   margin-top: clamp(40px, 7vh, 72px);
 }

@@ -304,12 +304,22 @@
   background: #10222f;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.45s ease;
+  /* `visibility` as well as opacity: an invisible link is still a link to
+     the keyboard and to a screen reader unless it is hidden outright. The
+     visibility change waits for the fade out, and leads the fade in. */
+  visibility: hidden;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s linear 0.45s;
 }
 
 .panelOpen {
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s;
 }
 
 /* The destinations, large and in the serif: a menu, not a list of tags. */

@@ -97,7 +97,17 @@ export type Dict = {
     submit: string
     sending: string
     error: string
-    errors: { name: string; email: string; emailInvalid: string; goal: string; required: string }
+    errors: {
+      name: string
+      email: string
+      emailInvalid: string
+      goal: string
+      required: string
+      /** Too many submissions from one address in a short time. */
+      tooMany: string
+      /** The bot check did not pass, or its token had expired. */
+      verify: string
+    }
     /** The small word above the thank-you, e.g. "Received". */
     doneEyebrow: string
     doneHeading: string
@@ -225,6 +235,8 @@ const en: Dict = {
       emailInvalid: 'That address doesn’t look quite right.',
       goal: 'A sentence is plenty — it tells us what the journey is for.',
       required: 'we need this one.',
+      tooMany: 'That is a few inquiries in a short while. Please wait a few minutes and try again, or write to us directly.',
+      verify: 'We could not confirm the form was sent by a person. Please try once more.',
     },
     doneEyebrow: 'Received',
     doneHeading: 'Thank you — your inquiry is with us.',
@@ -340,6 +352,8 @@ const id: Dict = {
       emailInvalid: 'Alamat itu sepertinya belum tepat.',
       goal: 'Satu kalimat sudah cukup — itu memberi tahu kami tujuan perjalanannya.',
       required: 'bagian ini perlu diisi.',
+      tooMany: 'Sudah beberapa pesan dalam waktu singkat. Mohon tunggu beberapa menit dan coba lagi, atau tulis langsung kepada kami.',
+      verify: 'Kami belum bisa memastikan formulir ini dikirim oleh orang. Silakan coba sekali lagi.',
     },
     doneEyebrow: 'Diterima',
     doneHeading: 'Terima kasih — pesan Anda sudah sampai.',

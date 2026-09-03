@@ -1,6 +1,8 @@
 'use server'
 
-import type { Locale } from '@/lib/content/types'
+import { headers } from 'next/headers'
+
+import { locales, type Locale } from '@/lib/content/types'
 import { getInquiryCopy } from '@/lib/content'
 import { dict } from '@/lib/i18n/ui'
 import { TEXT_KINDS } from '@/lib/inquiry-fields'
@@ -12,8 +14,13 @@ import {
   type InquiryDraft,
 } from '@/lib/inquiries'
 import { getPayloadSafe } from '@/lib/payload'
+import { clientAddress, rateLimited } from '@/lib/rate-limit'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 export type SubmitResult = { ok: true } | { ok: false; error: string }
+
+/** Five inquiries from one address in ten minutes is plenty for a person. */
+const LIMIT = { max: 5, windowMs: 10 * 60 * 1000 }
 
 const trim = (value: unknown, max = 5000) =>
   (typeof value === 'string' ? value : '').trim().slice(0, max)
@@ -30,17 +37,31 @@ const cleanSlugs = (slugs: unknown) =>
  * `POST /api/inquiries` can stay closed to the public.
  */
 export async function submitInquiry(
-  locale: Locale,
+  requested: Locale,
   draft: InquiryDraft,
   /** Honeypot. A visitor never sees the field, so anything in it is a bot. */
   trap = '',
+  /** The Turnstile token, when the bot check is configured. */
+  token = '',
 ): Promise<SubmitResult> {
+  // The locale arrives from the browser too; anything unknown is English.
+  const locale: Locale = locales.includes(requested) ? requested : 'en'
   const t = dict(locale).inquiry
 
   if (trap.trim() !== '') {
     console.warn('[atibhagya] Discarded an inquiry that filled the honeypot field.')
     // Answer as though it worked; a bot told it failed simply tries again.
     return { ok: true }
+  }
+
+  const address = clientAddress(await headers())
+  if (rateLimited(`inquiry:${address}`, LIMIT.max, LIMIT.windowMs)) {
+    console.warn(`[atibhagya] Rate-limited inquiries from ${address}.`)
+    return { ok: false, error: t.errors.tooMany }
+  }
+
+  if (!(await verifyTurnstile(String(token ?? ''), address))) {
+    return { ok: false, error: t.errors.verify }
   }
 
   // The form is read from the CMS again here — the browser's copy of which

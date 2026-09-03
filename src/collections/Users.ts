@@ -17,9 +17,30 @@ export const signedIn: Access = ({ req: { user } }) => Boolean(user)
 
 const adminFieldOnly: FieldAccess = ({ req: { user } }) => isAdmin(user)
 
+/**
+ * Whether the admin is served over HTTPS — every Vercel deployment, or any
+ * explicit https origin. The session cookie then carries the `Secure` flag,
+ * so it can never travel over plain HTTP. Local development stays on
+ * http://localhost, where a Secure cookie would simply never be set.
+ */
+const onHttps =
+  Boolean(process.env.VERCEL) || (process.env.NEXT_PUBLIC_SERVER_URL ?? '').startsWith('https://')
+
 export const Users: CollectionConfig = {
   slug: 'users',
-  auth: true,
+  auth: {
+    // Five wrong passwords lock the account for ten minutes (Payload's
+    // defaults, stated here so they are a decision rather than an accident).
+    maxLoginAttempts: 5,
+    lockTime: 10 * 60 * 1000,
+    // Two hours, then sign in again.
+    tokenExpiration: 2 * 60 * 60,
+    // `Lax` rather than `Strict`: the admin is reached from links in email
+    // and chat, and Strict would show those arrivals a login screen even
+    // with a valid session. Lax still withholds the cookie from cross-site
+    // POSTs, which is the CSRF case that matters.
+    cookies: { secure: onHttps, sameSite: 'Lax' },
+  },
   admin: {
     useAsTitle: 'email',
     group: 'Admin',
