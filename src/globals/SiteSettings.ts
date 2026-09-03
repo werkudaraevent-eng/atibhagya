@@ -1,5 +1,6 @@
 import type { FieldAccess, GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { plain, prefillGlobal, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
@@ -32,6 +33,7 @@ export const SiteSettings: GlobalConfig = {
         responseTime: text((l) => defaults(l).site.responseTime),
       }),
     ],
+    beforeChange: [stampUpdatedByGlobal],
     afterChange: [revalidateGlobal(['/', '/product', '/journey', '/about', '/inquiry'])],
   },
   versions: {
@@ -42,6 +44,7 @@ export const SiteSettings: GlobalConfig = {
   },
 
   fields: [
+    updatedBy,
     { name: 'email', type: 'email' },
     { name: 'phone', type: 'text' },
     { name: 'whatsapp', type: 'text', admin: { description: 'Full wa.me link.' } },

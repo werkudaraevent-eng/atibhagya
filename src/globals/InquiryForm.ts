@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
 import type { Locale } from '../lib/content/types'
 import { dict } from '../lib/i18n/ui'
 import {
@@ -199,10 +200,12 @@ export const InquiryFormCopy: GlobalConfig = {
         return doc
       },
     ],
+    beforeChange: [stampUpdatedByGlobal],
     afterChange: [revalidateGlobal(['/inquiry'])],
   },
   versions: { drafts: true, max: 50 },
   fields: [
+    updatedBy,
     {
       type: 'tabs',
       tabs: [
@@ -218,7 +221,11 @@ export const InquiryFormCopy: GlobalConfig = {
               validate: checkFields,
               defaultValue: DEFAULT_ROWS,
               admin: {
-                components: { RowLabel: '@/admin/FieldRowLabel#FieldRowLabel' },
+                components: {
+                  RowLabel: '@/admin/FieldRowLabel#FieldRowLabel',
+                  // Versions: each row by its name, each change as a sentence.
+                  Diff: '@/admin/FieldsDiff#FieldsDiff',
+                },
                 isSortable: true,
               },
               fields: [

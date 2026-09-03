@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
 import { dict } from '../lib/i18n/ui'
 import { prefillGlobal, text as shows } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
@@ -42,10 +43,12 @@ export const CataloguePages: GlobalConfig = {
         journeyDetailEyebrow: shows((l) => dict(l).journeys.detailEyebrow),
       }),
     ],
+    beforeChange: [stampUpdatedByGlobal],
     afterChange: [revalidateGlobal(['/product', '/journey'])],
   },
   versions: { drafts: true, max: 50 },
   fields: [
+    updatedBy,
     {
       type: 'tabs',
       tabs: [

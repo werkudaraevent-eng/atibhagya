@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { stampUpdatedBy, updatedBy } from '../lib/audit'
 import { adminOnly, signedIn } from './Users'
 
 /**
@@ -28,7 +29,9 @@ export const Posts: CollectionConfig = {
   versions: {
     drafts: true,
   },
+  hooks: { beforeChange: [stampUpdatedBy] },
   fields: [
+    updatedBy,
     {
       name: 'title',
       type: 'text',

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { stampUpdatedBy, updatedBy } from '../lib/audit'
 import { revalidateCatalogue } from '../lib/revalidate'
 import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
@@ -19,7 +20,7 @@ export const Products: CollectionConfig = {
   admin: {
     group: 'Experiences',
     useAsTitle: 'title',
-    defaultColumns: ['code', 'title', 'category', 'suitableFor', '_status', 'order'],
+    defaultColumns: ['code', 'title', 'category', 'suitableFor', '_status', 'updatedBy', 'updatedAt'],
     // With a catalogue this size, editors find a product by typing, not by
     // scrolling.
     listSearchableFields: ['title', 'subtitle', 'slug', 'description'],
@@ -38,7 +39,7 @@ export const Products: CollectionConfig = {
   },
 
   defaultSort: 'order',
-  hooks: { afterChange: [revalidateCatalogue('product')] },
+  hooks: { beforeChange: [stampUpdatedBy], afterChange: [revalidateCatalogue('product')] },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.
@@ -191,5 +192,6 @@ export const Products: CollectionConfig = {
       admin: { position: 'sidebar', description: 'Eligible for the homepage selection.' },
     },
     { name: 'order', type: 'number', defaultValue: 0, admin: { position: 'sidebar' } },
+    updatedBy,
   ],
 }

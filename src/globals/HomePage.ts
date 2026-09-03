@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { plain, prefillGlobal, rows, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
@@ -36,6 +37,7 @@ export const HomePage: GlobalConfig = {
         ctaLabel: text((l) => defaults(l).home.cta.label),
       }),
     ],
+    beforeChange: [stampUpdatedByGlobal],
     afterChange: [revalidateGlobal(['/'])],
   },
   versions: {
@@ -46,6 +48,7 @@ export const HomePage: GlobalConfig = {
   },
 
   fields: [
+    updatedBy,
     {
       type: 'tabs',
       tabs: [

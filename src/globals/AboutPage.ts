@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { prefillGlobal, rows, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
@@ -30,6 +31,7 @@ export const AboutPage: GlobalConfig = {
         ctaLabel: text((l) => defaults(l).about.ctaLabel),
       }),
     ],
+    beforeChange: [stampUpdatedByGlobal],
     afterChange: [revalidateGlobal(['/about'])],
   },
   versions: {
@@ -40,6 +42,7 @@ export const AboutPage: GlobalConfig = {
   },
 
   fields: [
+    updatedBy,
     { name: 'eyebrow', type: 'text', localized: true },
     {
       name: 'headline',

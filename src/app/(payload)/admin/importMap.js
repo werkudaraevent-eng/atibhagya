@@ -42,6 +42,7 @@ import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 }
 import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { ShowWhen as ShowWhen_36b7161a8fb8a478d54eb6399eec0fa9 } from '@/admin/ShowWhen'
 import { FieldRowLabel as FieldRowLabel_cd7e65500bb4921dc0d989fc6b68a82a } from '@/admin/FieldRowLabel'
+import { FieldsDiff as FieldsDiff_682135ee3d6e4e96988c5df0f1001faa } from '@/admin/FieldsDiff'
 import { Icon as Icon_3c31fdf4820328a29c17991ad8f3f536 } from '@/admin/Graphics'
 import { Logo as Logo_3c31fdf4820328a29c17991ad8f3f536 } from '@/admin/Graphics'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -94,6 +95,7 @@ export const importMap = {
   "@payloadcms/next/client#FolderTypeField": FolderTypeField_2b8867833a34864a02ddf429b0728a40,
   "@/admin/ShowWhen#ShowWhen": ShowWhen_36b7161a8fb8a478d54eb6399eec0fa9,
   "@/admin/FieldRowLabel#FieldRowLabel": FieldRowLabel_cd7e65500bb4921dc0d989fc6b68a82a,
+  "@/admin/FieldsDiff#FieldsDiff": FieldsDiff_682135ee3d6e4e96988c5df0f1001faa,
   "@/admin/Graphics#Icon": Icon_3c31fdf4820328a29c17991ad8f3f536,
   "@/admin/Graphics#Logo": Logo_3c31fdf4820328a29c17991ad8f3f536,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,

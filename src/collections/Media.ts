@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 
 import { APIError, type CollectionConfig } from 'payload'
 
+import { stampUpdatedBy, updatedBy } from '../lib/audit'
 import { revalidateEverything } from '../lib/revalidate'
 import { adminOnly, signedIn } from './Users'
 
@@ -48,6 +49,7 @@ export const Media: CollectionConfig = {
         )
       },
     ],
+    beforeChange: [stampUpdatedBy],
     // A replaced photograph appears wherever it is used.
     afterChange: [revalidateEverything],
   },
@@ -81,6 +83,7 @@ export const Media: CollectionConfig = {
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'video/mp4', 'video/webm'],
   },
   fields: [
+    updatedBy,
     {
       name: 'alt',
       type: 'text',

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { stampUpdatedBy, updatedBy } from '../lib/audit'
 import { revalidateEverything } from '../lib/revalidate'
 import { adminOnly, signedIn } from './Users'
 
@@ -21,9 +22,10 @@ export const ProductCategories: CollectionConfig = {
     update: signedIn,
     delete: adminOnly,
   },
-  hooks: { afterChange: [revalidateEverything] },
+  hooks: { beforeChange: [stampUpdatedBy], afterChange: [revalidateEverything] },
   defaultSort: 'order',
   fields: [
+    updatedBy,
     { name: 'name', type: 'text', required: true, localized: true },
     {
       name: 'slug',
