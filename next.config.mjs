@@ -1,6 +1,15 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 
 const isDev = process.env.NODE_ENV !== 'production'
+const enforceCsp = process.env.CSP_ENFORCE === '1'
+
+/**
+ * Vercel's toolbar (comments, feedback) is injected into every deployment
+ * except production. It loads a script from, and frames, vercel.live —
+ * allowed there and nowhere else, so production's policy stays tight.
+ */
+const onVercelPreview = Boolean(process.env.VERCEL) && process.env.VERCEL_ENV !== 'production'
+const toolbar = onVercelPreview ? ' https://vercel.live' : ''
 
 /** The origin the browser PUTs uploads to, when uploads go straight to R2. */
 const s3Origin = (() => {
@@ -25,23 +34,25 @@ const s3Origin = (() => {
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://challenges.cloudflare.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://challenges.cloudflare.com${toolbar}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://upload.wikimedia.org https://commons.wikimedia.org",
+  `img-src 'self' data: blob: https://upload.wikimedia.org https://commons.wikimedia.org${toolbar}`,
   "media-src 'self' blob:",
   "font-src 'self' data:",
-  `connect-src 'self' https://challenges.cloudflare.com${s3Origin ? ` ${s3Origin}` : ''}${isDev ? ' ws: wss:' : ''}`,
+  `connect-src 'self' https://challenges.cloudflare.com${s3Origin ? ` ${s3Origin}` : ''}${toolbar}${isDev ? ' ws: wss:' : ''}`,
   // Our own pages (the admin's live preview) and the bot check.
-  "frame-src 'self' https://challenges.cloudflare.com",
+  `frame-src 'self' https://challenges.cloudflare.com${toolbar}`,
   "worker-src 'self' blob:",
   "frame-ancestors 'self'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  ...(isDev ? [] : ['upgrade-insecure-requests']),
+  // Only meaningful when enforced; a report-only policy ignores it and
+  // says so in the console on every page.
+  ...(enforceCsp && !isDev ? ['upgrade-insecure-requests'] : []),
 ].join('; ')
 
-const cspHeader = process.env.CSP_ENFORCE === '1' ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only'
+const cspHeader = enforceCsp ? 'Content-Security-Policy' : 'Content-Security-Policy-Report-Only'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

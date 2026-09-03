@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 
-import { LANG_SCRIPT } from '@/components/site/HtmlLang'
 import { RefreshOnSave } from '@/components/site/RefreshOnSave'
-import { THEME_SCRIPT } from '@/components/site/ThemeToggle'
 import { isProduction } from '@/lib/env'
 import { karla, marcellus } from '@/lib/fonts'
+import { LANG_SCRIPT, THEME_SCRIPT } from '@/lib/head-scripts'
 import { serverURL } from '@/lib/server-url'
 import '@/app/globals.css'
 

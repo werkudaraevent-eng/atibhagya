@@ -2,18 +2,10 @@
 
 import { useEffect, useId, useState } from 'react'
 
+import { THEME_KEY } from '@/lib/head-scripts'
 import styles from './ThemeToggle.module.css'
 
-export const THEME_KEY = 'atibhagya:theme'
-
 type Theme = 'light' | 'dark'
-
-/**
- * Runs before anything paints, so the page never flashes the wrong theme.
- * Inlined into <head> by the layout; kept here so the key and the logic
- * live next to the control that changes them.
- */
-export const THEME_SCRIPT = `(function(){try{var k='${THEME_KEY}';var s=localStorage.getItem(k);var d=s?s==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.theme=d?'dark':'light'}catch(e){}})()`
 
 /** The 8 rays of the sun, as line endpoints on a 24-unit grid. */
 const RAYS = Array.from({ length: 8 }, (_, i) => {
