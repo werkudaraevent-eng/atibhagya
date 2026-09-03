@@ -1,12 +1,25 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-import type { CollectionConfig } from 'payload'
+import { APIError, type CollectionConfig } from 'payload'
 
 import { revalidateEverything } from '../lib/revalidate'
 import { adminOnly, signedIn } from './Users'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
+
+/**
+ * A photograph larger than this is refused with instructions, at upload.
+ *
+ * The site never shows the original — it serves the 2400px rendition — but
+ * the original still has to be fetched and resized once, inside a
+ * serverless function with a short clock. An 8 MB export from a camera can
+ * run that out and leave a media document with no renditions, which is a
+ * hero that sometimes fails to appear. Four megabytes is generous for a
+ * 2400px JPEG at quality 80 (usually 600 KB–1.5 MB). Videos have their own
+ * limit, on the hero field.
+ */
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -14,7 +27,7 @@ export const Media: CollectionConfig = {
     group: 'Content',
     useAsTitle: 'filename',
     description:
-      'Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.',
+      'Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge and under 4 MB — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.',
   },
   access: {
     read: () => true,
@@ -22,8 +35,22 @@ export const Media: CollectionConfig = {
     update: signedIn,
     delete: adminOnly,
   },
-  // A replaced photograph appears wherever it is used.
-  hooks: { afterChange: [revalidateEverything] },
+  hooks: {
+    beforeValidate: [
+      ({ req }) => {
+        const file = req.file
+        if (!file || !file.mimetype?.startsWith('image/')) return
+        if (file.size <= MAX_IMAGE_BYTES) return
+        const mb = (file.size / 1_048_576).toFixed(1)
+        throw new APIError(
+          `"${file.name}" is ${mb} MB. Photographs must be under 4 MB: export at 2400px on the long edge, JPEG quality 80, and upload that instead.`,
+          400,
+        )
+      },
+    ],
+    // A replaced photograph appears wherever it is used.
+    afterChange: [revalidateEverything],
+  },
   /**
    * Folders are how the library is organised — Products, Journeys, Pages,
    * Brand, or whatever the team finds natural. They are a filing system, not

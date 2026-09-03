@@ -58,12 +58,26 @@ const localise = (url: string) => {
   return url
 }
 
+/**
+ * The file the site should actually serve: the 2400px rendition Payload made
+ * at upload, not the original. The original may be a 30 MB, 8000px export,
+ * and every request for it has to pass through a serverless function and
+ * the image optimizer — which, on a cold cache, is where a hero photograph
+ * times out and arrives as a broken image. A rendition exists only when the
+ * original was wider than it, so smaller files fall through to themselves.
+ */
+const servable = (doc: Any): string | undefined => {
+  const sizes = doc.sizes as Record<string, { url?: string | null } | undefined> | undefined
+  return sizes?.hero?.url || sizes?.wide?.url || doc.url || undefined
+}
+
 const toImg = (media: unknown, fallback: Img): Img => {
   if (!media || typeof media !== 'object') return fallback
   const doc = media as Any
-  if (!doc.url) return fallback
+  const url = servable(doc)
+  if (!url) return fallback
   return {
-    src: localise(doc.url),
+    src: localise(url),
     alt: doc.alt ?? fallback.alt,
     credit: doc.credit ?? undefined,
     creditUrl: doc.creditUrl ?? undefined,
@@ -107,7 +121,7 @@ const toFacilitator = (doc: unknown): Facilitator | null => {
     role: f.role ?? undefined,
     bio: f.bio ?? undefined,
     photo: f.photo?.url
-      ? { src: f.photo.url, alt: f.photo.alt ?? f.name ?? '' }
+      ? { src: localise(servable(f.photo) ?? f.photo.url), alt: f.photo.alt ?? f.name ?? '' }
       : undefined,
   }
 }
