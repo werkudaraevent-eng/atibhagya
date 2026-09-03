@@ -33,13 +33,15 @@ jobs:
           sudo apt-get install -y postgresql-common
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
           sudo apt-get install -y postgresql-client-17
+          /usr/lib/postgresql/17/bin/pg_dump --version
 
       - name: Dump the database
         env:
           DATABASE_URI: ${{ secrets.BACKUP_DATABASE_URI }}
         run: |
           set -euo pipefail
-          pg_dump "$DATABASE_URI" --no-owner --no-privileges | gzip -9 > "atibhagya-$(date -u +%F).sql.gz"
+          # The runner ships its own pg_dump 16 and prefers it; call 17 by path.
+          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URI" --no-owner --no-privileges | gzip -9 > "atibhagya-$(date -u +%F).sql.gz"
           ls -la *.sql.gz
 
       - name: Upload the dump
