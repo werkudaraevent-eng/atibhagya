@@ -34,9 +34,9 @@ type Props = {
  */
 export function Turnstile({ siteKey, onToken }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const latest = useRef(onToken)
-  latest.current = onToken
 
+  // `onToken` is a state setter, so it is stable and the widget is rendered
+  // once; a changing callback would re-render it, which is the right thing.
   useEffect(() => {
     const host = ref.current
     if (!host) return
@@ -50,9 +50,9 @@ export function Turnstile({ siteKey, onToken }: Props) {
         appearance: 'interaction-only',
         size: 'flexible',
         theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light',
-        callback: (token: string) => latest.current(token),
-        'expired-callback': () => latest.current(''),
-        'error-callback': () => latest.current(''),
+        callback: (token: string) => onToken(token),
+        'expired-callback': () => onToken(''),
+        'error-callback': () => onToken(''),
       })
     }
 
@@ -73,7 +73,7 @@ export function Turnstile({ siteKey, onToken }: Props) {
       cancelled = true
       if (id) window.turnstile?.remove(id)
     }
-  }, [siteKey])
+  }, [siteKey, onToken])
 
   return <div ref={ref} />
 }

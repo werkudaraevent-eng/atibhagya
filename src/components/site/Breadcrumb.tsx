@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import { serverURL } from '@/lib/server-url'
 import styles from './Breadcrumb.module.css'
 
 export type Crumb = { label: string; href?: string }
@@ -26,7 +27,7 @@ type Props = {
  * result show "Atibhagya › Product › Rituals & Ceremony" under the title.
  */
 export function Breadcrumb({ trail, label }: Props) {
-  const base = process.env.NEXT_PUBLIC_SERVER_URL || ''
+  const base = serverURL
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { revalidateCatalogue } from '../lib/revalidate'
+import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
 import { adminOnly, signedIn } from './Users'
 
@@ -24,8 +25,7 @@ export const Products: CollectionConfig = {
     listSearchableFields: ['title', 'subtitle', 'slug', 'description'],
     pagination: { defaultLimit: 25, limits: [25, 50, 100] },
     description: 'Each experience in the catalogue. The reference code matches the printed catalogue.',
-    preview: (doc) =>
-      `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/product/${doc.slug}`,
+    preview: (doc) => `${serverURL}/product/${doc.slug}`,
   },
   access: {
     read: ({ req: { user } }) => {

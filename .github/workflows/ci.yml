@@ -1,0 +1,54 @@
+# Every pull request and every push to staging or main: types, lint, and a
+# real build against a throwaway SQLite file. Vercel builds too, but this
+# one runs first and blocks the merge.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [staging, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          # A throwaway database and a placeholder secret: enough for the
+          # build to generate its pages from the built-in content.
+          PAYLOAD_SECRET: ci-only-placeholder-not-a-secret
+          DATABASE_URI: file:./ci.db
+          NEXT_PUBLIC_SERVER_URL: http://localhost:3000
+
+  # Advisories are reported, not blocking: a transitive "high" with no fix
+  # yet should not stop a copy change from shipping. Read it, then decide.
+  audit:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=high

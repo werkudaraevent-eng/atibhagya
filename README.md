@@ -486,14 +486,29 @@ Rules → rate-limit `POST` to `/inquiry` and `/id/inquiry`. Behind Cloudflare:
 a rate-limiting rule on the same paths, and Cloudflare Access in front of
 `/admin` so the login page is never reachable from an unknown network.
 
-Still open, and deliberate:
+**When the database cannot be reached.** Outside production the site falls
+back to its built-in sample content, so a bare checkout and staging keep
+rendering. In production it does not: the page throws, and Next keeps
+serving the last copy it built. A five-minute outage is invisible; a brand
+new page during an outage is a styled error page with a retry, not the
+sample catalogue cached as if it were real.
 
-- **A privacy notice is still missing.** The inquiry collects contact details
-  and free text; Indonesia's PDP law and GDPR both expect a notice and a
-  retention period. That is a legal call, not a code one.
-- **Backups.** Neon keeps point-in-time history for as long as its plan
-  allows; R2 has no versioning. A scheduled `pg_dump` to a separate bucket,
-  and a periodic sync of the media bucket, are the next step.
+**Checks and upkeep** (`.github/`):
+
+- `ci.yml` — every pull request and every push to `staging` or `main` runs
+  the type check, ESLint and a full build; `npm audit` runs beside them and
+  reports without blocking.
+- `dependabot.yml` — weekly dependency PRs against `staging`, grouped; major
+  versions of Next, React and Payload are left for a deliberate upgrade.
+- `backup.yml` — Mondays: a `pg_dump` of production and a mirror of the media
+  bucket, into a separate private R2 bucket. Needs the secrets listed at the
+  top of the file, and a lifecycle rule on that bucket. Try a restore on a
+  Neon branch once, before it matters.
+
+**Data notice.** The line under the submit button (Inquiries → Inquiry form →
+Other wording → Data notice) says what happens to what a visitor writes.
+Indonesia's PDP law (UU 27/2022) expects it. Still open: a retention period
+— decide how long a closed inquiry is kept, and delete on that schedule.
 
 ## Deploying
 

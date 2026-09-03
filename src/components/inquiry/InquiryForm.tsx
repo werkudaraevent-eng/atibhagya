@@ -523,6 +523,7 @@ export function InquiryForm({
         >
           {submitting ? t.sending : t.submit}
         </button>
+        {t.privacyNote ? <p className={styles.privacy}>{t.privacyNote}</p> : null}
       </div>
     </form>
       </div>

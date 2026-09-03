@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import type { Locale, ProductCard, ProductCategory } from '@/lib/content/types'
 import { ELEMENTS } from '@/lib/elements'
@@ -38,20 +38,46 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
   const [term, setTerm] = useState('')
   const [shown, setShown] = useState(PAGE)
 
-  // A product page's breadcrumb links back here with `?category=`, so the
-  // listing opens already narrowed to where the reader came from.
+  // The filters live in the address as well as in state — `?category=`,
+  // `for=`, `element=`, `q=` — so a narrowed listing can be shared, and the
+  // back button returns to the same view. A product page's breadcrumb links
+  // back here with `?category=` for the same reason.
   //
   // Read from `window.location` after mount, deliberately not via
   // `useSearchParams`: that hook needs a Suspense boundary on a static page,
   // and a boundary makes React hydrate this subtree late — after GSAP has
   // already written inline styles onto the rows — which fails hydration.
+  const readFromUrl = useRef(false)
   useEffect(() => {
-    const requested = new URLSearchParams(window.location.search).get('category')
-    if (requested && categories.some((c) => c.slug === requested)) {
-      setCategory(requested)
-      setShown(PAGE)
+    const params = new URLSearchParams(window.location.search)
+    const wantedCategory = params.get('category')
+    const wantedAudience = params.get('for') ?? ''
+    const wantedElement = params.get('element') ?? ''
+    const wantedTerm = params.get('q') ?? ''
+
+    if (wantedCategory && categories.some((c) => c.slug === wantedCategory)) setCategory(wantedCategory)
+    if (wantedAudience && wantedAudience in t.suitable) setAudience(wantedAudience)
+    if (wantedElement && (ELEMENTS as readonly string[]).includes(wantedElement)) setElement(wantedElement)
+    if (wantedTerm) setTerm(wantedTerm.slice(0, 80))
+    setShown(PAGE)
+    readFromUrl.current = true
+  }, [categories, t.suitable])
+
+  // Write the filters back without adding history entries: the back button
+  // should leave the listing, not step through every keystroke.
+  useEffect(() => {
+    if (!readFromUrl.current) return
+    const params = new URLSearchParams()
+    if (category) params.set('category', category)
+    if (audience) params.set('for', audience)
+    if (element) params.set('element', element)
+    if (term.trim()) params.set('q', term.trim())
+    const search = params.toString()
+    const next = `${window.location.pathname}${search ? `?${search}` : ''}${window.location.hash}`
+    if (next !== `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+      window.history.replaceState(window.history.state, '', next)
     }
-  }, [categories])
+  }, [category, audience, element, term])
 
   const audiences = useMemo(() => {
     const present = new Set<string>()

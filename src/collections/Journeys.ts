@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { revalidateCatalogue } from '../lib/revalidate'
+import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
 import { adminOnly, signedIn } from './Users'
 
@@ -21,8 +22,7 @@ export const Journeys: CollectionConfig = {
     defaultColumns: ['title', 'durationText', '_status', 'order'],
     listSearchableFields: ['title', 'positioning', 'slug'],
     description: 'Multi-day itineraries. Days hold activities; an activity may point at a product, or stay custom.',
-    preview: (doc) =>
-      `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/journey/${doc.slug}`,
+    preview: (doc) => `${serverURL}/journey/${doc.slug}`,
   },
   access: {
     read: ({ req: { user } }) => {

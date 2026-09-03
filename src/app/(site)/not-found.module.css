@@ -31,7 +31,19 @@
   background: rgba(var(--ink-rgb), 0.3);
 }
 
-.link {
+.body {
+  margin: -8px 0 0;
+  max-width: 48ch;
+  font: 300 15px/1.85 var(--font-karla), sans-serif;
+  color: var(--ink-body);
+}
+
+.link,
+.button {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
   font: 400 11px/1 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;

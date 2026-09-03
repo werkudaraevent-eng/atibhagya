@@ -117,6 +117,7 @@ const WORDING: Record<string, (l: Locale) => string> = {
   addCustomLabel: (l) => dict(l).inquiry.addIdea,
   requiredNote: (l) => dict(l).inquiry.requiredNote,
   submitLabel: (l) => dict(l).inquiry.submit,
+  privacyNote: (l) => dict(l).inquiry.privacyNote,
   doneEyebrow: (l) => dict(l).inquiry.doneEyebrow,
   doneHeading: (l) => dict(l).inquiry.doneHeading,
   doneBody: (l) => dict(l).inquiry.doneBody,
@@ -424,6 +425,16 @@ export const InquiryFormCopy: GlobalConfig = {
             text('addCustomLabel', 'The button that adds an "own idea".'),
             text('requiredNote', 'The line above the form explaining the * mark. Default "Required".'),
             text('submitLabel', 'The submit button.'),
+            {
+              name: 'privacyNote',
+              type: 'textarea',
+              localized: true,
+              label: 'Data notice',
+              admin: {
+                description:
+                  'The short line under the submit button saying what happens to what the visitor writes. Indonesia’s personal-data law (UU 27/2022) expects one; keep it honest and plain. Clear it to return to the approved wording.',
+              },
+            },
           ],
         },
         {

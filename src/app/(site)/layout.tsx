@@ -5,10 +5,13 @@ import { RefreshOnSave } from '@/components/site/RefreshOnSave'
 import { THEME_SCRIPT } from '@/components/site/ThemeToggle'
 import { isProduction } from '@/lib/env'
 import { karla, marcellus } from '@/lib/fonts'
+import { serverURL } from '@/lib/server-url'
 import '@/app/globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'),
+  // Absolute URLs for Open Graph images and canonicals — the branch alias
+  // on staging, the domain in production.
+  metadataBase: new URL(serverURL),
   // Belt and braces with robots.ts: a staging page that somehow gets
   // crawled still tells the engine not to keep it.
   ...(isProduction ? {} : { robots: { index: false, follow: false } }),

@@ -73,6 +73,8 @@ export type Product = {
   heroImage: Img
   gallery: Img[]
   featured: boolean
+  /** When the document last changed in the CMS; absent for built-in content. */
+  updatedAt?: string
 }
 
 /**
@@ -136,6 +138,8 @@ export type Journey = {
   days: JourneyDay[]
   heroImage: Img
   gallery: Img[]
+  /** When the document last changed in the CMS; absent for built-in content. */
+  updatedAt?: string
 }
 
 export type Pillar = {

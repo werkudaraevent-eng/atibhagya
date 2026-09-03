@@ -239,6 +239,14 @@
   cursor: progress;
 }
 
+/* What happens to what was written: small, quiet, and there. */
+.privacy {
+  margin: 22px 0 0;
+  max-width: 52ch;
+  font: 300 12.5px/1.75 var(--font-karla), sans-serif;
+  color: var(--ink-caption);
+}
+
 /* --- Confirmation ------------------------------------------------------ */
 
 /* --- After sending ------------------------------------------------------- */

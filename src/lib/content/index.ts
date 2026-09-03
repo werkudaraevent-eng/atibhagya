@@ -1,3 +1,4 @@
+import { isProduction } from '../env'
 import { getPayloadSafe } from '../payload'
 import { defaults } from './defaults'
 import { guessElement, isElement } from '../elements'
@@ -26,6 +27,19 @@ import type {
 } from './types'
 
 type Any = Record<string, any>
+
+/**
+ * When a read from the CMS fails. Outside production the approved default
+ * content is the right answer — a build without a database, a local
+ * checkout, staging while Neon wakes. In production the page throws
+ * instead, so Next keeps serving the last good copy it cached rather than
+ * the sample catalogue.
+ */
+const recover = <T>(err: unknown, fallback: T): T => {
+  if (isProduction) throw err
+  console.warn('[atibhagya] CMS read failed, using default content:', err)
+  return fallback
+}
 
 /** Keeps the approved copy when a CMS field has been left empty. */
 const or = <T>(value: T | null | undefined, fallback: T): T => {
@@ -151,6 +165,7 @@ const toProduct = (doc: Any, fallback: Product): Product => ({
   heroImage: toImg(doc.heroImage, fallback.heroImage),
   gallery: gallery(doc.gallery, fallback.gallery),
   featured: doc.featured ?? fallback.featured,
+  updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : undefined,
 })
 
 const toJourney = (doc: Any, fallback: Journey): Journey => ({
@@ -183,6 +198,7 @@ const toJourney = (doc: Any, fallback: Journey): Journey => ({
     : fallback.days,
   heroImage: toImg(doc.heroImage, fallback.heroImage),
   gallery: gallery(doc.gallery, fallback.gallery),
+  updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : undefined,
 })
 
 /**
@@ -232,8 +248,8 @@ export async function getSite(locale: Locale, options: ReadOptions = {}): Promis
       parentBrand: typeof site.parentBrand === 'string' ? site.parentBrand : fallback.parentBrand,
       responseTime: or(site.responseTime, fallback.responseTime),
     }
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }
 
@@ -293,8 +309,8 @@ export async function getHome(locale: Locale, options: ReadOptions = {}): Promis
         image: toImg(home.ctaImage, fallback.cta.image),
       },
     }
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }
 
@@ -332,8 +348,8 @@ export async function getAbout(locale: Locale, options: ReadOptions = {}): Promi
       ctaHeadline: or(about.ctaHeadline, fallback.ctaHeadline),
       ctaLabel: or(about.ctaLabel, fallback.ctaLabel),
     }
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }
 
@@ -346,12 +362,13 @@ export async function getCategories(locale: Locale): Promise<ProductCategory[]> 
     // Categories carry no drafts, so they have no `_status` — the shared
     // published filter would be rejected as an unknown field, and the catch
     // below would hand back the hardcoded fallback as if nothing were wrong.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { where: _published, ...withoutStatus } = query
     const found = await payload.find({ collection: 'product-categories', locale, ...withoutStatus })
     if (found.docs.length === 0) return fallback
     return found.docs.map((d: Any) => toCategory(d)!).filter(Boolean)
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }
 
@@ -364,8 +381,8 @@ export async function getProducts(locale: Locale): Promise<Product[]> {
     const found = await payload.find({ collection: 'products', locale, ...query })
     if (found.docs.length === 0) return fallback
     return found.docs.map((d: Any, i: number) => toProduct(d, fallback[i] ?? fallback[0]))
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }
 
@@ -399,8 +416,9 @@ export async function getProduct(
       })
       const doc = found.docs[0] as Any | undefined
       if (doc) return toProduct(doc, fallback ?? fallbackList[0])
-    } catch {
-      // fall through to the approved default
+    } catch (err) {
+      // Outside production: fall through to the approved default.
+      recover(err, null)
     }
   }
 
@@ -416,8 +434,8 @@ export async function getJourneys(locale: Locale): Promise<Journey[]> {
     const found = await payload.find({ collection: 'journeys', locale, ...query })
     if (found.docs.length === 0) return fallback
     return found.docs.map((d: Any, i: number) => toJourney(d, fallback[i] ?? fallback[0]))
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }
 
@@ -443,8 +461,9 @@ export async function getJourney(
       })
       const doc = found.docs[0] as Any | undefined
       if (doc) return toJourney(doc, fallback ?? fallbackList[0])
-    } catch {
-      // fall through to the approved default
+    } catch (err) {
+      // Outside production: fall through to the approved default.
+      recover(err, null)
     }
   }
 
@@ -528,8 +547,8 @@ export async function getCatalogueCopy(
         detailEyebrow: or(c.journeyDetailEyebrow, fallback.journeys.detailEyebrow),
       },
     }
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }
 
@@ -659,13 +678,14 @@ export async function getInquiryCopy(
       addIdea: or(copy.addCustomLabel, fallback.addIdea),
       requiredNote: or(copy.requiredNote, fallback.requiredNote),
       submit: or(copy.submitLabel, fallback.submit),
+      privacyNote: or(copy.privacyNote, fallback.privacyNote),
       doneEyebrow: or(copy.doneEyebrow, fallback.doneEyebrow),
       doneHeading: or(copy.doneHeading, fallback.doneHeading),
       doneBody: or(copy.doneBody, fallback.doneBody),
       doneContact: or(copy.doneContact, fallback.doneContact),
       doneBack: or(copy.doneBack, fallback.doneBack),
     }
-  } catch {
-    return fallback
+  } catch (err) {
+    return recover(err, fallback)
   }
 }

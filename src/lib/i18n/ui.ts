@@ -96,6 +96,8 @@ export type Dict = {
     remove: string
     submit: string
     sending: string
+    /** Under the submit button: what happens to what the visitor writes. */
+    privacyNote: string
     error: string
     errors: {
       name: string
@@ -228,6 +230,8 @@ const en: Dict = {
     remove: 'Remove',
     submit: 'Submit inquiry',
     sending: 'Sending…',
+    privacyNote:
+      'What you write here is used only to reply to you and plan your visit. Atibhagya keeps it for that purpose and does not sell it or use it for marketing. Write to us at any time to have it removed.',
     error: 'We could not send that just now. Please try once more, or write to us directly.',
     errors: {
       name: 'We’d love a name to write back to.',
@@ -345,6 +349,8 @@ const id: Dict = {
     remove: 'Hapus',
     submit: 'Kirim',
     sending: 'Mengirim…',
+    privacyNote:
+      'Apa yang Anda tulis di sini hanya dipakai untuk membalas Anda dan merencanakan kunjungan. Atibhagya menyimpannya untuk keperluan itu saja, tidak menjualnya, dan tidak memakainya untuk pemasaran. Hubungi kami kapan saja untuk menghapusnya.',
     error: 'Kami belum bisa mengirimnya sekarang. Coba sekali lagi, atau tulis langsung kepada kami.',
     errors: {
       name: 'Kami ingin tahu nama Anda untuk membalas.',

@@ -144,9 +144,11 @@
   border-left: 1px solid rgba(255, 255, 255, 0.22);
 }
 
+/* Small, but not faint: 0.72 white over the darkened hero clears the 4.5:1
+   contrast that text this size needs; 0.5 did not. */
 .langLink {
-  color: rgba(255, 255, 255, 0.5);
-  font: 400 9.5px/1 var(--font-karla), sans-serif;
+  color: rgba(255, 255, 255, 0.72);
+  font: 400 10.5px/1 var(--font-karla), sans-serif;
   letter-spacing: 0.1em;
   transition: color 0.4s ease;
 }
@@ -160,7 +162,7 @@
 }
 
 .langSep {
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.4);
   font-size: 9px;
   line-height: 1;
 }
@@ -228,7 +230,7 @@
 .nav[data-tone='light'] .theme,
 :global(html[data-nav-solid]) .langLink,
 :global(html[data-nav-solid]) .theme {
-  color: rgba(var(--ink-rgb), 0.55);
+  color: rgba(var(--ink-rgb), 0.7);
 }
 
 .nav[data-tone='light'] .theme:hover,
@@ -260,7 +262,7 @@
   display: inline-flex;
   align-items: center;
   margin-left: clamp(10px, 1.2vw, 18px);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   transition: color 0.4s ease;
 }
 

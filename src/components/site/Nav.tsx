@@ -34,6 +34,8 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
   useEffect(() => {
     if (!open) return
     const root = document.documentElement
+    const panel = panelRef.current
+    const toggle = toggleRef.current
     const gap = window.innerWidth - root.clientWidth
     const previousOverflow = root.style.overflow
     const previousPadding = root.style.paddingRight
@@ -48,7 +50,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
     // After the curtain has begun to rise, so the focus ring lands on a
     // visible link rather than on one still fading in.
     const focus = window.setTimeout(() => {
-      panelRef.current?.querySelector<HTMLElement>('a')?.focus()
+      panel?.querySelector<HTMLElement>('a')?.focus()
     }, 120)
 
     return () => {
@@ -57,7 +59,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
       document.removeEventListener('keydown', onKeyDown)
       window.clearTimeout(focus)
       // Only when focus was inside the menu: a navigation moves it elsewhere.
-      if (panelRef.current?.contains(document.activeElement)) toggleRef.current?.focus()
+      if (panel?.contains(document.activeElement)) toggle?.focus()
     }
   }, [open])
 
