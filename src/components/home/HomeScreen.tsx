@@ -4,6 +4,7 @@ import { Hero } from '@/components/home/Hero'
 import { Why } from '@/components/home/Why'
 import { ProductGrid } from '@/components/products/ProductCard'
 import { Footer } from '@/components/site/Footer'
+import { SectionMark } from '@/components/site/Ornament'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getFeaturedProducts, getHome, getSite } from '@/lib/content'
@@ -27,7 +28,7 @@ export async function HomeScreen({ locale, draft = false }: Props) {
 
   const [home, site, featured] = await Promise.all([
     getHome(locale, { draft }),
-    getSite(locale),
+    getSite(locale, { draft }),
     getFeaturedProducts(locale),
   ])
 
@@ -36,15 +37,13 @@ export async function HomeScreen({ locale, draft = false }: Props) {
       <Motion />
       <Nav locale={locale} dict={t} />
 
-      <main>
+      <main id="main">
         <Hero hero={home.hero} ctaHref={`${prefix}/product`} />
         <Why why={home.why} />
 
         <section className={`${page.section} ${page.sectionAlt}`}>
           <div className={page.container}>
-            <div className={page.eyebrow} data-fade>
-              {home.featured.eyebrow}
-            </div>
+            <SectionMark number="02" mark="wave" label={home.featured.eyebrow} align="start" />
             <h2 className={page.headline} data-headline style={{ marginBottom: 'clamp(40px, 6vh, 72px)' }}>
               <Lines text={home.featured.headline} />
             </h2>

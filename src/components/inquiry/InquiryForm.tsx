@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 
-import { submitInquiry } from '@/app/[locale]/inquiry/actions'
+import { submitInquiry } from '@/app/(site)/[locale]/inquiry/actions'
 import page from '@/components/site/Page.module.css'
 import type { Locale, SiteContent } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
@@ -21,6 +21,14 @@ import {
 import styles from './InquiryForm.module.css'
 import { ChoiceSelect } from './ChoiceSelect'
 import { TokenSelect } from './TokenSelect'
+import { Turnstile, turnstileSiteKey } from './Turnstile'
+
+/**
+ * The draft lives in `sessionStorage`: it survives closing the dialog and
+ * coming back, and is gone when the tab closes — a name, an address and a
+ * phone number should not wait indefinitely on a shared computer.
+ */
+const store = () => window.sessionStorage
 
 export type Choice = { slug: string; title: string }
 
@@ -80,14 +88,16 @@ export function InquiryForm({
   const [submitting, setSubmitting] = useState(false)
   const [done, setDone] = useState(false)
   const [idea, setIdea] = useState('')
+  const [token, setToken] = useState('')
   const trapRef = useRef<HTMLInputElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const doneRef = useRef<HTMLHeadingElement>(null)
   const skipFirstSave = useRef(true)
 
   // Restore a draft, but never let it overwrite the prefill the CTA carried.
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(DRAFT_STORAGE_KEY)
+      const stored = store().getItem(DRAFT_STORAGE_KEY)
       if (!stored) return
       const saved = JSON.parse(stored) as Partial<InquiryDraft>
       setDraft(() => ({
@@ -110,7 +120,7 @@ export function InquiryForm({
     }
     if (done) return
     try {
-      window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft))
+      store().setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft))
     } catch {
       // Private browsing, quota — the form still works without a saved draft.
     }
@@ -169,17 +179,28 @@ export function InquiryForm({
     const found = validate(draft, t.fields, t.errors)
     if (Object.keys(found).length > 0) {
       setErrors(found)
+      // Take the reader to the first thing that needs attention, rather
+      // than leaving them at the button wondering why nothing happened.
+      requestAnimationFrame(() => {
+        const flagged = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')
+        if (!flagged) return
+        // The ideas row flags its frame, not a control; focus the input inside.
+        const control = flagged.matches('input, textarea, select, button, [tabindex]')
+          ? flagged
+          : flagged.querySelector<HTMLElement>('input, textarea, button')
+        control?.focus()
+      })
       return
     }
 
     setSubmitting(true)
     setFormError(null)
-    const result = await submitInquiry(locale, draft, trapRef.current?.value ?? '')
+    const result = await submitInquiry(locale, draft, trapRef.current?.value ?? '', token)
     setSubmitting(false)
 
     if (result.ok) {
       try {
-        window.localStorage.removeItem(DRAFT_STORAGE_KEY)
+        store().removeItem(DRAFT_STORAGE_KEY)
       } catch {
         // Nothing to clean up.
       }
@@ -336,6 +357,7 @@ export function InquiryForm({
         <input
           className={styles.input}
           type="text"
+          name="idea"
           placeholder={field.placeholder ?? t.ideasPlaceholder}
           value={idea}
           aria-label={field.label}
@@ -414,6 +436,7 @@ export function InquiryForm({
         {field.type === 'textarea' ? (
           <textarea
             className={styles.textarea}
+            name={field.name}
             rows={field.kind === 'goal' ? 4 : 3}
             value={value}
             placeholder={field.placeholder}
@@ -425,6 +448,7 @@ export function InquiryForm({
           <span className={styles.checkbox}>
             <input
               type="checkbox"
+              name={field.name}
               checked={value === 'yes'}
               aria-invalid={invalid}
               onChange={(e) => write(field, e.target.checked ? 'yes' : '')}
@@ -435,6 +459,7 @@ export function InquiryForm({
           <input
             className={styles.input}
             type={field.type}
+            name={field.name}
             autoComplete={autoComplete}
             value={value}
             placeholder={field.placeholder}
@@ -457,7 +482,7 @@ export function InquiryForm({
           missing-key warning, though nothing is actually a list. */}
       {heading ? <div>{heading}</div> : null}
       <div className={frameClassName}>
-    <form className={styles.form} onSubmit={onSubmit} noValidate>
+    <form ref={formRef} className={styles.form} onSubmit={onSubmit} noValidate>
       {/* Off-screen rather than display:none — plenty of bots skip hidden
           fields but fill anything they can read. */}
       <input
@@ -487,6 +512,13 @@ export function InquiryForm({
         </p>
       ) : null}
 
+      {/* Invisible unless Cloudflare has a question; a box appears here if so. */}
+      {turnstileSiteKey ? (
+        <div className={styles.verify}>
+          <Turnstile siteKey={turnstileSiteKey} onToken={setToken} />
+        </div>
+      ) : null}
+
       <div className={styles.actions}>
         <button
           type="submit"
@@ -495,6 +527,7 @@ export function InquiryForm({
         >
           {submitting ? t.sending : t.submit}
         </button>
+        {t.privacyNote ? <p className={styles.privacy}>{t.privacyNote}</p> : null}
       </div>
     </form>
       </div>

@@ -1,6 +1,8 @@
 import type { CollectionConfig } from 'payload'
 
+import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
 import { revalidateCatalogue } from '../lib/revalidate'
+import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
 import { adminOnly, signedIn } from './Users'
 
@@ -18,11 +20,11 @@ export const Journeys: CollectionConfig = {
   admin: {
     group: 'Experiences',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'durationText', '_status', 'order'],
+    defaultColumns: ['title', 'durationText', '_status', 'updatedBy', 'updatedAt'],
     listSearchableFields: ['title', 'positioning', 'slug'],
     description: 'Multi-day itineraries. Days hold activities; an activity may point at a product, or stay custom.',
-    preview: (doc) =>
-      `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/journey/${doc.slug}`,
+    preview: (doc) => `${serverURL}/journey/${doc.slug}`,
+    components: versionsView,
   },
   access: {
     read: ({ req: { user } }) => {
@@ -35,7 +37,7 @@ export const Journeys: CollectionConfig = {
   },
 
   defaultSort: 'order',
-  hooks: { afterChange: [revalidateCatalogue('journey')] },
+  hooks: { beforeChange: [stampUpdatedBy], afterChange: [revalidateCatalogue('journey')] },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.
@@ -158,5 +160,6 @@ export const Journeys: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     { name: 'order', type: 'number', defaultValue: 0, admin: { position: 'sidebar' } },
+    updatedBy,
   ],
 }

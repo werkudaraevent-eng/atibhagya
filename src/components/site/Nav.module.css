@@ -12,12 +12,28 @@
   left: 0;
   right: 0;
   z-index: 60;
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  transition:
-    background 0.6s ease,
-    border-color 0.6s ease,
-    backdrop-filter 0.6s ease;
+}
+
+/**
+ * The header's surface lives on a pseudo-element, not on `.nav` itself.
+ *
+ * It carries a backdrop blur once the page has scrolled, and `backdrop-filter`
+ * turns whatever carries it into the containing block for `position: fixed`
+ * descendants — which the small-screen menu is. On `.nav` that pinned the
+ * menu to the header's own box, a hundred pixels tall, instead of the
+ * viewport. On a pseudo-element it affects nothing else.
+ */
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, rgba(var(--paper-rgb), 0.95), rgba(var(--paper-rgb), 0.82));
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.08);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
 }
 
 /* Tall and airy. A cramped header is the fastest way to look like a template. */
@@ -128,9 +144,11 @@
   border-left: 1px solid rgba(255, 255, 255, 0.22);
 }
 
+/* Small, but not faint: 0.72 white over the darkened hero clears the 4.5:1
+   contrast that text this size needs; 0.5 did not. */
 .langLink {
-  color: rgba(255, 255, 255, 0.5);
-  font: 400 9.5px/1 var(--font-karla), sans-serif;
+  color: rgba(255, 255, 255, 0.72);
+  font: 400 10.5px/1 var(--font-karla), sans-serif;
   letter-spacing: 0.1em;
   transition: color 0.4s ease;
 }
@@ -144,12 +162,14 @@
 }
 
 .langSep {
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.4);
   font-size: 9px;
   line-height: 1;
 }
 
 .progress {
+  position: relative;
+  z-index: 2;
   height: 2px;
   width: var(--scroll-progress, 0%);
   background: linear-gradient(90deg, var(--emas), var(--emas-deep));
@@ -157,11 +177,9 @@
 
 /* --- Over a light page, or scrolled past an immersive hero ------------- */
 
-.nav[data-tone='light'],
-:global(html[data-nav-solid]) .nav {
-  background: linear-gradient(180deg, rgba(var(--paper-rgb), 0.95), rgba(var(--paper-rgb), 0.82));
-  border-bottom-color: rgba(var(--ink-rgb), 0.08);
-  backdrop-filter: blur(10px);
+.nav[data-tone='light']::before,
+:global(html[data-nav-solid]) .nav::before {
+  opacity: 1;
 }
 
 /* On an ivory surface the header tightens up: the hero's generosity would
@@ -212,7 +230,7 @@
 .nav[data-tone='light'] .theme,
 :global(html[data-nav-solid]) .langLink,
 :global(html[data-nav-solid]) .theme {
-  color: rgba(var(--ink-rgb), 0.55);
+  color: rgba(var(--ink-rgb), 0.7);
 }
 
 .nav[data-tone='light'] .theme:hover,
@@ -244,7 +262,7 @@
   display: inline-flex;
   align-items: center;
   margin-left: clamp(10px, 1.2vw, 18px);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   transition: color 0.4s ease;
 }
 
@@ -267,64 +285,173 @@
   transition: color 0.4s ease;
 }
 
-/* The panel is navy in both themes: it is a curtain, not a page. */
+/* --- The menu on small screens ------------------------------------------
+   A curtain the height of the screen, navy in both themes, under the header.
+   The page cannot scroll beneath it; the header above it turns white so the
+   wordmark, Close and Inquiry read on the navy whatever the page's theme. */
+
+.inner {
+  position: relative;
+  z-index: 2;
+}
+
 .panel {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
   display: none;
   flex-direction: column;
-  gap: 22px;
-  padding: 26px clamp(20px, 4vw, 48px) 34px;
-  background: rgba(16, 34, 47, 0.97);
-  backdrop-filter: blur(10px);
+  justify-content: space-between;
+  padding: clamp(110px, 18vh, 150px) clamp(24px, 6vw, 40px) clamp(28px, 5vh, 44px);
+  background: #10222f;
+  opacity: 0;
+  pointer-events: none;
+  /* `visibility` as well as opacity: an invisible link is still a link to
+     the keyboard and to a screen reader unless it is hidden outright. The
+     visibility change waits for the fade out, and leads the fade in. */
+  visibility: hidden;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s linear 0.45s;
 }
 
-.panel a:not(.cta) {
+.panelOpen {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s;
+}
+
+/* The destinations, large and in the serif: a menu, not a list of tags. */
+.panelLinks {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 3vh, 24px);
+}
+
+.panelLinks a {
   color: var(--ivory-on-dark);
-  font: 400 12px/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font: 400 clamp(30px, 8.5vw, 44px) / 1.1 var(--font-marcellus), serif;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s var(--ease-out),
+    color 0.3s ease;
 }
 
-.panel .cta {
-  align-self: flex-start;
-  color: var(--emas-hover);
-  text-shadow: none;
+.panelOpen .panelLinks a {
+  opacity: 1;
+  transform: none;
 }
 
-/* Stacked in the panel, a left border and its indent make no sense. */
-.panel .lang {
+.panelLinks a:hover,
+.panelLinkActive {
+  color: var(--emas-hover) !important;
+}
+
+/* One quiet row at the foot: language, theme, and the way to write to us. */
+.panelFoot {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 5vw, 32px);
+  padding-top: 22px;
+  border-top: 1px solid rgba(246, 243, 231, 0.14);
+}
+
+.panelFoot .lang {
   border-left: none;
   padding-left: 0;
   margin-left: 0;
   gap: 8px;
 }
 
-.panel .langLink {
-  color: rgba(246, 243, 231, 0.55);
-  font-size: 12px;
-  letter-spacing: 0.2em;
+/* Written with the `.nav` prefix on purpose: the solid-header rules
+   (`.nav[data-tone='light'] .langLink`, and the scrolled equivalent) colour
+   these in ink, which on the navy curtain is invisible. Same specificity
+   plus one class beats them, whatever the header's state or the theme. */
+.nav .panelFoot .langLink {
+  color: rgba(246, 243, 231, 0.5);
+  font-size: 11px;
+  letter-spacing: 0.18em;
 }
 
-.panel .langCurrent {
+.nav .panelFoot .langLink:hover,
+.nav .panelFoot .langCurrent {
   color: var(--ivory-on-dark);
 }
 
-.panel .theme {
+.nav .panelFoot .langSep {
+  color: rgba(246, 243, 231, 0.28);
+}
+
+.nav .panelFoot .lang {
+  border-left: none;
+}
+
+.nav .panelFoot .theme {
   margin-left: 0;
   color: rgba(246, 243, 231, 0.7);
 }
 
-.panelOpen {
-  display: flex;
+.nav .panelFoot .theme:hover {
+  color: #fff;
+}
+
+.nav .panelFoot .cta {
+  margin-left: auto;
+  color: var(--ivory-on-dark);
+  text-shadow: none;
+}
+
+.nav .panelFoot .cta::after {
+  background: var(--emas);
+}
+
+/* While the curtain is up, the header sits on navy: white type, gold mark,
+   no ivory surface — whatever tone or theme the page has. */
+/* The surface goes while the curtain is up; the curtain is the surface. */
+.nav[data-menu-open]::before {
+  opacity: 0 !important;
+}
+
+.nav[data-menu-open] .logo {
+  filter: none;
+}
+
+.nav[data-menu-open] .toggle,
+.nav[data-menu-open] .cta {
+  color: #fff;
+  text-shadow: none;
+}
+
+.nav[data-menu-open] .theme {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nav[data-menu-open] .cta::after {
+  background: var(--emas);
 }
 
 @media (max-width: 880px) {
   .links .link,
-  .links .lang {
+  .links .lang,
+  .links .theme {
     display: none;
   }
 
   .toggle {
     display: block;
+  }
+
+  /* Always in the tree on small screens, so its fade can play; hidden by
+     opacity and pointer-events until opened. */
+  .panel {
+    display: flex;
   }
 }
 

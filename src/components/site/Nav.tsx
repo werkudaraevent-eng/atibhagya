@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { ThemeToggle } from '@/components/site/ThemeToggle'
@@ -25,6 +25,48 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname() || '/'
   const prefix = locale === 'id' ? '/id' : ''
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  // The open menu covers the page: the page must not scroll beneath it, and
+  // the keyboard belongs to the menu — Escape closes it, focus moves to its
+  // first destination and comes back to the button when it closes.
+  useEffect(() => {
+    if (!open) return
+    const root = document.documentElement
+    const panel = panelRef.current
+    const toggle = toggleRef.current
+    const gap = window.innerWidth - root.clientWidth
+    const previousOverflow = root.style.overflow
+    const previousPadding = root.style.paddingRight
+    root.style.overflow = 'hidden'
+    if (gap > 0) root.style.paddingRight = `${gap}px`
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+
+    // After the curtain has begun to rise, so the focus ring lands on a
+    // visible link rather than on one still fading in.
+    const focus = window.setTimeout(() => {
+      panel?.querySelector<HTMLElement>('a')?.focus()
+    }, 120)
+
+    return () => {
+      root.style.overflow = previousOverflow
+      root.style.paddingRight = previousPadding
+      document.removeEventListener('keydown', onKeyDown)
+      window.clearTimeout(focus)
+      // Only when focus was inside the menu: a navigation moves it elsewhere.
+      if (panel?.contains(document.activeElement)) toggle?.focus()
+    }
+  }, [open])
+
+  // A navigation closes the menu, so a new page never opens under it.
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
 
   const links = [
     { label: dict.nav.products, href: `${prefix}/product` },
@@ -36,7 +78,10 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
 
   return (
-    <div className={styles.nav} data-role="nav" data-tone={tone}>
+    // `data-menu-open`, not `data-open`: the latter is the motion system's
+    // "image opening from its top edge" hook, and the stylesheet clips
+    // anything carrying it until GSAP reveals it.
+    <div className={styles.nav} data-role="nav" data-tone={tone} data-menu-open={open || undefined}>
       <div className={styles.inner}>
         <Link href={prefix || '/'} className={styles.logoLink}>
           <Image
@@ -76,6 +121,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
           />
 
           <button
+            ref={toggleRef}
             type="button"
             className={styles.toggle}
             aria-expanded={open}
@@ -91,29 +137,46 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
         </div>
       </div>
 
-      <div id="nav-panel" className={open ? `${styles.panel} ${styles.panelOpen}` : styles.panel}>
-        {links.map((link) => (
-          <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>
-            {link.label}
+      {/* Small screens: the menu as a full-height curtain under the header. */}
+      <div
+        ref={panelRef}
+        id="nav-panel"
+        className={open ? `${styles.panel} ${styles.panelOpen}` : styles.panel}
+        aria-hidden={!open}
+      >
+        <nav className={styles.panelLinks} aria-label={dict.menu}>
+          {links.map((link, i) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={isActive(link.href) ? styles.panelLinkActive : undefined}
+              style={{ transitionDelay: open ? `${80 + i * 60}ms` : '0ms' }}
+              onClick={() => setOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className={styles.panelFoot}>
+          <LanguageSwitcher
+            locale={locale}
+            label={dict.languageLabel}
+            className={styles.lang}
+            itemClassName={styles.langLink}
+            currentClassName={styles.langCurrent}
+            separatorClassName={styles.langSep}
+            onNavigate={() => setOpen(false)}
+          />
+          <ThemeToggle
+            toDark={dict.theme.toDark}
+            toLight={dict.theme.toLight}
+            className={styles.theme}
+          />
+          <Link href={inquiryHref} className={styles.cta} onClick={() => setOpen(false)}>
+            {dict.nav.inquiry}
           </Link>
-        ))}
-        <LanguageSwitcher
-          locale={locale}
-          label={dict.languageLabel}
-          className={styles.lang}
-          itemClassName={styles.langLink}
-          currentClassName={styles.langCurrent}
-          separatorClassName={styles.langSep}
-          onNavigate={() => setOpen(false)}
-        />
-        <ThemeToggle
-          toDark={dict.theme.toDark}
-          toLight={dict.theme.toLight}
-          className={styles.theme}
-        />
-        <Link href={inquiryHref} className={styles.cta} onClick={() => setOpen(false)}>
-          {dict.nav.inquiry}
-        </Link>
+        </div>
       </div>
 
       <div className={styles.progress} data-role="progress" />

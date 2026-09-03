@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
 import { adminOnly, signedIn } from './Users'
 
 /**
@@ -13,6 +14,7 @@ export const Posts: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'publishedAt', '_status'],
     description: 'Not yet rendered on the site — the journal front end ships in phase 2.',
+    components: versionsView,
   },
   access: {
     // Drafts are staff-only. Without this the REST and GraphQL APIs hand
@@ -28,7 +30,9 @@ export const Posts: CollectionConfig = {
   versions: {
     drafts: true,
   },
+  hooks: { beforeChange: [stampUpdatedBy] },
   fields: [
+    updatedBy,
     {
       name: 'title',
       type: 'text',

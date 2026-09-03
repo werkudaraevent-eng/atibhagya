@@ -1,4 +1,5 @@
 import type { Locale } from '../content/types'
+import type { Element } from '../elements'
 import { defaultFields, type FormField, type LabelKey } from '../inquiry-fields'
 
 export type Dict = {
@@ -26,6 +27,10 @@ export type Dict = {
     filterCategory: string
     forLabel: string
     anyone: string
+    /** The five elements, as the second filter and a mark on each product. */
+    elementLabel: string
+    anyElement: string
+    elements: Record<Element, string>
     searchPlaceholder: string
     clear: string
     reset: string
@@ -35,6 +40,7 @@ export type Dict = {
     duration: string
     venue: string
     suitableFor: string
+    element: string
     facilities: string
     facilitator: string
     inquire: string
@@ -90,8 +96,20 @@ export type Dict = {
     remove: string
     submit: string
     sending: string
+    /** Under the submit button: what happens to what the visitor writes. */
+    privacyNote: string
     error: string
-    errors: { name: string; email: string; emailInvalid: string; goal: string; required: string }
+    errors: {
+      name: string
+      email: string
+      emailInvalid: string
+      goal: string
+      required: string
+      /** Too many submissions from one address in a short time. */
+      tooMany: string
+      /** The bot check did not pass, or its token had expired. */
+      verify: string
+    }
     /** The small word above the thank-you, e.g. "Received". */
     doneEyebrow: string
     doneHeading: string
@@ -135,6 +153,9 @@ const en: Dict = {
     filterCategory: 'Category',
     forLabel: 'For',
     anyone: 'Anyone',
+    elementLabel: 'Element',
+    anyElement: 'Any',
+    elements: { earth: 'Earth', water: 'Water', fire: 'Fire', air: 'Air', ether: 'Space' },
     searchPlaceholder: 'Search',
     clear: 'Clear search',
     reset: 'Clear filters',
@@ -144,6 +165,7 @@ const en: Dict = {
     duration: 'Duration',
     venue: 'Venue',
     suitableFor: 'Suitable for',
+    element: 'Element',
     facilities: 'Facilities',
     facilitator: 'Facilitator',
     inquire: 'Inquire this experience',
@@ -208,6 +230,8 @@ const en: Dict = {
     remove: 'Remove',
     submit: 'Submit inquiry',
     sending: 'Sending…',
+    privacyNote:
+      'What you write here is used only to reply to you and plan your visit. Atibhagya keeps it for that purpose and does not sell it or use it for marketing. Write to us at any time to have it removed.',
     error: 'We could not send that just now. Please try once more, or write to us directly.',
     errors: {
       name: 'We’d love a name to write back to.',
@@ -215,6 +239,8 @@ const en: Dict = {
       emailInvalid: 'That address doesn’t look quite right.',
       goal: 'A sentence is plenty — it tells us what the journey is for.',
       required: 'we need this one.',
+      tooMany: 'That is a few inquiries in a short while. Please wait a few minutes and try again, or write to us directly.',
+      verify: 'We could not confirm the form was sent by a person. Please try once more.',
     },
     doneEyebrow: 'Received',
     doneHeading: 'Thank you — your inquiry is with us.',
@@ -246,6 +272,9 @@ const id: Dict = {
     filterCategory: 'Kategori',
     forLabel: 'Untuk',
     anyone: 'Siapa saja',
+    elementLabel: 'Unsur',
+    anyElement: 'Semua',
+    elements: { earth: 'Tanah', water: 'Air', fire: 'Api', air: 'Udara', ether: 'Ruang' },
     searchPlaceholder: 'Cari',
     clear: 'Hapus pencarian',
     reset: 'Hapus filter',
@@ -255,6 +284,7 @@ const id: Dict = {
     duration: 'Durasi',
     venue: 'Lokasi',
     suitableFor: 'Cocok untuk',
+    element: 'Unsur',
     facilities: 'Fasilitas',
     facilitator: 'Fasilitator',
     inquire: 'Tanyakan pengalaman ini',
@@ -319,6 +349,8 @@ const id: Dict = {
     remove: 'Hapus',
     submit: 'Kirim',
     sending: 'Mengirim…',
+    privacyNote:
+      'Apa yang Anda tulis di sini hanya dipakai untuk membalas Anda dan merencanakan kunjungan. Atibhagya menyimpannya untuk keperluan itu saja, tidak menjualnya, dan tidak memakainya untuk pemasaran. Hubungi kami kapan saja untuk menghapusnya.',
     error: 'Kami belum bisa mengirimnya sekarang. Coba sekali lagi, atau tulis langsung kepada kami.',
     errors: {
       name: 'Kami ingin tahu nama Anda untuk membalas.',
@@ -326,6 +358,8 @@ const id: Dict = {
       emailInvalid: 'Alamat itu sepertinya belum tepat.',
       goal: 'Satu kalimat sudah cukup — itu memberi tahu kami tujuan perjalanannya.',
       required: 'bagian ini perlu diisi.',
+      tooMany: 'Sudah beberapa pesan dalam waktu singkat. Mohon tunggu beberapa menit dan coba lagi, atau tulis langsung kepada kami.',
+      verify: 'Kami belum bisa memastikan formulir ini dikirim oleh orang. Silakan coba sekali lagi.',
     },
     doneEyebrow: 'Diterima',
     doneHeading: 'Terima kasih — pesan Anda sudah sampai.',

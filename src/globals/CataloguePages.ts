@@ -1,5 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
+import { dict } from '../lib/i18n/ui'
+import { prefillGlobal, text as shows } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
 
 const text = (name: string, description?: string) => ({
@@ -23,12 +26,30 @@ export const CataloguePages: GlobalConfig = {
   admin: {
     group: 'Pages',
     description:
-      'Headings for the product and journey listings and the small label above each detail page. Leave a field empty to keep the approved wording.',
+      'Headings for the product and journey listings and the small label above each detail page. Each box shows what the site currently says; change it, or clear it to return to the approved wording.',
+    components: versionsView,
   },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateGlobal(['/product', '/journey'])] },
+  hooks: {
+    // Every box shows what the site currently uses; see src/lib/prefill.ts.
+    afterRead: [
+      prefillGlobal({
+        productsEyebrow: shows((l) => dict(l).products.eyebrow),
+        productsHeadline: shows((l) => dict(l).products.headline),
+        productsIntro: shows((l) => dict(l).products.intro),
+        productDetailEyebrow: shows((l) => dict(l).products.detailEyebrow),
+        journeysEyebrow: shows((l) => dict(l).journeys.eyebrow),
+        journeysHeadline: shows((l) => dict(l).journeys.headline),
+        journeysIntro: shows((l) => dict(l).journeys.intro),
+        journeyDetailEyebrow: shows((l) => dict(l).journeys.detailEyebrow),
+      }),
+    ],
+    beforeChange: [stampUpdatedByGlobal],
+    afterChange: [revalidateGlobal(['/product', '/journey'])],
+  },
   versions: { drafts: true, max: 50 },
   fields: [
+    updatedBy,
     {
       type: 'tabs',
       tabs: [

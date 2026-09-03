@@ -33,6 +33,7 @@ import fs from 'fs'
 import path from 'path'
 import { getPayload, type Payload } from 'payload'
 
+import { guessElement, isElement } from '../lib/elements'
 import config from '../payload.config'
 
 type Localized = {
@@ -52,6 +53,8 @@ type Row = Localized & {
   categorySlug?: string
   venues?: string[]
   suitableFor?: string[]
+  /** One of earth/water/fire/air/ether; guessed from the text when absent. */
+  element?: string
   featured?: boolean
   order?: number
   en?: Localized
@@ -175,6 +178,14 @@ async function run() {
       _status: 'published',
       order: row.order ?? index,
       suitableFor: row.suitableFor ?? [],
+      element: isElement(row.element)
+        ? row.element
+        : guessElement(
+            [row.en?.title ?? row.title, row.en?.subtitle ?? row.subtitle, row.en?.highlightText ?? row.highlightText, row.en?.description ?? row.description]
+              .filter(Boolean)
+              .join(' '),
+            row.categorySlug ? slugify(row.categorySlug) : categoryName ? slugify(categoryName) : undefined,
+          ),
       venues: venueIds,
       ...(categoryId ? { category: categoryId } : {}),
     }

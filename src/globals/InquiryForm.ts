@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import type { Locale } from '../lib/content/types'
 import { dict } from '../lib/i18n/ui'
 import {
@@ -117,6 +118,7 @@ const WORDING: Record<string, (l: Locale) => string> = {
   addCustomLabel: (l) => dict(l).inquiry.addIdea,
   requiredNote: (l) => dict(l).inquiry.requiredNote,
   submitLabel: (l) => dict(l).inquiry.submit,
+  privacyNote: (l) => dict(l).inquiry.privacyNote,
   doneEyebrow: (l) => dict(l).inquiry.doneEyebrow,
   doneHeading: (l) => dict(l).inquiry.doneHeading,
   doneBody: (l) => dict(l).inquiry.doneBody,
@@ -172,6 +174,7 @@ export const InquiryFormCopy: GlobalConfig = {
     group: 'Inquiries',
     description:
       'The fields on the inquiry form and the words around them. Every box shows what the site currently says — change it, or clear it to return to the approved copy.',
+    components: versionsView,
   },
   access: { read: () => true },
   hooks: {
@@ -198,10 +201,12 @@ export const InquiryFormCopy: GlobalConfig = {
         return doc
       },
     ],
+    beforeChange: [stampUpdatedByGlobal],
     afterChange: [revalidateGlobal(['/inquiry'])],
   },
   versions: { drafts: true, max: 50 },
   fields: [
+    updatedBy,
     {
       type: 'tabs',
       tabs: [
@@ -217,7 +222,11 @@ export const InquiryFormCopy: GlobalConfig = {
               validate: checkFields,
               defaultValue: DEFAULT_ROWS,
               admin: {
-                components: { RowLabel: '@/admin/FieldRowLabel#FieldRowLabel' },
+                components: {
+                  RowLabel: '@/admin/FieldRowLabel#FieldRowLabel',
+                  // Versions: each row by its name, each change as a sentence.
+                  Diff: '@/admin/FieldsDiff#FieldsDiff',
+                },
                 isSortable: true,
               },
               fields: [
@@ -424,6 +433,16 @@ export const InquiryFormCopy: GlobalConfig = {
             text('addCustomLabel', 'The button that adds an "own idea".'),
             text('requiredNote', 'The line above the form explaining the * mark. Default "Required".'),
             text('submitLabel', 'The submit button.'),
+            {
+              name: 'privacyNote',
+              type: 'textarea',
+              localized: true,
+              label: 'Data notice',
+              admin: {
+                description:
+                  'The short line under the submit button saying what happens to what the visitor writes. Indonesia’s personal-data law (UU 27/2022) expects one; keep it honest and plain. Clear it to return to the approved wording.',
+              },
+            },
           ],
         },
         {

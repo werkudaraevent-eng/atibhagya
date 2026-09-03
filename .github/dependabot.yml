@@ -1,0 +1,37 @@
+# Dependency updates as pull requests against staging, once a week, with
+# minor and patch bumps grouped so there is one PR to review rather than
+# thirty. Security advisories still arrive on their own, straight away.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: staging
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Asia/Jakarta
+    groups:
+      payload:
+        patterns: ['payload', '@payloadcms/*']
+      minor-and-patch:
+        update-types: [minor, patch]
+    ignore:
+      # Major versions of the framework and the CMS are a deliberate move,
+      # made with the docs open, not a Monday-morning merge.
+      - dependency-name: next
+        update-types: [version-update:semver-major]
+      - dependency-name: react
+        update-types: [version-update:semver-major]
+      - dependency-name: react-dom
+        update-types: [version-update:semver-major]
+      - dependency-name: payload
+        update-types: [version-update:semver-major]
+      - dependency-name: '@payloadcms/*'
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: staging
+    schedule:
+      interval: monthly

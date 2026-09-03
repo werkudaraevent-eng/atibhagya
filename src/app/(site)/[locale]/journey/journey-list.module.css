@@ -1,0 +1,72 @@
+.opening {
+  position: relative;
+  height: clamp(460px, 78vh, 760px);
+  overflow: hidden;
+}
+
+/* The same three layers as the home hero (see Hero.module.css), at the
+   default strength: the photograph here is whichever journey comes first. */
+.openingImage {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transform-origin: 50% 45%;
+  filter: brightness(0.85) saturate(0.9) contrast(1.04);
+}
+
+.openingScrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
+    radial-gradient(
+      ellipse 58% 46% at 50% 47%,
+      rgba(16, 34, 47, 0.33) 0%,
+      rgba(16, 34, 47, 0.19) 45%,
+      rgba(16, 34, 47, 0) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(16, 34, 47, 0.28) 0%,
+      rgba(16, 34, 47, 0.12) 30%,
+      rgba(16, 34, 47, 0.08) 60%,
+      rgba(16, 34, 47, 0.5) 100%
+    );
+}
+
+.openingContent {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(48px, 10vh, 96px);
+  padding: 0 clamp(24px, 5vw, 64px);
+  max-width: 1160px;
+  margin: 0 auto;
+  transform: translateY(var(--hero-shift, 0px));
+  will-change: transform, opacity;
+}
+
+.openingEyebrow {
+  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 231, 0.8);
+}
+
+.openingHeadline {
+  margin: 24px 0 0;
+  max-width: 14em;
+  font: 400 clamp(34px, 5vw, 72px) / 1.16 var(--font-marcellus), serif;
+  /* Over the photograph, always ivory — whatever the page theme. */
+  color: #f6f3e7;
+  text-shadow: 0 4px 44px rgba(16, 34, 47, 0.5);
+  text-wrap: balance;
+}
+
+.openingLede {
+  margin: 20px 0 0;
+  max-width: 46ch;
+  font: 300 14.5px/1.9 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.86);
+}

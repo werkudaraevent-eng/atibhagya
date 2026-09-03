@@ -1,5 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
+import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
+import { defaults } from '../lib/content/defaults'
+import { plain, prefillGlobal, rows, text } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
 import { videoFile, webImage } from '../lib/validate-media'
 
@@ -10,9 +13,33 @@ import { videoFile, webImage } from '../lib/validate-media'
 export const HomePage: GlobalConfig = {
   slug: 'home',
   label: 'Home page',
-  admin: { group: 'Pages' },
+  admin: { group: 'Pages', components: versionsView },
   access: { read: () => true },
-  hooks: { afterChange: [revalidateGlobal(['/'])] },
+  hooks: {
+    // Every box shows what the site currently uses; see src/lib/prefill.ts.
+    afterRead: [
+      prefillGlobal({
+        metaTitle: text((l) => defaults(l).home.meta.title),
+        metaDescription: text((l) => defaults(l).home.meta.description),
+        heroEyebrow: text((l) => defaults(l).home.hero.eyebrow),
+        heroHeadline: text((l) => defaults(l).home.hero.headline),
+        heroStatement: text((l) => defaults(l).home.hero.statement),
+        heroCtaLabel: text((l) => defaults(l).home.hero.ctaLabel),
+        heroDarken: plain(() => Math.round(defaults('en').home.hero.darken * 100)),
+        whyEyebrow: text((l) => defaults(l).home.why.eyebrow),
+        whyHeadline: text((l) => defaults(l).home.why.headline),
+        whyBody: text((l) => defaults(l).home.why.body),
+        pillars: rows((l) => defaults(l).home.why.pillars),
+        featuredEyebrow: text((l) => defaults(l).home.featured.eyebrow),
+        featuredHeadline: text((l) => defaults(l).home.featured.headline),
+        ctaHeadline: text((l) => defaults(l).home.cta.headline),
+        ctaBody: text((l) => defaults(l).home.cta.body),
+        ctaLabel: text((l) => defaults(l).home.cta.label),
+      }),
+    ],
+    beforeChange: [stampUpdatedByGlobal],
+    afterChange: [revalidateGlobal(['/'])],
+  },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.
@@ -21,6 +48,7 @@ export const HomePage: GlobalConfig = {
   },
 
   fields: [
+    updatedBy,
     {
       type: 'tabs',
       tabs: [
@@ -37,6 +65,18 @@ export const HomePage: GlobalConfig = {
             { name: 'heroStatement', type: 'textarea', localized: true },
             { name: 'heroCtaLabel', type: 'text', localized: true },
             { name: 'heroImage', type: 'upload', relationTo: 'media', validate: webImage },
+            {
+              name: 'heroDarken',
+              type: 'number',
+              label: 'Darken photograph',
+              min: 0,
+              max: 100,
+              defaultValue: 35,
+              admin: {
+                description:
+                  '0–100. How much the photograph is toned down behind the headline so white type stays legible. A dusk photograph with quiet sky needs 10–20; a bright, busy one like foliage or water in sun needs 45–60. Watch the preview while you change it.',
+              },
+            },
             {
               name: 'heroVideoFile',
               type: 'upload',

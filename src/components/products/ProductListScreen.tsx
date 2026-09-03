@@ -2,6 +2,8 @@ import { Motion } from '@/components/Motion'
 import { CatalogueIndex } from '@/components/products/CatalogueIndex'
 import { ProductBrowser } from '@/components/products/ProductBrowser'
 import { Footer } from '@/components/site/Footer'
+import { Divider } from '@/components/site/Ornament'
+import ornament from '@/components/site/Ornament.module.css'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCatalogueCopy, getCategories, getProducts, getSite } from '@/lib/content'
@@ -25,7 +27,7 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
   const [products, categories, site, copy] = await Promise.all([
     getProducts(locale),
     getCategories(locale),
-    getSite(locale),
+    getSite(locale, { draft }),
     getCatalogueCopy(locale, { draft }),
   ])
 
@@ -36,7 +38,7 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
 
       <CatalogueIndex />
 
-      <main>
+      <main id="main">
         <header className={page.pageHead}>
           <div className={page.container}>
             <div className={page.eyebrow}>{copy.products.eyebrow}</div>
@@ -44,6 +46,7 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
               <Lines text={copy.products.headline} />
             </h1>
             <p className={page.lede}>{copy.products.intro}</p>
+            <Divider mark="wave" className={ornament.dividerStart} />
           </div>
         </header>
 

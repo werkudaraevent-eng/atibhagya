@@ -1,3 +1,4 @@
+import { SectionMark } from '@/components/site/Ornament'
 import page from '@/components/site/Page.module.css'
 import type { HomeContent } from '@/lib/content/types'
 import { Lines } from '@/lib/text'
@@ -9,9 +10,7 @@ export function Why({ why }: { why: HomeContent['why'] }) {
       <div className={page.container}>
         <div className={page.split}>
           <div>
-            <div className={page.eyebrow} data-fade>
-              {why.eyebrow}
-            </div>
+            <SectionMark number="01" mark="sprout" label={why.eyebrow} align="start" />
             <h2 className={page.headline} data-headline>
               <Lines text={why.headline} />
             </h2>

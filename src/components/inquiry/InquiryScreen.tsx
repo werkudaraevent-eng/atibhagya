@@ -1,5 +1,7 @@
 import { InquiryForm } from '@/components/inquiry/InquiryForm'
 import { Footer } from '@/components/site/Footer'
+import { Divider } from '@/components/site/Ornament'
+import ornament from '@/components/site/Ornament.module.css'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCategories, getInquiryCopy, getJourneys, getProducts, getSite } from '@/lib/content'
@@ -30,7 +32,7 @@ export async function InquiryScreen({
     getProducts(locale),
     getJourneys(locale),
     getCategories(locale),
-    getSite(locale),
+    getSite(locale, { draft }),
     getInquiryCopy(locale, { draft }),
   ])
 
@@ -38,7 +40,7 @@ export async function InquiryScreen({
     <>
       <Nav locale={locale} dict={t} tone="light" />
 
-      <main>
+      <main id="main">
         <section className={page.section} style={{ paddingTop: 0 }}>
           <InquiryForm
             locale={locale}
@@ -59,6 +61,7 @@ export async function InquiryScreen({
                   <div className={page.eyebrow}>{copy.eyebrow}</div>
                   <h1 className={page.headline}>{copy.headline}</h1>
                   <p className={page.lede}>{copy.lede}</p>
+                  <Divider mark="macron" className={ornament.dividerStart} />
                 </div>
               </header>
             }

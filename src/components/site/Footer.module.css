@@ -1,7 +1,8 @@
+/* Navy in both themes: the footer is the site's floor, not its paper. */
 .footer {
   background: var(--biru-footer);
   color: var(--ivory-on-dark);
-  padding: 80px clamp(24px, 4vw, 48px) 40px;
+  padding: clamp(96px, 14vh, 150px) clamp(24px, 5vw, 64px) clamp(32px, 5vh, 44px);
 }
 
 .inner {
@@ -9,77 +10,182 @@
   margin: 0 auto;
 }
 
+/* The wave from the wordmark at the top: a breath after the photograph. */
+.rule {
+  height: 14px;
+  stroke: var(--emas);
+  margin-bottom: clamp(44px, 7vh, 72px);
+}
+
+.upper {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+
+.word {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(32px, 5vh, 48px);
+}
+
+/* The closing line: large, in the serif, the one sentence the site leaves
+   the reader with. */
+.closing {
+  margin: 0;
+  max-width: 14em;
+  font: 400 clamp(28px, 3.6vw, 44px) / 1.22 var(--font-marcellus), serif;
+  letter-spacing: 0.005em;
+  color: var(--ivory-on-dark);
+  text-wrap: balance;
+}
+
+/* Its own size, never the column's: a flex column stretches children by
+   default, and a fixed height on a stretched image is a stretched image. */
+.logo {
+  align-self: flex-start;
+  height: 34px;
+  width: auto;
+}
+
 .columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 48px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 56px);
+  padding-top: 10px;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
+/* One small word above each column — not a heading, a label. */
 .label {
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.26em;
+  font: 400 10px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--emas);
+  margin-bottom: 8px;
 }
 
 .link {
-  font: 300 14px/1.6 var(--font-karla), sans-serif;
-  color: var(--ivory-on-dark);
+  position: relative;
+  align-self: flex-start;
+  font: 300 14px/1.5 var(--font-karla), sans-serif;
+  color: rgba(233, 228, 216, 0.82);
+  transition: color 0.35s ease;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--emas);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease-out);
 }
 
 .link:hover {
-  color: var(--emas);
+  color: var(--emas-hover);
 }
 
-.brand {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 16px;
+.link:hover::after {
+  transform: scaleX(1);
 }
 
-.logo {
-  height: 38px;
-  width: auto;
+.social {
+  margin-top: 6px;
+  font: 300 14px/1.5 var(--font-karla), sans-serif;
 }
 
-.tagline {
-  font: 300 12px/1.7 var(--font-karla), sans-serif;
-  color: rgba(233, 228, 216, 0.5);
-  text-align: right;
-  margin: 0;
+.social .link {
+  display: inline;
 }
 
-.legal {
+.dot {
+  color: rgba(233, 228, 216, 0.35);
+}
+
+/* The foot: who, where, which language. */
+.foot {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 24px;
   flex-wrap: wrap;
-  align-items: center;
-  margin-top: 72px;
-  padding-top: 28px;
-  border-top: 1px solid rgba(233, 228, 216, 0.14);
-  font: 300 11px/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.08em;
+  margin-top: clamp(64px, 10vh, 110px);
+  padding-top: 24px;
+  border-top: 1px solid rgba(233, 228, 216, 0.12);
+  font: 300 11.5px/1.6 var(--font-karla), sans-serif;
+  letter-spacing: 0.06em;
   color: rgba(233, 228, 216, 0.45);
+}
+
+.group {
+  color: rgba(233, 228, 216, 0.6);
+}
+
+.place {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.5vw, 32px);
+}
+
+.lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: clamp(18px, 2.5vw, 32px);
+  border-left: 1px solid rgba(233, 228, 216, 0.16);
+}
+
+.langLink {
+  font: 400 10px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.14em;
+  color: rgba(233, 228, 216, 0.45);
+  transition: color 0.3s ease;
+}
+
+.langLink:hover,
+.langCurrent {
+  color: var(--ivory-on-dark);
+}
+
+.langSep {
+  color: rgba(233, 228, 216, 0.25);
+  font-size: 9px;
+}
+
+@media (max-width: 880px) {
+  .upper {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .closing {
+    max-width: none;
+  }
 }
 
 @media (max-width: 720px) {
   .footer {
-    padding: 60px 24px 32px;
+    padding: 72px 24px 28px;
   }
 
-  .brand {
+  .rule {
+    margin-bottom: 36px;
+  }
+
+  .foot {
+    flex-direction: column;
     align-items: flex-start;
-  }
-
-  .tagline {
-    text-align: left;
+    gap: 14px;
   }
 }

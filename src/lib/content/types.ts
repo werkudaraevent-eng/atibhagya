@@ -1,3 +1,5 @@
+import type { Element } from '../elements'
+
 export const locales = ['en', 'id'] as const
 export type Locale = (typeof locales)[number]
 
@@ -26,6 +28,8 @@ export type SiteContent = {
   social: NavLink[]
   footerTagline: string
   footerLegal: string
+  /** The group the brand belongs to, named in the footer's last line. */
+  parentBrand?: string
   responseTime: string
 }
 
@@ -60,6 +64,8 @@ export type Product = {
   durationText?: string
   facilities: string[]
   suitableFor: string[]
+  /** One of the five elements; always resolved, never absent on the site. */
+  element: Element
   whatToExpect?: string
   category?: ProductCategory
   venues: Venue[]
@@ -67,6 +73,8 @@ export type Product = {
   heroImage: Img
   gallery: Img[]
   featured: boolean
+  /** When the document last changed in the CMS; absent for built-in content. */
+  updatedAt?: string
 }
 
 /**
@@ -83,6 +91,7 @@ export type ProductCard = {
   categoryName?: string
   categorySlug?: string
   suitableFor: string[]
+  element: Element
   image: Img
 }
 
@@ -95,6 +104,7 @@ export const toCard = (product: Product): ProductCard => ({
   categoryName: product.category?.name,
   categorySlug: product.category?.slug,
   suitableFor: product.suitableFor,
+  element: product.element,
   image: product.heroImage,
 })
 
@@ -128,6 +138,8 @@ export type Journey = {
   days: JourneyDay[]
   heroImage: Img
   gallery: Img[]
+  /** When the document last changed in the CMS; absent for built-in content. */
+  updatedAt?: string
 }
 
 export type Pillar = {
@@ -144,6 +156,8 @@ export type HomeContent = {
     ctaLabel: string
     image: Img
     video?: string
+    /** 0–1: how far the photograph is toned down behind the type. */
+    darken: number
   }
   why: {
     eyebrow: string

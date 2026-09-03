@@ -55,6 +55,19 @@ That settles one item on the content master's "confirm before publishing" list
 (who owns and operates each experience). Still open: which of them are
 currently active and bookable, and in which destinations.
 
+### The five elements
+
+Every experience carries one of the five elements of Panca Mahabhuta —
+earth, water, fire, air, space (`src/lib/elements.ts`). It is a field on
+the product, shown as a drawn mark beside the category on the listing and
+in the facts column on the page, and it is the catalogue's second filter
+("Element", beside "For"). Nothing is ever without one: the import guesses
+it from the catalogue text (fire for Agni Hotra, water for Melukat, air for
+a sound bath, space for a silent sit), a product with no guess takes its
+category's element, and the team corrects any of it in the CMS. The marks
+are the ornaments' single gold stroke: three flames, three waves, three
+peaks, three lines, a circle around a point.
+
 ## Sitemap
 
 Seven templates, exactly as the wireframe lists them.
@@ -279,6 +292,12 @@ They are both the seed source and the fallback: each getter in
 by field, so an empty CMS field — or a missing database — renders the approved
 line rather than a gap.
 
+The admin never shows that emptiness, though. An `afterRead` hook on every
+global (`src/lib/prefill.ts`) fills each empty field, on read, with exactly
+what the site is showing for it — in the locale being edited — so an editor
+sees the sentence to change rather than a blank box standing in for it. The
+first Publish makes the copy explicit; nothing on the site changes.
+
 ### Which images are editable
 
 Every image the site displays is a `media` upload chosen in the admin:
@@ -314,7 +333,7 @@ outstanding work visible.
 
 `/inquiry` is a real URL that can be linked, shared and reloaded, and renders as
 a full page on a direct visit. Arriving from a product or journey is different:
-an intercepting route (`src/app/[locale]/@modal/(.)inquiry`) lifts the same form
+an intercepting route (`src/app/(site)/[locale]/@modal/(.)inquiry`) lifts the same form
 over the page instead of replacing it, so the visitor never loses their place.
 
 The CTA carries its context — `/inquiry?product=agni-hotra` — and the form opens
@@ -443,20 +462,58 @@ Verified against the running app:
 | `posts` | Public reads are filtered to `_status: published`; drafts are staff-only |
 | Notification email | The visitor's name is stripped of CR/LF before it reaches the subject line |
 | Field lengths | Capped on every free-text field |
-| Spam | Off-screen honeypot; a filled trap gets a success screen and is never stored |
-| Headers | `nosniff`, `SAMEORIGIN`, `strict-origin-when-cross-origin`, a closed `Permissions-Policy`, and HSTS |
+| Spam | Three layers: an off-screen honeypot (a filled trap gets a success screen and is never stored); five submissions per address per ten minutes, after which the form asks the visitor to wait; and Cloudflare Turnstile when its keys are set — invisible unless Cloudflare has a question, verified again on the server |
+| Sessions | The admin cookie is `Secure` on every HTTPS deployment and `SameSite=Lax`; five wrong passwords lock the account for ten minutes; a session lasts two hours |
+| API surface | GraphQL is off. REST populates one level by default and never more than three, so `?depth=10` cannot turn one request into a hundred joins |
+| Headers | `nosniff`, `SAMEORIGIN`, `strict-origin-when-cross-origin`, `Cross-Origin-Opener-Policy`, a closed `Permissions-Policy`, HSTS, and a Content-Security-Policy (below) |
 | Images | `remotePatterns` is limited to the two Wikimedia hosts, so the optimizer cannot be used as an open proxy |
-| XSS | No `dangerouslySetInnerHTML` anywhere; all visitor text renders as React children |
+| XSS | No `dangerouslySetInnerHTML` with visitor text anywhere; all of it renders as React children |
+| Drafts | The inquiry draft lives in `sessionStorage`, so a name and phone number typed on a shared computer are gone when the tab closes |
 
-Still open, and deliberate:
+**Content-Security-Policy.** Pages are static and cached, so there is no
+per-request nonce for Next's inline scripts; `'unsafe-inline'` stays for
+scripts and styles. Everything else is locked to our own origin plus
+Cloudflare's bot check: no third-party script, frame, connection or plugin,
+and no embedding of the site elsewhere (`frame-ancestors 'self'`). It ships
+as `Content-Security-Policy-Report-Only` until `CSP_ENFORCE=1` is set — a
+violation shows in the browser console rather than as a broken page. Turn it
+on for staging, click through the site and the admin (including an upload),
+and when the console stays clean set it for production.
 
-- **No Content-Security-Policy yet.** It needs a nonce pass over Next's inline
-  scripts. Worth doing before launch.
-- **No rate limiting** beyond the honeypot. Put the form behind the host's WAF
-  (Vercel's, or Cloudflare Turnstile) if it starts drawing abuse.
-- **A privacy notice is still missing.** The inquiry collects contact details
-  and free text; Indonesia's PDP law and GDPR both expect a notice and a
-  retention period. That is a legal call, not a code one.
+**The rate limit is per serverless instance.** It stops a burst from one
+address; a distributed flood needs the host's firewall. On Vercel: Firewall →
+Rules → rate-limit `POST` to `/inquiry` and `/id/inquiry`. Behind Cloudflare:
+a rate-limiting rule on the same paths, and Cloudflare Access in front of
+`/admin` so the login page is never reachable from an unknown network.
+
+**When the database cannot be reached.** Outside production the site falls
+back to its built-in sample content, so a bare checkout and staging keep
+rendering. In production it does not: the page throws, and Next keeps
+serving the last copy it built. A five-minute outage is invisible; a brand
+new page during an outage is a styled error page with a retry, not the
+sample catalogue cached as if it were real.
+
+**Checks and upkeep** (`.github/`):
+
+- `ci.yml` — every pull request and every push to `staging` or `main` runs
+  the type check, ESLint and a full build; `npm audit` runs beside them and
+  reports without blocking.
+- `dependabot.yml` — weekly dependency PRs against `staging`, grouped; major
+  versions of Next, React and Payload are left for a deliberate upgrade.
+- `backup.yml` — Mondays: a `pg_dump` of production and a mirror of the media
+  bucket, into a separate private R2 bucket. Needs the secrets listed at the
+  top of the file, and a lifecycle rule on that bucket. Try a restore on a
+  Neon branch once, before it matters.
+
+**Who changed what.** Every save stamps *Last edited by* on the document
+(sidebar, list columns) and on the version it creates, and the Versions tab
+lists it beside the date. Comparing two versions of the inquiry form names
+each field row ("03 · Phone — On the form: yes → no") rather than "Item 03".
+
+**Data notice.** The line under the submit button (Inquiries → Inquiry form →
+Other wording → Data notice) says what happens to what a visitor writes.
+Indonesia's PDP law (UU 27/2022) expects it. Still open: a retention period
+— decide how long a closed inquiry is kept, and delete on that schedule.
 
 ## Deploying
 
@@ -478,7 +535,10 @@ out loud before anyone types twenty products into staging.
 ### Stack
 
 - **Vercel** (Pro — Hobby forbids commercial use and has no password
-  protection for staging). Build command: `npm run build:deploy`.
+  protection for staging). Build command: `npm run build:deploy` — migrations
+  first, then the build. Migrations run only for production and the `staging`
+  branch; a preview build of any other branch skips them, so a migration file
+  still being worked on cannot reshape the staging database from a side branch.
 - **Neon** Postgres, one project, branches `main` and `staging`.
 - **Cloudflare R2**, two buckets. Uploads go straight from the browser to
   the bucket, so each bucket needs a CORS rule allowing `PUT` from its
@@ -522,16 +582,20 @@ schema change — a new field, a renamed collection — becomes a migration
 file under `src/migrations`, and the production build applies pending ones
 before `next build`.
 
-To create one, point `DATABASE_URI` at a Postgres database (a Neon dev
-branch is ideal; never production) and run:
+To create one, put the Neon **staging** connection string in `.env` as
+`DATABASE_URI_STAGING` (once) and run:
 
 ```bash
-npm run migrate:create
+npm run migrate:create:staging
 ```
 
-Review the generated SQL, commit it with the config change, and the next
-deploy applies it. `npm run migrate:status` shows what is pending. The
-first migration of all is created the same way, against an empty database.
+That swaps the staging database in for the one command only — local
+`DATABASE_URI` stays on SQLite, so a forgotten edit can never leave
+development writing to staging. The same swap serves the data scripts:
+`npm run import:products:staging` and `npm run seed:staging` run against
+staging, after the deploy carrying any new columns has gone green. Review the generated SQL, commit it with
+the config change, and the next deploy applies it.
+`npm run migrate:status:staging` shows what staging has pending.
 
 ### Only production is indexed
 
@@ -578,6 +642,18 @@ preference. A two-line script in `<head>` applies the theme before first
 paint so nothing flashes, and the change itself cross-fades colours over
 half a second, then removes that blanket transition so it never touches
 the site's own motion.
+
+## Ornament
+
+Three marks, all taken from the wordmark, in `src/components/site/Ornament.tsx`:
+the **wave** under the A, the **macron** over the ā with its dot, and one
+that is not in the logo — a **sprout**, for growth, used sparingly. Single
+stroke, one weight, gold; they draw themselves in once (`data-draw`, GSAP
+DrawSVG) and then hold still. Two compositions: a **Divider** (hairline,
+mark, hairline) between a heading and what follows it, and a **SectionMark**
+(N° 01, mark, label) opening a section in place of a bare eyebrow. The
+rules that keep them from becoming wallpaper: derived from the logo only,
+one per section, drawn once and never looped.
 
 ## Motion
 

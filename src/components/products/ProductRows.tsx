@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { CreditImage } from '@/components/CreditImage'
 import type { Locale, ProductCard } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
+import { ElementMark } from './ElementMark'
 import styles from './ProductRows.module.css'
 
 type Props = {
@@ -59,6 +60,12 @@ export function ProductRows({ products, locale, dict, startIndex = 0 }: Props) {
                 {product.categoryName ? (
                   <span className={styles.category}>{product.categoryName}</span>
                 ) : null}
+                <span className={styles.element}>
+                  <ElementMark
+                    element={product.element}
+                    label={dict.products.elements[product.element]}
+                  />
+                </span>
               </div>
 
               <h3 className={styles.title} data-headline>

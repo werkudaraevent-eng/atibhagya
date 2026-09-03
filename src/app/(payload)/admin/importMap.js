@@ -1,4 +1,5 @@
 import { RowLabel as RowLabel_1fef74805715afb85b23a4276c03c83c } from '@/admin/RowLabel'
+import { VersionsView as VersionsView_54c9d4fb37caddda0c73c095bbc601de } from '@/admin/VersionsView'
 import { ExportListMenuItem as ExportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { RefreshList as RefreshList_705bb9b6c3c765f5e432787f97ef304e } from '@/admin/RefreshList'
 import { FolderTableCell as FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -42,6 +43,7 @@ import { ImportSaveButton as ImportSaveButton_cdf7e044479f899a31f804427d568b36 }
 import { FolderTypeField as FolderTypeField_2b8867833a34864a02ddf429b0728a40 } from '@payloadcms/next/client'
 import { ShowWhen as ShowWhen_36b7161a8fb8a478d54eb6399eec0fa9 } from '@/admin/ShowWhen'
 import { FieldRowLabel as FieldRowLabel_cd7e65500bb4921dc0d989fc6b68a82a } from '@/admin/FieldRowLabel'
+import { FieldsDiff as FieldsDiff_682135ee3d6e4e96988c5df0f1001faa } from '@/admin/FieldsDiff'
 import { Icon as Icon_3c31fdf4820328a29c17991ad8f3f536 } from '@/admin/Graphics'
 import { Logo as Logo_3c31fdf4820328a29c17991ad8f3f536 } from '@/admin/Graphics'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -51,6 +53,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 /** @type import('payload').ImportMap */
 export const importMap = {
   "@/admin/RowLabel#RowLabel": RowLabel_1fef74805715afb85b23a4276c03c83c,
+  "@/admin/VersionsView#VersionsView": VersionsView_54c9d4fb37caddda0c73c095bbc601de,
   "@payloadcms/plugin-import-export/rsc#ExportListMenuItem": ExportListMenuItem_cdf7e044479f899a31f804427d568b36,
   "@/admin/RefreshList#RefreshList": RefreshList_705bb9b6c3c765f5e432787f97ef304e,
   "@payloadcms/next/rsc#FolderTableCell": FolderTableCell_f9c02e79a4aed9a3924487c0cd4cafb1,
@@ -94,6 +97,7 @@ export const importMap = {
   "@payloadcms/next/client#FolderTypeField": FolderTypeField_2b8867833a34864a02ddf429b0728a40,
   "@/admin/ShowWhen#ShowWhen": ShowWhen_36b7161a8fb8a478d54eb6399eec0fa9,
   "@/admin/FieldRowLabel#FieldRowLabel": FieldRowLabel_cd7e65500bb4921dc0d989fc6b68a82a,
+  "@/admin/FieldsDiff#FieldsDiff": FieldsDiff_682135ee3d6e4e96988c5df0f1001faa,
   "@/admin/Graphics#Icon": Icon_3c31fdf4820328a29c17991ad8f3f536,
   "@/admin/Graphics#Logo": Logo_3c31fdf4820328a29c17991ad8f3f536,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,

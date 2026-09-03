@@ -26,29 +26,10 @@ import { CataloguePages } from './globals/CataloguePages'
 import { HomePage } from './globals/HomePage'
 import { InquiryFormCopy } from './globals/InquiryForm'
 import { SiteSettings } from './globals/SiteSettings'
+import { serverURL } from './lib/server-url'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-
-/**
- * The site's own origin — what the admin calls to log in and out, what
- * CORS and CSRF trust, where the preview panel points.
- *
- * It has to be the address people actually open. Set it explicitly where
- * there is a domain. On Vercel, without one, fall back to the *stable*
- * address — the project's production URL, or the branch alias
- * (`atibhagya-git-staging-….vercel.app`) — never the per-deployment URL:
- * that one is a different host from the alias in the address bar, so a
- * logout sent there cleared nothing.
- */
-const vercelHost =
-  process.env.VERCEL_ENV === 'production'
-    ? process.env.VERCEL_PROJECT_PRODUCTION_URL
-    : process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL
-
-const serverURL =
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (vercelHost ? `https://${vercelHost}` : 'http://localhost:3000')
 
 const databaseURI = process.env.DATABASE_URI || ''
 
@@ -127,6 +108,9 @@ const pathFor = (collection: string, slug: unknown, locale?: string) => {
   if (collection === 'about') return `${prefix}/preview/about`
   if (collection === 'inquiry-form') return `${prefix}/preview/inquiry`
   if (collection === 'catalogue') return `${prefix}/preview/catalogue`
+  // A category shows itself as a filter on the listing.
+  if (collection === 'product-categories') return `${prefix}/preview/catalogue`
+  // Site settings are the footer and contact on every page; home stands in.
   return `${prefix}/preview/home`
 }
 
@@ -134,12 +118,19 @@ export default buildConfig({
   serverURL,
   admin: {
     user: Users.slug,
+    // Initials, not Gravatar: the default would send a hash of every staff
+    // member's email to a third party on each admin page, and it is the one
+    // image origin the Content-Security-Policy would otherwise have to open.
+    avatar: 'default',
     importMap: {
       baseDir: path.resolve(dirname),
     },
     meta: {
       titleSuffix: ' · Atibhagya',
       description: 'Atibhagya content management',
+      // The site declares its icon through Next's metadata; the admin has
+      // its own document and would otherwise ask for /favicon.ico and 404.
+      icons: [{ rel: 'icon', type: 'image/png', url: '/icon.png' }],
     },
     components: {
       graphics: {
@@ -154,8 +145,11 @@ export default buildConfig({
         { name: 'tablet', label: 'Tablet', width: 834, height: 1112 },
         { name: 'desktop', label: 'Desktop', width: 1440, height: 900 },
       ],
-      collections: ['products', 'journeys'],
-      globals: ['home', 'about', 'catalogue', 'inquiry-form'],
+      // Everything that has a page to show. Venues and facilitators appear
+      // inside product pages and have none of their own; media has its
+      // "where used" panel; inquiries and users are records, not pages.
+      collections: ['products', 'journeys', 'product-categories'],
+      globals: ['home', 'about', 'catalogue', 'inquiry-form', 'site'],
       url: ({ data, collectionConfig, globalConfig, locale }) =>
         `${serverURL}${pathFor(
           collectionConfig?.slug ?? globalConfig?.slug ?? 'home',
@@ -240,6 +234,15 @@ export default buildConfig({
   ],
   cors: [serverURL],
   csrf: [serverURL],
+  // The site reads through the Local API and the admin through REST; nothing
+  // speaks GraphQL. Off, so there is no introspectable schema and no
+  // deeply-nested query for a stranger to run.
+  graphQL: { disable: true },
+  // How far a request may ask relationships to be populated. The site never
+  // needs more than two levels; capping it keeps `/api/products?depth=10`
+  // from turning one request into a hundred joins.
+  defaultDepth: 1,
+  maxDepth: 3,
   sharp,
   // Room for a hero video; photographs are a tenth of this.
   upload: { limits: { fileSize: 30 * 1024 * 1024 } },

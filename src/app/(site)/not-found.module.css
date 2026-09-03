@@ -1,0 +1,51 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 40px;
+  text-align: center;
+  background: var(--ivory);
+  color: var(--biru);
+}
+
+.eyebrow {
+  font: 400 11px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--emas-deep);
+}
+
+.headline {
+  margin: 0;
+  max-width: 620px;
+  font: 400 clamp(26px, 3.2vw, 44px) / 1.4 var(--font-marcellus), serif;
+  text-wrap: balance;
+}
+
+.rule {
+  width: 24px;
+  height: 1px;
+  background: rgba(var(--ink-rgb), 0.3);
+}
+
+.body {
+  margin: -8px 0 0;
+  max-width: 48ch;
+  font: 300 15px/1.85 var(--font-karla), sans-serif;
+  color: var(--ink-body);
+}
+
+.link,
+.button {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: 400 11px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--emas-deep);
+}

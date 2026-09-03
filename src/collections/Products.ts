@@ -1,6 +1,8 @@
 import type { CollectionConfig } from 'payload'
 
+import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
 import { revalidateCatalogue } from '../lib/revalidate'
+import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
 import { adminOnly, signedIn } from './Users'
 
@@ -18,14 +20,14 @@ export const Products: CollectionConfig = {
   admin: {
     group: 'Experiences',
     useAsTitle: 'title',
-    defaultColumns: ['code', 'title', 'category', 'suitableFor', '_status', 'order'],
+    defaultColumns: ['code', 'title', 'category', 'suitableFor', '_status', 'updatedBy', 'updatedAt'],
     // With a catalogue this size, editors find a product by typing, not by
     // scrolling.
     listSearchableFields: ['title', 'subtitle', 'slug', 'description'],
     pagination: { defaultLimit: 25, limits: [25, 50, 100] },
     description: 'Each experience in the catalogue. The reference code matches the printed catalogue.',
-    preview: (doc) =>
-      `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'}/product/${doc.slug}`,
+    preview: (doc) => `${serverURL}/product/${doc.slug}`,
+    components: versionsView,
   },
   access: {
     read: ({ req: { user } }) => {
@@ -38,7 +40,7 @@ export const Products: CollectionConfig = {
   },
 
   defaultSort: 'order',
-  hooks: { afterChange: [revalidateCatalogue('product')] },
+  hooks: { beforeChange: [stampUpdatedBy], afterChange: [revalidateCatalogue('product')] },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
     // keeps the table from growing without bound.
@@ -161,6 +163,22 @@ export const Products: CollectionConfig = {
       },
     },
     {
+      name: 'element',
+      type: 'select',
+      options: [
+        { label: 'Earth · Pertiwi', value: 'earth' },
+        { label: 'Water · Apah', value: 'water' },
+        { label: 'Fire · Teja', value: 'fire' },
+        { label: 'Air · Bayu', value: 'air' },
+        { label: 'Space · Akasa', value: 'ether' },
+      ],
+      admin: {
+        position: 'sidebar',
+        description:
+          'Which of the five elements the experience belongs to. Shown as a mark on the listing and the page, and as the "Element" filter. Empty: guessed from the category.',
+      },
+    },
+    {
       name: 'slug',
       type: 'text',
       required: true,
@@ -175,5 +193,6 @@ export const Products: CollectionConfig = {
       admin: { position: 'sidebar', description: 'Eligible for the homepage selection.' },
     },
     { name: 'order', type: 'number', defaultValue: 0, admin: { position: 'sidebar' } },
+    updatedBy,
   ],
 }

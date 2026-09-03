@@ -221,6 +221,15 @@
   color: var(--emas-deep);
 }
 
+/* The bot check's box, on the rare occasion it shows; empty otherwise. */
+.verify {
+  margin-top: 26px;
+}
+
+.verify:empty {
+  display: none;
+}
+
 .actions {
   margin-top: clamp(40px, 7vh, 72px);
 }
@@ -228,6 +237,14 @@
 .submit:disabled {
   opacity: 0.6;
   cursor: progress;
+}
+
+/* What happens to what was written: small, quiet, and there. */
+.privacy {
+  margin: 22px 0 0;
+  max-width: 52ch;
+  font: 300 12.5px/1.75 var(--font-karla), sans-serif;
+  color: var(--ink-caption);
 }
 
 /* --- Confirmation ------------------------------------------------------ */

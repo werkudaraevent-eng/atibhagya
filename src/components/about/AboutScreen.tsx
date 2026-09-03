@@ -1,9 +1,10 @@
 import Link from 'next/link'
 
-import styles from '@/app/[locale]/about/about.module.css'
+import styles from '@/app/(site)/[locale]/about/about.module.css'
 import { CreditImage } from '@/components/CreditImage'
 import { Motion } from '@/components/Motion'
 import { Footer } from '@/components/site/Footer'
+import { Divider } from '@/components/site/Ornament'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getAbout, getSite } from '@/lib/content'
@@ -25,7 +26,10 @@ export async function AboutScreen({ locale, draft = false }: Props) {
   const t = dict(locale)
   const prefix = locale === 'id' ? '/id' : ''
 
-  const [about, site] = await Promise.all([getAbout(locale, { draft }), getSite(locale)])
+  const [about, site] = await Promise.all([
+    getAbout(locale, { draft }),
+    getSite(locale, { draft }),
+  ])
 
   return (
     <>
@@ -33,7 +37,7 @@ export async function AboutScreen({ locale, draft = false }: Props) {
       <Nav locale={locale} dict={t} tone="light" />
 
       {/* A centred column, but one left edge inside it. */}
-      <main>
+      <main id="main">
         <header className={page.pageHead}>
           <div className={styles.centred}>
             <div className={page.eyebrow}>{about.eyebrow}</div>
@@ -41,6 +45,7 @@ export async function AboutScreen({ locale, draft = false }: Props) {
               <Lines text={about.headline} />
             </h1>
             <p className={styles.lede}>{about.lede}</p>
+            <Divider mark="wave" />
           </div>
         </header>
 
@@ -59,6 +64,7 @@ export async function AboutScreen({ locale, draft = false }: Props) {
             </div>
           </div>
 
+          <Divider mark="sprout" />
           <p className={styles.statement} data-fade>
             {about.statement}
           </p>

@@ -1,0 +1,68 @@
+# A weekly copy of production, kept where a mistake in production cannot
+# reach it: a Postgres dump and a mirror of the media bucket, both written to
+# a separate, private R2 bucket. Neon's own point-in-time history covers the
+# last days; this covers "we noticed a month later".
+#
+# Secrets (repository → Settings → Secrets → Actions):
+#   BACKUP_DATABASE_URI       Neon connection string for the production branch
+#   BACKUP_S3_ENDPOINT        https://<account-id>.r2.cloudflarestorage.com
+#   BACKUP_S3_ACCESS_KEY_ID   an R2 token with read on the media bucket and
+#   BACKUP_S3_SECRET_ACCESS_KEY   read+write on the backup bucket
+#   BACKUP_BUCKET             e.g. atibhagya-backup (private; add a lifecycle
+#                             rule deleting objects older than 180 days)
+#   MEDIA_BUCKET              atibhagya-media
+#
+# Restore: `gunzip < dump.sql.gz | psql "$NEW_DATABASE_URI"`, then
+# `aws s3 sync s3://atibhagya-backup/media s3://atibhagya-media`. Try it once
+# on a Neon branch before you need it.
+name: Backup
+
+on:
+  schedule:
+    # Mondays 02:00 UTC — 09:00 in Jakarta, after the weekend's edits.
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Postgres client matching Neon's server
+        run: |
+          sudo apt-get install -y postgresql-common
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Dump the database
+        env:
+          DATABASE_URI: ${{ secrets.BACKUP_DATABASE_URI }}
+        run: |
+          set -euo pipefail
+          pg_dump "$DATABASE_URI" --no-owner --no-privileges | gzip -9 > "atibhagya-$(date -u +%F).sql.gz"
+          ls -la *.sql.gz
+
+      - name: Upload the dump
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          ENDPOINT: ${{ secrets.BACKUP_S3_ENDPOINT }}
+          BUCKET: ${{ secrets.BACKUP_BUCKET }}
+        run: |
+          set -euo pipefail
+          aws s3 cp ./*.sql.gz "s3://$BUCKET/postgres/" --endpoint-url "$ENDPOINT"
+
+      - name: Mirror the media bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_S3_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_S3_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          ENDPOINT: ${{ secrets.BACKUP_S3_ENDPOINT }}
+          BUCKET: ${{ secrets.BACKUP_BUCKET }}
+          MEDIA: ${{ secrets.MEDIA_BUCKET }}
+        run: |
+          set -euo pipefail
+          # A mirror, not a purge: a photograph deleted from production by
+          # mistake is exactly what a backup is for, so nothing is removed here.
+          aws s3 sync "s3://$MEDIA" "s3://$BUCKET/media/" --endpoint-url "$ENDPOINT"

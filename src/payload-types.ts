@@ -242,6 +242,10 @@ export interface Product {
    */
   suitableFor?: ('solo' | 'couple' | 'group' | 'corporate' | 'community')[] | null;
   /**
+   * Which of the five elements the experience belongs to. Shown as a mark on the listing and the page, and as the "Element" filter. Empty: guessed from the category.
+   */
+  element?: ('earth' | 'water' | 'fire' | 'air' | 'ether') | null;
+  /**
    * e.g. agni-hotra
    */
   slug: string;
@@ -908,6 +912,7 @@ export interface ProductsSelect<T extends boolean = true> {
   code?: T;
   category?: T;
   suitableFor?: T;
+  element?: T;
   slug?: T;
   featured?: T;
   order?: T;
@@ -1292,6 +1297,10 @@ export interface Home {
   heroCtaLabel?: string | null;
   heroImage?: (number | null) | Media;
   /**
+   * 0–100. How much the photograph is toned down behind the headline so white type stays legible. A dusk photograph with quiet sky needs 10–20; a bright, busy one like foliage or water in sun needs 45–60. Watch the preview while you change it.
+   */
+  heroDarken?: number | null;
+  /**
    * Optional. A short silent loop that plays over the hero image on larger screens; phones, slow connections and visitors who prefer reduced motion see the image instead, and it is the poster while the video loads. Export: MP4 (H.264), 1920×1080, 10–15 s, ~4 Mbps, no audio, under 12 MB.
    */
   heroVideoFile?: (number | null) | Media;
@@ -1370,7 +1379,7 @@ export interface About {
   createdAt?: string | null;
 }
 /**
- * Headings for the product and journey listings and the small label above each detail page. Leave a field empty to keep the approved wording.
+ * Headings for the product and journey listings and the small label above each detail page. Each box shows what the site currently says; change it, or clear it to return to the approved wording.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "catalogue".
@@ -1570,8 +1579,15 @@ export interface Site {
         id?: string | null;
       }[]
     | null;
+  /**
+   * The sentence the site ends on, set large in the footer. One thought, two lines at most; line breaks are kept.
+   */
   footerTagline?: string | null;
   footerLegal?: string | null;
+  /**
+   * Shown after the copyright line, e.g. "Werkudara Group". Leave empty to omit.
+   */
+  parentBrand?: string | null;
   /**
    * Every address here receives a copy of each new inquiry.
    */
@@ -1607,6 +1623,7 @@ export interface HomeSelect<T extends boolean = true> {
   heroStatement?: T;
   heroCtaLabel?: T;
   heroImage?: T;
+  heroDarken?: T;
   heroVideoFile?: T;
   heroVideo?: T;
   whyEyebrow?: T;
@@ -1748,6 +1765,7 @@ export interface SiteSelect<T extends boolean = true> {
       };
   footerTagline?: T;
   footerLegal?: T;
+  parentBrand?: T;
   inquiryRecipients?:
     | T
     | {

@@ -105,6 +105,13 @@
   color: var(--ink-caption);
 }
 
+/* The element, after the category: a mark only, no word. */
+.element {
+  display: inline-flex;
+  align-items: center;
+  transform: translateY(2px);
+}
+
 .title {
   margin: 0;
   font: 400 clamp(26px, 3vw, 42px) / 1.2 var(--font-marcellus), serif;

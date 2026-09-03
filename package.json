@@ -9,18 +9,22 @@
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
-    "build:deploy": "npm run migrate && npm run build",
+    "build:deploy": "node scripts/build-deploy.mjs",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "migrate:status": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:status",
+    "migrate:create:staging": "tsx src/scripts/migrate-staging.ts migrate:create",
+    "migrate:status:staging": "tsx src/scripts/migrate-staging.ts migrate:status",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed.ts",
-    "import:products": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/import-products.ts"
+    "import:products": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/import-products.ts",
+    "import:products:staging": "tsx src/scripts/on-staging.ts import:products",
+    "seed:staging": "tsx src/scripts/on-staging.ts seed"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -37,19 +41,25 @@
     "graphql": "^16.11.0",
     "gsap": "^3.15.0",
     "next": "16.3.4",
-    "nodemailer": "^6.10.1",
     "payload": "3.88.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "sharp": "0.34.2"
+    "sharp": "^0.35.4"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "^11.1.1"
+    },
+    "dompurify": "^3.4.13"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
-    "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
     "cross-env": "^7.0.3",
     "dotenv": "^17.4.2",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.3.4",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"
   }
