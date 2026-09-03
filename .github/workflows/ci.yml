@@ -33,10 +33,10 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # A throwaway database and a placeholder secret: enough for the
-          # build to generate its pages from the built-in content.
-          PAYLOAD_SECRET: ci-only-placeholder-not-a-secret
-          DATABASE_URI: file:./ci.db
+          # No database on purpose. Without DATABASE_URI the content layer
+          # renders the built-in default content, which is all a build check
+          # needs. (An empty SQLite file would have no tables: a production
+          # build never pushes a schema, so every query would fail.)
           NEXT_PUBLIC_SERVER_URL: http://localhost:3000
 
   # Advisories are reported, not blocking: a transitive "high" with no fix
