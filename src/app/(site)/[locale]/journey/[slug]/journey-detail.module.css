@@ -11,7 +11,7 @@
 .positioning {
   margin: 24px 0 0;
   max-width: 58ch;
-  font: 300 15px/1.95 var(--font-karla), sans-serif;
+  font: 300 calc(15.5px * var(--type-scale))/1.95 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
@@ -39,6 +39,6 @@
 .description {
   max-width: 62ch;
   margin: 0 0 clamp(40px, 6vh, 72px);
-  font: 300 15px/1.95 var(--font-karla), sans-serif;
+  font: 300 calc(15.5px * var(--type-scale))/1.95 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }

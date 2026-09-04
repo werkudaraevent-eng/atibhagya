@@ -66,7 +66,7 @@
   display: flex;
   align-items: center;
   gap: clamp(20px, 2.8vw, 42px);
-  font: 400 11px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -97,7 +97,7 @@
   display: inline-block;
   padding: 6px 0;
   color: #fff;
-  font: 500 11px/1 var(--font-karla), sans-serif;
+  font: 500 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   text-shadow: 0 1px 14px rgba(16, 34, 47, 0.45);
@@ -148,7 +148,7 @@
    contrast that text this size needs; 0.5 did not. */
 .langLink {
   color: rgba(255, 255, 255, 0.72);
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.1em;
   transition: color 0.4s ease;
 }
@@ -163,7 +163,7 @@
 
 .langSep {
   color: rgba(255, 255, 255, 0.4);
-  font-size: 9px;
+  font-size: calc(10px * var(--type-scale));
   line-height: 1;
 }
 
@@ -278,7 +278,7 @@
   background: none;
   padding: 10px 0;
   color: #fff;
-  font: 500 10px/1 var(--font-karla), sans-serif;
+  font: 500 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   cursor: pointer;
@@ -376,7 +376,7 @@
    plus one class beats them, whatever the header's state or the theme. */
 .nav .panelFoot .langLink {
   color: rgba(246, 243, 231, 0.5);
-  font-size: 11px;
+  font-size: calc(11.5px * var(--type-scale));
   letter-spacing: 0.18em;
 }
 

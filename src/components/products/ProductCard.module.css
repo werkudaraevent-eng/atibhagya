@@ -38,7 +38,7 @@
 }
 
 .category {
-  font: 400 10px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--emas-deep);
@@ -62,7 +62,7 @@
 }
 
 .subtitle {
-  font: 300 12.5px/1.6 var(--font-karla), sans-serif;
+  font: 300 calc(13px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
   color: var(--ink-body);
   min-height: 1.6em;
   display: -webkit-box;
@@ -74,7 +74,7 @@
 /* One line, revealed on hover — the height is reserved either way, so nothing
    reflows when the pointer moves across the grid. */
 .highlight {
-  font: 300 12px/1.7 var(--font-karla), sans-serif;
+  font: 300 calc(12.5px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
   color: var(--ink-caption);
   min-height: 1.7em;
   display: -webkit-box;

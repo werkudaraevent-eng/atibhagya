@@ -64,7 +64,7 @@
 
 /* One small word above each column — not a heading, a label. */
 .label {
-  font: 400 10px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--emas);
@@ -74,7 +74,7 @@
 .link {
   position: relative;
   align-self: flex-start;
-  font: 300 14px/1.5 var(--font-karla), sans-serif;
+  font: 300 calc(14.5px * var(--type-scale))/1.5 var(--font-karla), sans-serif;
   color: rgba(233, 228, 216, 0.82);
   transition: color 0.35s ease;
 }
@@ -102,7 +102,7 @@
 
 .social {
   margin-top: 6px;
-  font: 300 14px/1.5 var(--font-karla), sans-serif;
+  font: 300 calc(14.5px * var(--type-scale))/1.5 var(--font-karla), sans-serif;
 }
 
 .social .link {
@@ -123,7 +123,7 @@
   margin-top: clamp(64px, 10vh, 110px);
   padding-top: 24px;
   border-top: 1px solid rgba(233, 228, 216, 0.12);
-  font: 300 11.5px/1.6 var(--font-karla), sans-serif;
+  font: 300 calc(11.5px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
   letter-spacing: 0.06em;
   color: rgba(233, 228, 216, 0.45);
 }
@@ -147,7 +147,7 @@
 }
 
 .langLink {
-  font: 400 10px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.14em;
   color: rgba(233, 228, 216, 0.45);
   transition: color 0.3s ease;
@@ -160,7 +160,7 @@
 
 .langSep {
   color: rgba(233, 228, 216, 0.25);
-  font-size: 9px;
+  font-size: calc(10px * var(--type-scale));
 }
 
 @media (max-width: 880px) {

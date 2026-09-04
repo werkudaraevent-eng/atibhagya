@@ -29,7 +29,7 @@
 }
 
 .eyebrow {
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--emas-deep);
@@ -50,13 +50,13 @@
 .lede {
   margin: 24px 0 0;
   max-width: 560px;
-  font: 300 15px/1.95 var(--font-karla), sans-serif;
+  font: 300 calc(17px * var(--type-scale))/1.9 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
 .body {
   margin: 20px 0 0;
-  font: 300 15px/1.95 var(--font-karla), sans-serif;
+  font: 300 calc(15.5px * var(--type-scale))/1.95 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
@@ -75,7 +75,7 @@
   background: var(--biru);
   color: var(--ivory);
   padding: 17px 34px;
-  font: 500 10.5px/1 var(--font-karla), sans-serif;
+  font: 500 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   border-radius: var(--radius);
@@ -94,7 +94,7 @@
   border: 1px solid rgba(255, 255, 255, 0.85);
   color: #fff;
   padding: 17px 34px;
-  font: 500 10.5px/1 var(--font-karla), sans-serif;
+  font: 500 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   backdrop-filter: blur(4px);
@@ -109,7 +109,7 @@
 }
 
 .meta {
-  font: 400 10px/1.6 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--ink-label);

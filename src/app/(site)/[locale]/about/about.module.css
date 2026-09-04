@@ -17,7 +17,7 @@
 .lede {
   margin: 24px 0 0;
   max-width: 46ch;
-  font: 300 15px/1.95 var(--font-karla), sans-serif;
+  font: 300 calc(17px * var(--type-scale))/1.9 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
@@ -25,7 +25,7 @@
 .paragraph {
   margin: 0 0 clamp(28px, 4vh, 40px);
   max-width: 62ch;
-  font: 300 15.5px/2.05 var(--font-karla), sans-serif;
+  font: 300 calc(16px * var(--type-scale))/2.05 var(--font-karla), sans-serif;
   color: rgba(var(--ink-rgb), 0.74);
 }
 
@@ -72,7 +72,7 @@
 }
 
 .valueTitle {
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--emas-deep);
@@ -80,7 +80,7 @@
 
 .valueCaption {
   margin-top: 14px;
-  font: 300 13.5px/1.8 var(--font-karla), sans-serif;
+  font: 300 calc(14px * var(--type-scale))/1.8 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 

@@ -33,6 +33,34 @@
   --radius-pill: 20px;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /*
+   * Type scale for the small sizes — body, labels, nav, captions. Every
+   * fixed size in the modules is `calc(Npx * var(--type-scale))`, so the
+   * hierarchy is untouched and only the volume rises on wide screens: a
+   * 15.5px body reads at 18px on a 16-inch MacBook and stays 15.5px on a
+   * phone. Headlines are fluid in their own right (clamp with vw) and do
+   * not use this.
+   */
+  --type-scale: 1;
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --type-scale: 1.08;
+  }
+}
+
+@media (min-width: 1680px) {
+  :root {
+    --type-scale: 1.16;
+  }
+}
+
+@media (min-width: 2000px) {
+  :root {
+    --type-scale: 1.22;
+  }
 }
 
 html[data-theme='dark'] {
@@ -245,7 +273,7 @@ textarea:focus {
   padding: 12px 18px;
   background: #10222f;
   color: #f6f3e7;
-  font: 500 11px/1 var(--font-karla), sans-serif;
+  font: 500 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   transform: translateY(calc(-100% - 20px));
