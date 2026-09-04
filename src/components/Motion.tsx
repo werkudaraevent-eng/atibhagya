@@ -44,12 +44,17 @@ function fresh(scope: ParentNode, selector: string): HTMLElement[] {
  * about the markup has to know GSAP exists:
  *
  *   data-headline    split into real rendered lines, each rising from a mask
+ *   data-words       split into words, each settling from a blur — the new
+ *                    design's text effect, for heroes and section openings
  *   data-fade        fade and rise on entry
  *   data-reveal      marks entry without moving, for blocks whose parts animate
  *   data-rule        a hairline that draws itself across
  *   data-draw        an SVG stroke (the ornaments) that draws itself in
  *   data-open        an image that opens from its top edge
  *   data-rowtext     catalogue text drifting slower than its photograph
+ *   data-drift       a strip image: lerped lag, a stretch at speed, and a
+ *                    sideways drift by its place in the row (-1 | 0 | 1)
+ *   data-heroveil    the ivory veil the page pulls over the hero
  *   data-zoom        the slow hero zoom
  *   data-heroword    hero text parallax and fade
  *   data-para        image parallax inside a clipping parent
@@ -80,6 +85,8 @@ export function Motion() {
   useLayoutEffect(() => {
     let observer: MutationObserver | undefined
     let chapterTimer = 0
+    /** Torn down with the effect — for listeners GSAP does not own. */
+    let stopDrift: (() => void) | undefined
 
     // Switching language re-renders the same page with other words. Playing
     // every entrance again — headlines rising, images opening — would make
@@ -305,6 +312,7 @@ export function Motion() {
            */
           const enhance = (scope: ParentNode, animate = full) => {
             const headlines = fresh(scope, '[data-headline]')
+            const words = fresh(scope, '[data-words]')
             const fades = fresh(scope, '[data-fade]')
             const rules = fresh(scope, '[data-rule]')
             const opens = fresh(scope, '[data-open]')
@@ -318,6 +326,7 @@ export function Motion() {
                 if (targets.length) gsap.set(targets, vars)
               }
               settle(headlines, { visibility: 'visible' })
+              settle(words, { visibility: 'visible' })
               settle([...fades, ...fresh(scope, '[data-reveal]')], { opacity: 1, y: 0 })
               settle(rules, { scaleX: 1 })
               settle(opens, { clipPath: 'inset(0% 0% 0% 0%)' })
@@ -343,6 +352,34 @@ export function Motion() {
                     stagger: 0.09,
                     scrollTrigger: { trigger: el, start: ENTER, once: true },
                   })
+                },
+              })
+              gsap.set(el, { visibility: 'visible' })
+            })
+
+            // Word settle — the new design's text effect. Each word arrives
+            // from a slight blur and settles sharp, 70ms apart, on the same
+            // 1.3s breath as the reference. For the few opening lines, not
+            // for body copy.
+            words.forEach((el) => {
+              SplitText.create(el, {
+                type: 'words',
+                wordsClass: 'settleWord',
+                autoSplit: true,
+                onSplit(self) {
+                  return gsap.fromTo(
+                    self.words,
+                    { opacity: 0, y: 8, filter: 'blur(8px)' },
+                    {
+                      opacity: 1,
+                      y: 0,
+                      filter: 'blur(0px)',
+                      duration: 1.3,
+                      ease: EASE,
+                      stagger: 0.07,
+                      scrollTrigger: { trigger: el, start: ENTER, once: true },
+                    },
+                  )
                 },
               })
               gsap.set(el, { visibility: 'visible' })
@@ -456,6 +493,66 @@ export function Motion() {
 
           // Scroll-driven effects belong to every visit, translation included.
           if (full) {
+            // The hero veil: the page colour drawn over the photograph
+            // between a quarter and 0.85 of the first viewport.
+            gsap.utils.toArray<HTMLElement>('[data-heroveil]').forEach((el) => {
+              gsap.fromTo(
+                el,
+                { opacity: 0 },
+                {
+                  opacity: 1,
+                  ease: 'none',
+                  scrollTrigger: { start: () => window.innerHeight * 0.25, end: () => window.innerHeight * 0.85, scrub: true },
+                },
+              )
+            })
+
+            // Strip images: the design's lerped lag and pull. A smoothed
+            // copy of the scroll (lerp 0.09) trails the real one; the gap
+            // shifts the image, the smoothed velocity (lerp 0.12) stretches
+            // it a touch at speed; each card also drifts sideways by its
+            // place in the row. The reference's own constants throughout.
+            const drifts = gsap.utils.toArray<HTMLElement>('[data-drift]')
+            if (drifts.length) {
+              const sm = { y: window.scrollY, v: 0, last: window.scrollY }
+              let raf = 0
+              const paint = () => {
+                const vh = window.innerHeight
+                const lag = sm.y - window.scrollY
+                const pull = Math.min(1, Math.abs(sm.v) / 60)
+                drifts.forEach((el) => {
+                  const r = el.getBoundingClientRect()
+                  if (r.bottom < -80 || r.top > vh + 80) return
+                  const c = (r.top + r.height / 2 - vh / 2) / vh
+                  const place = parseInt(el.dataset.drift ?? '0', 10) || 0
+                  el.style.transform =
+                    `translate(${(place * c * -16).toFixed(1)}px, ${(c * -18 - lag * 0.12).toFixed(1)}px)` +
+                    ` scale(${(1 + pull * 0.03).toFixed(4)})`
+                })
+              }
+              const step = () => {
+                const y = window.scrollY
+                sm.v += (y - sm.last - sm.v) * 0.12
+                sm.last = y
+                sm.y += (y - sm.y) * 0.09
+                paint()
+                if (Math.abs(y - sm.y) > 0.3 || Math.abs(sm.v) > 0.05) raf = requestAnimationFrame(step)
+                else {
+                  raf = 0
+                  sm.v = 0
+                  paint()
+                }
+              }
+              const wake = () => {
+                if (!raf) raf = requestAnimationFrame(step)
+              }
+              window.addEventListener('scroll', wake, { passive: true })
+              paint()
+              stopDrift = () => {
+                window.removeEventListener('scroll', wake)
+                cancelAnimationFrame(raf)
+              }
+            }
             // The slow hero zoom, and the hero text drifting up as you leave it.
             gsap.utils.toArray<HTMLElement>('[data-zoom]').forEach((el) => {
               gsap.fromTo(
@@ -524,8 +621,8 @@ export function Motion() {
                 Array.from(r.addedNodes).some(
                   (n) =>
                     n instanceof HTMLElement &&
-                    (n.matches('[data-headline],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]') ||
-                      n.querySelector('[data-headline],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]')),
+                    (n.matches('[data-headline],[data-words],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]') ||
+                      n.querySelector('[data-headline],[data-words],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]')),
                 ),
               )
               if (!touched) return
@@ -562,6 +659,7 @@ export function Motion() {
     return () => {
       window.clearTimeout(refresh)
       window.clearTimeout(chapterTimer)
+      stopDrift?.()
       observer?.disconnect()
       context.revert()
       // Anything that survives the route change is back at its stylesheet

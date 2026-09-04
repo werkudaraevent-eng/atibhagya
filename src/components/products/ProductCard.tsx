@@ -14,14 +14,16 @@ export function ProductGrid({ products, locale }: Props) {
 
   return (
     <div className={styles.grid}>
-      {products.map((product) => (
+      {products.map((product, i) => (
         <Link
           key={product.id}
           href={`${prefix}/product/${product.slug}`}
           className={styles.card}
           data-fade
         >
-          <div className={styles.image}>
+          {/* data-drift: the cards of a strip pull gently apart as the row
+              crosses the viewport — left drifts left, right drifts right. */}
+          <div className={styles.image} data-drift={(i % 3) - 1}>
             <CreditImage
               image={product.image}
               sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 25vw"

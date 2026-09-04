@@ -30,11 +30,20 @@ export function Hero({ hero, ctaHref }: Props) {
         {hero.video ? <HeroVideo src={hero.video} poster={hero.image.src} /> : null}
       </div>
 
+      {/* The colour grade: navy in the shadows, warmth in the light, so any
+          photograph an editor uploads settles into the brand's palette. */}
+      <div className={styles.grade} aria-hidden="true" />
+      <div className={styles.cast} aria-hidden="true" />
       <div className={styles.scrim} />
+      {/* A breathing pool of light behind the words, and an ivory veil the
+          page pulls over the photograph as it is left — the hero dissolves
+          into the page colour rather than being cut off by it. */}
+      <div className={styles.mist} aria-hidden="true" />
+      <div className={styles.veil} data-heroveil aria-hidden="true" />
 
       <div className={styles.word} data-heroword>
         <div className={styles.eyebrow}>{hero.eyebrow}</div>
-        <h1 className={styles.headline} data-headline>
+        <h1 className={styles.headline} data-words>
           <Lines text={hero.headline} />
         </h1>
         <p className={styles.statement}>{hero.statement}</p>

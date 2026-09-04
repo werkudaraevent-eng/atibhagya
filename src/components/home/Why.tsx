@@ -11,7 +11,7 @@ export function Why({ why }: { why: HomeContent['why'] }) {
         <div className={page.split}>
           <div>
             <SectionMark number="01" mark="sprout" label={why.eyebrow} align="start" />
-            <h2 className={page.headline} data-headline>
+            <h2 className={page.headline} data-words>
               <Lines text={why.headline} />
             </h2>
           </div>

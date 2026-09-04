@@ -46,7 +46,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <body>
         <noscript>
           {/* Without JS nothing would ever animate in, so show everything. */}
-          <style>{`[data-fade],[data-headline],[data-rule],[data-open]{opacity:1 !important;visibility:visible !important;transform:none !important;clip-path:none !important}`}</style>
+          <style>{`[data-fade],[data-headline],[data-words],[data-rule],[data-open]{opacity:1 !important;visibility:visible !important;transform:none !important;clip-path:none !important}`}</style>
         </noscript>
         {children}
         <RefreshOnSave />

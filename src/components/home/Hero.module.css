@@ -23,7 +23,44 @@
   inset: 0;
   will-change: transform;
   transform-origin: 50% 45%;
-  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.42)) saturate(0.9) contrast(1.04);
+  /* The grade, part one: quieter colour. Saturation comes down further than
+     before, so a bright blue noon or a red bloom stops shouting over the
+     ivory type; contrast stays gentle. */
+  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.42)) saturate(0.72) contrast(1.02);
+}
+
+/* The grade, part two: the brand's own light, laid over any photograph.
+   Shadows are pulled toward the navy the whole site is inked in; the upper
+   light is warmed a step toward ivory. `soft-light` shifts hue without
+   flattening the image, and both layers breathe with the Darken slider —
+   at 0 the grade nearly disappears with everything else. */
+.grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      205deg,
+      rgba(246, 236, 214, calc(0.28 + var(--hero-darken, 0.35) * 0.3)) 0%,
+      rgba(246, 236, 214, 0) 44%
+    ),
+    linear-gradient(
+      12deg,
+      rgba(16, 34, 47, calc(0.5 + var(--hero-darken, 0.35) * 0.5)) 0%,
+      rgba(16, 34, 47, 0) 62%
+    );
+  mix-blend-mode: soft-light;
+}
+
+/* A whisper of navy over everything, plainly composited — soft-light alone
+   cannot pull a cyan sky toward the brand. Kept faint: a cast, not a wash. */
+.cast {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #10222f;
+  opacity: calc(0.1 + var(--hero-darken, 0.35) * 0.14);
+  mix-blend-mode: color;
 }
 
 .video {
@@ -69,6 +106,36 @@
       rgba(16, 34, 47, 0.08) 60%,
       rgba(16, 34, 47, 0.5) 100%
     );
+}
+
+/* Breath in the picture: a soft pool of ivory light, swelling on a slow
+   nine-second cycle. Overlay only — the photograph itself holds still. */
+.mist {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 42% 34% at 50% 72%,
+    rgba(246, 243, 231, 0.16) 0%,
+    rgba(246, 243, 231, 0) 100%
+  );
+  animation: mist 9s ease-in-out infinite;
+}
+
+/* The page colour, pulled over the hero as it is scrolled past. Motion
+   drives the opacity from 0 at a quarter viewport to 1 at 0.85. */
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--ivory);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mist {
+    animation: none;
+  }
 }
 
 /**

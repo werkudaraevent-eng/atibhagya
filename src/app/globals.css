@@ -151,6 +151,11 @@ textarea:focus {
   visibility: hidden;
 }
 
+/* Word-settle text likewise waits to be split into words. */
+[data-words] {
+  visibility: hidden;
+}
+
 [data-rule] {
   transform: scaleX(0);
   transform-origin: left center;
@@ -175,7 +180,8 @@ textarea:focus {
 .no-js [data-rule],
 .no-js [data-open],
 .no-js [data-draw],
-.no-js [data-headline] {
+.no-js [data-headline],
+.no-js [data-words] {
   opacity: 1;
   visibility: visible;
   transform: none;
@@ -185,6 +191,7 @@ textarea:focus {
 @media (prefers-reduced-motion: reduce) {
   [data-fade],
   [data-headline],
+  [data-words],
   [data-rule],
   [data-draw],
   [data-open] {
@@ -204,6 +211,18 @@ textarea:focus {
   50% {
     transform: translateY(8px);
     opacity: 0.25;
+  }
+}
+
+@keyframes mist {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.07);
   }
 }
 

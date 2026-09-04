@@ -60,7 +60,7 @@ export async function HomeScreen({ locale, draft = false }: Props) {
         >
           <div className={page.container}>
             <SectionMark number="02" mark="wave" label={home.featured.eyebrow} align="start" />
-            <h2 className={page.headline} data-headline style={{ marginBottom: 'clamp(40px, 6vh, 72px)' }}>
+            <h2 className={page.headline} data-words style={{ marginBottom: 'clamp(40px, 6vh, 72px)' }}>
               <Lines text={home.featured.headline} />
             </h2>
             <ProductGrid products={featured.map(toCard)} locale={locale} />

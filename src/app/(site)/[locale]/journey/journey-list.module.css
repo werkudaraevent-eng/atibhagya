@@ -11,7 +11,7 @@
   inset: 0;
   will-change: transform;
   transform-origin: 50% 45%;
-  filter: brightness(0.85) saturate(0.9) contrast(1.04);
+  filter: brightness(0.85) saturate(0.72) contrast(1.02);
 }
 
 .openingScrim {
@@ -19,6 +19,12 @@
   inset: 0;
   pointer-events: none;
   background:
+    /* The brand grade at default strength — see Hero.module.css. */
+    linear-gradient(
+      205deg,
+      rgba(246, 236, 214, 0.13) 0%,
+      rgba(246, 236, 214, 0) 44%
+    ),
     linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
     radial-gradient(
       ellipse 58% 46% at 50% 47%,
