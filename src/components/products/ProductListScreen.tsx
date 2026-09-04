@@ -9,7 +9,7 @@ import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCatalogueCopy, getCategories, getProducts, getSite } from '@/lib/content'
 import { toCard, type Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
 
 type Props = {
@@ -23,7 +23,6 @@ type Props = {
  * draft preview of the catalogue headings.
  */
 export async function ProductListScreen({ locale, draft = false }: Props) {
-  const t = dict(locale)
 
   const [products, categories, site, copy] = await Promise.all([
     getProducts(locale),
@@ -31,6 +30,7 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
     getSite(locale, { draft }),
     getCatalogueCopy(locale, { draft }),
   ])
+  const t = withSite(dict(locale), site)
 
   return (
     <>

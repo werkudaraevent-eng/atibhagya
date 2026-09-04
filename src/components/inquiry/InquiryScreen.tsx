@@ -9,7 +9,7 @@ import page from '@/components/site/Page.module.css'
 import form from '@/components/inquiry/InquiryForm.module.css'
 import { getCategories, getInquiryCopy, getJourneys, getProducts, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 
 type Props = {
   locale: Locale
@@ -29,7 +29,6 @@ export async function InquiryScreen({
   initialJourneys = [],
   draft = false,
 }: Props) {
-  const t = dict(locale)
 
   const [products, journeys, categories, site, copy] = await Promise.all([
     getProducts(locale),
@@ -38,6 +37,7 @@ export async function InquiryScreen({
     getSite(locale, { draft }),
     getInquiryCopy(locale, { draft }),
   ])
+  const t = withSite(dict(locale), site)
 
   return (
     <>

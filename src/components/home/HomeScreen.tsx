@@ -10,7 +10,7 @@ import { PageMarks } from '@/components/site/PageMarks'
 import page from '@/components/site/Page.module.css'
 import { getFeaturedProducts, getHome, getSite } from '@/lib/content'
 import { toCard, type Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
 
 type Props = {
@@ -24,7 +24,6 @@ type Props = {
  * preview, which differ only in what they read.
  */
 export async function HomeScreen({ locale, draft = false }: Props) {
-  const t = dict(locale)
   const prefix = locale === 'id' ? '/id' : ''
 
   const [home, site, featured] = await Promise.all([
@@ -32,6 +31,7 @@ export async function HomeScreen({ locale, draft = false }: Props) {
     getSite(locale, { draft }),
     getFeaturedProducts(locale),
   ])
+  const t = withSite(dict(locale), site)
 
   // The stops on the path indicator, in the words the sections already use.
   const stages = [

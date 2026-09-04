@@ -1,7 +1,7 @@
 import { InquiryModal } from '@/components/inquiry/InquiryModal'
 import { getCategories, getInquiryCopy, getJourneys, getProducts, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 
 export const revalidate = 300
 
@@ -35,7 +35,7 @@ export default async function InterceptedInquiryPage({
   return (
     <InquiryModal
       locale={locale}
-      dict={{ ...dict(locale), inquiry: copy }}
+      dict={{ ...withSite(dict(locale), site), inquiry: copy }}
       site={site}
       choices={{
         products: products.map((p) => ({ slug: p.slug, title: p.title })),

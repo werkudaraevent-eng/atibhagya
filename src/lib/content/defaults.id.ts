@@ -29,6 +29,7 @@ export const siteId: SiteContent = {
   footerTagline: 'Kesejahteraan yang berakar\npada tempat dan kehadiran.',
   footerLegal: '© 2026 Atibhagya. Seluruh hak cipta dilindungi.',
   responseTime: 'dalam dua hari kerja',
+  nav: { products: 'Pengalaman', journeys: 'Perjalanan', about: 'Tentang', inquiry: 'Kontak' },
 }
 
 export const homeId: HomeContent = {

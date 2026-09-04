@@ -18,8 +18,17 @@ export type NavLink = {
   href: string
 }
 
+/** The words on the main menu — header, mobile curtain, footer, path marks. */
+export type NavLabels = {
+  products: string
+  journeys: string
+  about: string
+  inquiry: string
+}
+
 /** Chrome shared by every page. */
 export type SiteContent = {
+  nav: NavLabels
   email: string
   phone?: string
   whatsapp: string

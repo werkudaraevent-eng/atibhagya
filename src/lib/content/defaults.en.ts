@@ -56,6 +56,7 @@ export const siteEn: SiteContent = {
   footerLegal: '© 2026 Atibhagya. All rights reserved.',
   parentBrand: 'Werkudara Group',
   responseTime: 'within two working days',
+  nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry' },
 }
 
 export const homeEn: HomeContent = {

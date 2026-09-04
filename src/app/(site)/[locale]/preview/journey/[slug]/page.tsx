@@ -11,7 +11,7 @@ import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCatalogueCopy, getJourney, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 import { isStaffRequest } from '@/lib/preview'
 import styles from '../../../journey/[slug]/journey-detail.module.css'
 
@@ -29,7 +29,6 @@ export default async function JourneyPreviewPage({
 
   const { locale: raw, slug } = await params
   const locale = raw as Locale
-  const t = dict(locale)
   const prefix = locale === 'id' ? '/id' : ''
 
   const [journey, site, copy] = await Promise.all([
@@ -37,6 +36,7 @@ export default async function JourneyPreviewPage({
     getSite(locale),
     getCatalogueCopy(locale),
   ])
+  const t = withSite(dict(locale), site)
   if (!journey) notFound()
 
   const inquiryHref = `${prefix}/inquiry?journey=${encodeURIComponent(journey.slug)}`

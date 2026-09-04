@@ -505,6 +505,11 @@ sample catalogue cached as if it were real.
   top of the file, and a lifecycle rule on that bucket. Try a restore on a
   Neon branch once, before it matters.
 
+**Menu words.** Site settings → Navigation holds the four words on the main
+menu (Products, Journeys, About, Inquiry), in both languages. One source for
+the header, the mobile menu, the footer, the path indicator and the chapter
+marks; the addresses themselves never change. Boxes show the words in use.
+
 **Who changed what.** Every save stamps *Last edited by* on the document
 (sidebar, list columns) and on the version it creates, and the Versions tab
 lists it beside the date. Comparing two versions of the inquiry form names

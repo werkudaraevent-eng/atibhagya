@@ -8,7 +8,7 @@ import { Nav } from '@/components/site/Nav'
 import { PageMarks } from '@/components/site/PageMarks'
 import { getCatalogueCopy, getProduct, getProducts, getSite } from '@/lib/content'
 import { locales, toCard, type Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 
 export const revalidate = 300
 
@@ -50,7 +50,6 @@ export default async function ProductPage({
 }) {
   const { locale: raw, slug } = await params
   const locale = raw as Locale
-  const t = dict(locale)
 
   const [product, site, all, copy] = await Promise.all([
     getProduct(locale, slug),
@@ -58,6 +57,7 @@ export default async function ProductPage({
     getProducts(locale),
     getCatalogueCopy(locale),
   ])
+  const t = withSite(dict(locale), site)
   if (!product) notFound()
 
   // Same category first; if that is thin, fill from the rest of the catalogue.

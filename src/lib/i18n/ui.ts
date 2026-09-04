@@ -1,4 +1,4 @@
-import type { Locale } from '../content/types'
+import type { Locale, SiteContent } from '../content/types'
 import type { Element } from '../elements'
 import { defaultFields, type FormField, type LabelKey } from '../inquiry-fields'
 
@@ -382,3 +382,14 @@ const id: Dict = {
 }
 
 export const dict = (locale: Locale): Dict => (locale === 'id' ? id : en)
+
+/**
+ * The dictionary with the menu words the team set in Site settings laid
+ * over the approved ones. Every page that has fetched the site uses this,
+ * so the header, the mobile menu, the footer and the page marks all say
+ * the same thing.
+ */
+export const withSite = (t: Dict, site: SiteContent): Dict => ({
+  ...t,
+  nav: { ...t.nav, ...site.nav },
+})

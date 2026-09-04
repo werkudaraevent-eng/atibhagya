@@ -12,7 +12,7 @@ import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCatalogueCopy, getJourney, getJourneys, getSite } from '@/lib/content'
 import { locales, type Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 import styles from './journey-detail.module.css'
 
 export const revalidate = 300
@@ -55,7 +55,6 @@ export default async function JourneyPage({
 }) {
   const { locale: raw, slug } = await params
   const locale = raw as Locale
-  const t = dict(locale)
   const prefix = locale === 'id' ? '/id' : ''
 
   const [journey, site, copy] = await Promise.all([
@@ -63,6 +62,7 @@ export default async function JourneyPage({
     getSite(locale),
     getCatalogueCopy(locale),
   ])
+  const t = withSite(dict(locale), site)
   if (!journey) notFound()
 
   const inquiryHref = `${prefix}/inquiry?journey=${encodeURIComponent(journey.slug)}`

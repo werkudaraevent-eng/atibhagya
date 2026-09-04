@@ -31,6 +31,10 @@ export const SiteSettings: GlobalConfig = {
         footerLegal: text((l) => defaults(l).site.footerLegal),
         parentBrand: plain(() => defaults('en').site.parentBrand),
         responseTime: text((l) => defaults(l).site.responseTime),
+        navProducts: text((l) => defaults(l).site.nav.products),
+        navJourneys: text((l) => defaults(l).site.nav.journeys),
+        navAbout: text((l) => defaults(l).site.nav.about),
+        navInquiry: text((l) => defaults(l).site.nav.inquiry),
       }),
     ],
     beforeChange: [stampUpdatedByGlobal],
@@ -45,6 +49,30 @@ export const SiteSettings: GlobalConfig = {
 
   fields: [
     updatedBy,
+    {
+      type: 'collapsible',
+      label: 'Navigation',
+      admin: {
+        description:
+          'The words on the main menu, in the header and the mobile menu, the footer, and the small marks at the edges of the page. The addresses (/product, /journey, /about, /inquiry) do not change.',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'navProducts', type: 'text', localized: true, label: 'Products page' },
+            { name: 'navJourneys', type: 'text', localized: true, label: 'Journeys page' },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'navAbout', type: 'text', localized: true, label: 'About page' },
+            { name: 'navInquiry', type: 'text', localized: true, label: 'Inquiry' },
+          ],
+        },
+      ],
+    },
     { name: 'email', type: 'email' },
     { name: 'phone', type: 'text' },
     { name: 'whatsapp', type: 'text', admin: { description: 'Full wa.me link.' } },

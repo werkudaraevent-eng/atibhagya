@@ -234,6 +234,12 @@ export async function getSite(locale: Locale, options: ReadOptions = {}): Promis
       draft: options.draft === true,
     })) as Any
     return {
+      nav: {
+        products: or(site.navProducts, fallback.nav.products),
+        journeys: or(site.navJourneys, fallback.nav.journeys),
+        about: or(site.navAbout, fallback.nav.about),
+        inquiry: or(site.navInquiry, fallback.nav.inquiry),
+      },
       email: or(site.email, fallback.email),
       phone: or(site.phone, fallback.phone),
       whatsapp: or(site.whatsapp, fallback.whatsapp),

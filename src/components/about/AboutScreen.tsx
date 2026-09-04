@@ -10,7 +10,7 @@ import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getAbout, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
 
 type Props = {
@@ -24,13 +24,13 @@ type Props = {
  * preview, which differ only in what they read.
  */
 export async function AboutScreen({ locale, draft = false }: Props) {
-  const t = dict(locale)
   const prefix = locale === 'id' ? '/id' : ''
 
   const [about, site] = await Promise.all([
     getAbout(locale, { draft }),
     getSite(locale, { draft }),
   ])
+  const t = withSite(dict(locale), site)
 
   return (
     <>
