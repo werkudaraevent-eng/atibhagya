@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { CreditImage } from '@/components/CreditImage'
 import { Breadcrumb } from '@/components/site/Breadcrumb'
 import page from '@/components/site/Page.module.css'
+import type { Stage } from '@/components/site/PathIndicator'
 import type { Locale, Product, ProductCard } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
 import { ElementMark } from './ElementMark'
@@ -15,6 +16,22 @@ type Props = {
   dict: Dict
   /** Same category, current one excluded — keeps browsing alive at the foot. */
   related: ProductCard[]
+}
+
+/**
+ * The page's stops for PageMarks. Built here, rendered by the route —
+ * PageMarks holds `position: fixed` overlays, and inside `<main>` (which
+ * the entrance animation transforms) fixed means "fixed to main", pinned
+ * to the content instead of the screen.
+ */
+export function productStages(dict: Dict, hasRelated: boolean): Stage[] {
+  const t = dict.products
+  return [
+    { id: 'top', label: t.detailEyebrow },
+    { id: 'experience', label: t.experience },
+    ...(hasRelated ? [{ id: 'related', label: t.related }] : []),
+    { id: 'foot', label: dict.footer.enquiries },
+  ]
 }
 
 export function ProductDetail({ product, locale, dict, related }: Props) {
@@ -35,7 +52,9 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
 
   return (
     <>
-      <header className={page.opening}>
+      {/* Opens on the page colour, so the opening is chapter 01 and the
+          marks show from the first pixel. */}
+      <header id="top" className={page.opening} data-stage={t.detailEyebrow} data-chapter="01">
         <div className={page.openingText}>
           {/* The eyebrow, made into a way back out: listing, then category
               (filtered), then this page. */}
@@ -88,7 +107,7 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
         </div>
       </header>
 
-      <section className={page.section}>
+      <section id="experience" className={page.section} data-stage={t.experience} data-chapter="02">
         <div className={page.container}>
           {/* Narrative on the left, facts in one slim column on the right —
               the brochure's arrangement. A single stack means a single
@@ -182,7 +201,12 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
       </section>
 
       {related.length ? (
-        <section className={`${page.section} ${page.sectionAlt}`}>
+        <section
+          id="related"
+          className={`${page.section} ${page.sectionAlt}`}
+          data-stage={t.related}
+          data-chapter="03"
+        >
           <div className={page.container}>
             <h2 className={page.headlineSmall} data-fade style={{ marginBottom: 'clamp(32px, 5vh, 56px)' }}>
               {t.related}

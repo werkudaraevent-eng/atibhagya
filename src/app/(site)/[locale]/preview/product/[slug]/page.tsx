@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
 
 import { Motion } from '@/components/Motion'
-import { ProductDetail } from '@/components/products/ProductDetail'
+import { ProductDetail, productStages } from '@/components/products/ProductDetail'
 import { Footer } from '@/components/site/Footer'
 import { Nav } from '@/components/site/Nav'
+import { PageMarks } from '@/components/site/PageMarks'
 import { getCatalogueCopy, getProduct, getProducts, getSite } from '@/lib/content'
 import { toCard, type Locale } from '@/lib/content/types'
 import { dict } from '@/lib/i18n/ui'
@@ -51,6 +52,7 @@ export default async function ProductPreviewPage({
     <>
       <Motion />
       <Nav locale={locale} dict={t} tone="light" />
+      <PageMarks stages={productStages(t, related.length > 0)} label={t.yourPath} />
       <main id="main">
         <ProductDetail
           product={product}

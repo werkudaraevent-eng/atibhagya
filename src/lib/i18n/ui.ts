@@ -10,6 +10,8 @@ export type Dict = {
   skipToContent: string
   /** Accessible name of the breadcrumb landmark. */
   youAreHere: string
+  /** Accessible name of the path indicator. */
+  yourPath: string
   /** The light/dark switch: what pressing it will do. */
   theme: { toDark: string; toLight: string }
   readMore: string
@@ -36,6 +38,8 @@ export type Dict = {
     reset: string
     related: string
     detailEyebrow: string
+    /** The detail page's main chapter, on the path indicator and chapter mark. */
+    experience: string
     whatToExpect: string
     duration: string
     venue: string
@@ -51,6 +55,8 @@ export type Dict = {
     headline: string
     intro: string
     detailEyebrow: string
+    /** The detail page's main chapter, on the path indicator and chapter mark. */
+    itinerary: string
     day: string
     overview: string
     duration: string
@@ -138,6 +144,7 @@ const en: Dict = {
   languageLabel: 'Language',
   skipToContent: 'Skip to content',
   youAreHere: 'You are here',
+  yourPath: 'Where you are on the page',
   theme: { toDark: 'Switch to dark mode', toLight: 'Switch to light mode' },
   readMore: 'Read more',
   footer: { enquiries: 'Enquiries', explore: 'Explore', social: 'Social' },
@@ -161,6 +168,7 @@ const en: Dict = {
     reset: 'Clear filters',
     related: 'Related experiences',
     detailEyebrow: 'Product',
+    experience: 'The experience',
     whatToExpect: 'What to expect',
     duration: 'Duration',
     venue: 'Venue',
@@ -182,6 +190,7 @@ const en: Dict = {
     headline: 'Wellness as a\njourney, not a menu.',
     intro: 'Curated multi-day or multi-stop experiences.',
     detailEyebrow: 'Journey',
+    itinerary: 'Itinerary',
     day: 'Day',
     overview: 'Journey overview',
     duration: 'Duration',
@@ -257,6 +266,7 @@ const id: Dict = {
   languageLabel: 'Bahasa',
   skipToContent: 'Lompat ke konten',
   youAreHere: 'Posisi Anda',
+  yourPath: 'Posisi Anda di halaman',
   theme: { toDark: 'Ganti ke mode gelap', toLight: 'Ganti ke mode terang' },
   readMore: 'Selengkapnya',
   footer: { enquiries: 'Pertanyaan', explore: 'Jelajahi', social: 'Media sosial' },
@@ -280,6 +290,7 @@ const id: Dict = {
     reset: 'Hapus filter',
     related: 'Pengalaman terkait',
     detailEyebrow: 'Pengalaman',
+    experience: 'Pengalamannya',
     whatToExpect: 'Yang akan Anda alami',
     duration: 'Durasi',
     venue: 'Lokasi',
@@ -301,6 +312,7 @@ const id: Dict = {
     headline: 'Wellness sebagai\nperjalanan, bukan daftar menu.',
     intro: 'Pengalaman terkurasi lintas hari dan lintas tempat.',
     detailEyebrow: 'Perjalanan',
+    itinerary: 'Rangkaian perjalanan',
     day: 'Hari',
     overview: 'Ringkasan perjalanan',
     duration: 'Durasi',

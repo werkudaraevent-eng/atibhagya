@@ -176,6 +176,10 @@ export interface UserAuthOperations {
  */
 export interface ProductCategory {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   name: string;
   /**
    * Used in filter links, e.g. body-fit-care.
@@ -184,6 +188,38 @@ export interface ProductCategory {
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Admins manage accounts and can delete content. Editors write and publish, but cannot create accounts or delete.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  /**
+   * Only an admin can change this.
+   */
+  roles: ('admin' | 'editor')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * Each experience in the catalogue. The reference code matches the printed catalogue.
@@ -254,6 +290,10 @@ export interface Product {
    */
   featured?: boolean | null;
   order?: number | null;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -264,6 +304,10 @@ export interface Product {
  */
 export interface Venue {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   name: string;
   location?: string | null;
   description?: string | null;
@@ -272,13 +316,17 @@ export interface Venue {
   createdAt: string;
 }
 /**
- * Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.
+ * Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge and under 4 MB — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   /**
    * Described for screen readers, in the guest’s own language.
    */
@@ -434,6 +482,10 @@ export interface Journey {
     | null;
   slug: string;
   order?: number | null;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -444,6 +496,10 @@ export interface Journey {
  */
 export interface Facilitator {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   name: string;
   /**
    * Title or role.
@@ -543,6 +599,10 @@ export interface Inquiry {
  */
 export interface Post {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   title: string;
   slug: string;
   excerpt?: string | null;
@@ -566,38 +626,6 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * Admins manage accounts and can delete content. Editors write and publish, but cannot create accounts or delete.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  /**
-   * Only an admin can change this.
-   */
-  roles: ('admin' | 'editor')[];
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -877,6 +905,7 @@ export interface PayloadMigration {
  * via the `definition` "product-categories_select".
  */
 export interface ProductCategoriesSelect<T extends boolean = true> {
+  updatedBy?: T;
   name?: T;
   slug?: T;
   order?: T;
@@ -916,6 +945,7 @@ export interface ProductsSelect<T extends boolean = true> {
   slug?: T;
   featured?: T;
   order?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -976,6 +1006,7 @@ export interface JourneysSelect<T extends boolean = true> {
       };
   slug?: T;
   order?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -985,6 +1016,7 @@ export interface JourneysSelect<T extends boolean = true> {
  * via the `definition` "venues_select".
  */
 export interface VenuesSelect<T extends boolean = true> {
+  updatedBy?: T;
   name?: T;
   location?: T;
   description?: T;
@@ -997,6 +1029,7 @@ export interface VenuesSelect<T extends boolean = true> {
  * via the `definition` "facilitators_select".
  */
 export interface FacilitatorsSelect<T extends boolean = true> {
+  updatedBy?: T;
   name?: T;
   role?: T;
   bio?: T;
@@ -1045,6 +1078,7 @@ export interface InquiriesSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  updatedBy?: T;
   alt?: T;
   credit?: T;
   creditUrl?: T;
@@ -1106,6 +1140,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
+  updatedBy?: T;
   title?: T;
   slug?: T;
   excerpt?: T;
@@ -1288,6 +1323,10 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Home {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   heroEyebrow?: string | null;
   /**
    * Line breaks are kept — they set the shape of the headline.
@@ -1343,6 +1382,10 @@ export interface Home {
  */
 export interface About {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   eyebrow?: string | null;
   /**
    * Line breaks are kept.
@@ -1387,6 +1430,10 @@ export interface About {
 export interface Catalogue {
   id: number;
   /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
+  /**
    * The small label above the heading.
    */
   productsEyebrow?: string | null;
@@ -1424,6 +1471,10 @@ export interface Catalogue {
  */
 export interface InquiryForm {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   fields?:
     | {
         /**
@@ -1538,6 +1589,10 @@ export interface InquiryForm {
    */
   submitLabel?: string | null;
   /**
+   * The short line under the submit button saying what happens to what the visitor writes. Indonesia’s personal-data law (UU 27/2022) expects one; keep it honest and plain. Clear it to return to the approved wording.
+   */
+  privacyNote?: string | null;
+  /**
    * The small word above the thank-you. Default "Received".
    */
   doneEyebrow?: string | null;
@@ -1564,6 +1619,10 @@ export interface InquiryForm {
  */
 export interface Site {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   email?: string | null;
   phone?: string | null;
   /**
@@ -1618,6 +1677,7 @@ export interface Site {
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
+  updatedBy?: T;
   heroEyebrow?: T;
   heroHeadline?: T;
   heroStatement?: T;
@@ -1655,6 +1715,7 @@ export interface HomeSelect<T extends boolean = true> {
  * via the `definition` "about_select".
  */
 export interface AboutSelect<T extends boolean = true> {
+  updatedBy?: T;
   eyebrow?: T;
   headline?: T;
   lede?: T;
@@ -1687,6 +1748,7 @@ export interface AboutSelect<T extends boolean = true> {
  * via the `definition` "catalogue_select".
  */
 export interface CatalogueSelect<T extends boolean = true> {
+  updatedBy?: T;
   productsEyebrow?: T;
   productsHeadline?: T;
   productsIntro?: T;
@@ -1705,6 +1767,7 @@ export interface CatalogueSelect<T extends boolean = true> {
  * via the `definition` "inquiry-form_select".
  */
 export interface InquiryFormSelect<T extends boolean = true> {
+  updatedBy?: T;
   fields?:
     | T
     | {
@@ -1736,6 +1799,7 @@ export interface InquiryFormSelect<T extends boolean = true> {
   addCustomLabel?: T;
   requiredNote?: T;
   submitLabel?: T;
+  privacyNote?: T;
   doneEyebrow?: T;
   doneHeading?: T;
   doneBody?: T;
@@ -1751,6 +1815,7 @@ export interface InquiryFormSelect<T extends boolean = true> {
  * via the `definition` "site_select".
  */
 export interface SiteSelect<T extends boolean = true> {
+  updatedBy?: T;
   email?: T;
   phone?: T;
   whatsapp?: T;

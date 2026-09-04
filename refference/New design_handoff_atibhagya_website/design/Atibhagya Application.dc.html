@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&amp;family=Karla:ital,wght@0,300;0,400;0,500;1,300&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#f6f3e7}
+*{box-sizing:border-box}
+a{color:#a97b2a;text-decoration:none}a:hover{color:#c69a4b}
+input,select,textarea{font-family:'Karla',sans-serif;color:#10222f;background:transparent}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#a97b2a !important}
+::placeholder{color:rgba(16,34,47,.35)}
+</style>
+</helmet>
+<div data-screen-label="Application" style="min-height:100vh;display:grid;grid-template-columns:minmax(280px,380px) 1fr;background:#f6f3e7;font-family:'Karla',sans-serif;color:#10222f">
+<aside style="background:#10222f;color:#e9e4d8;padding:56px 48px;display:flex;flex-direction:column;gap:0;position:relative;overflow:hidden">
+<a href="#top" style="display:block"><img src="assets/logo-atibhagya-gold.png" alt="Atibhagya" style="height:44px"></a>
+<div style="margin-top:52px;font:400 11px/1 'Karla',sans-serif;letter-spacing:.34em;text-transform:uppercase;color:#c69a4b">Application to stay</div>
+<h1 style="margin:20px 0 0;font:400 clamp(24px,2.2vw,32px)/1.35 'Marcellus',serif;color:#f6f3e7;text-wrap:balance">We would love to know who is arriving.</h1>
+<p style="margin:18px 0 0;font:300 13.5px/1.9 'Karla',sans-serif;color:rgba(233,228,216,.7)">Eight guests at a time — every application is read personally by our hosts, never by a system. Take your time; nothing here is graded.</p>
+<div style="margin-top:44px;display:flex;flex-direction:column;gap:2px">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="6">
+<button onClick="{{ s.go }}" style="display:flex;align-items:center;gap:16px;padding:13px 14px;margin:0 -14px;border:none;background:{{ s.bg }};cursor:pointer;text-align:left;border-radius:2px;transition:background .3s ease">
+<span style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:400 12px/1 'Marcellus',serif;border:1px solid {{ s.ringColor }};color:{{ s.numColor }};background:{{ s.numBg }};flex-shrink:0">{{ s.mark }}</span>
+<span style="font:400 12px/1.4 'Karla',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:{{ s.labelColor }}">{{ s.label }}</span>
+</button>
+</sc-for>
+</div>
+<div style="margin-top:auto;padding-top:40px;font:300 12px/1.8 'Karla',sans-serif;color:rgba(233,228,216,.45)">Questions before applying?<br><a href="mailto:hello@atibhagya.com" style="color:#c69a4b">hello@atibhagya.com</a> · WhatsApp Business</div>
+</aside>
+<main style="padding:clamp(48px,7vh,84px) clamp(36px,6vw,110px);display:flex;flex-direction:column;max-width:860px">
+<div style="font:400 10.5px/1 'Karla',sans-serif;letter-spacing:.26em;text-transform:uppercase;color:rgba(16,34,47,.45)">{{ stepCounter }}</div>
+<sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
+<h2 style="margin:22px 0 0;font:400 30px/1.3 'Marcellus',serif">First — a little about you.</h2>
+<p style="margin:14px 0 0;font:300 14.5px/1.8 'Karla',sans-serif;color:rgba(16,34,47,.65)">Just enough for us to write back. We reply within two days, personally.</p>
+<div style="margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:34px 28px">
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Full name</span><input type="text" placeholder="As you'd like us to call you" style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Email</span><input type="email" placeholder="you@example.com" style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">WhatsApp / phone</span><input type="tel" placeholder="+62 …" style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Country of residence</span><input type="text" placeholder="Where you're travelling from" style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"></label>
+</div>
+</sc-if>
+<sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
+<h2 style="margin:22px 0 0;font:400 30px/1.3 'Marcellus',serif">When would you like to come?</h2>
+<p style="margin:14px 0 0;font:300 14.5px/1.8 'Karla',sans-serif;color:rgba(16,34,47,.65)">Dates can stay soft for now — a month is enough for us to hold space.</p>
+<div style="margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:34px 28px">
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Arrival window</span><input type="month" style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"></label>
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Guests</span><select style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"><option>Just me</option><option>Two of us</option></select></label>
+</div>
+<div style="margin-top:40px;display:flex;flex-direction:column;gap:14px">
+<span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Length of stay</span>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<sc-for list="{{ stayOptions }}" as="o" hint-placeholder-count="3">
+<button onClick="{{ o.pick }}" style="padding:14px 26px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};font:400 13px/1 'Karla',sans-serif;letter-spacing:.08em;cursor:pointer;border-radius:2px;transition:all .3s ease">{{ o.label }}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
+<h2 style="margin:22px 0 0;font:400 30px/1.3 'Marcellus',serif">What brings you to the island?</h2>
+<p style="margin:14px 0 0;font:300 14.5px/1.8 'Karla',sans-serif;color:rgba(16,34,47,.65)">In your own words — a sentence or a page, whatever feels true. This is the part we read most carefully.</p>
+<div style="margin-top:40px;display:flex;flex-direction:column;gap:14px">
+<span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">If any of these feel close, mark them</span>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<sc-for list="{{ intentions }}" as="o" hint-placeholder-count="5">
+<button onClick="{{ o.pick }}" style="padding:11px 20px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};font:300 13px/1 'Karla',sans-serif;cursor:pointer;border-radius:20px;transition:all .3s ease">{{ o.label }}</button>
+</sc-for>
+</div>
+</div>
+<label style="margin-top:36px;display:flex;flex-direction:column;gap:12px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Your intention</span><textarea rows="6" placeholder="There is no wrong answer here…" style="border:1px solid rgba(16,34,47,.2);padding:16px;font-size:15px;line-height:1.7;resize:vertical;border-radius:2px"></textarea></label>
+</sc-if>
+<sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
+<h2 style="margin:22px 0 0;font:400 30px/1.3 'Marcellus',serif">How is your body doing?</h2>
+<p style="margin:14px 0 0;font:300 14.5px/1.8 'Karla',sans-serif;color:rgba(16,34,47,.65)">So our healers can meet you where you are. Shared only with your care team, held in confidence.</p>
+<div style="margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:34px 28px">
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">How have you been sleeping?</span><select style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"><option>Well, mostly</option><option>Lightly — I wake often</option><option>Poorly, for a while now</option><option>I'd rather talk about it</option></select></label>
+<label style="display:flex;flex-direction:column;gap:10px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Mobility</span><select style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"><option>No limitations</option><option>Some — gentle practice please</option><option>I'll describe below</option></select></label>
+</div>
+<label style="margin-top:36px;display:flex;flex-direction:column;gap:12px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Anything your care team should know</span><textarea rows="5" placeholder="Conditions, medication, injuries, or anything on your mind…" style="border:1px solid rgba(16,34,47,.2);padding:16px;font-size:15px;line-height:1.7;resize:vertical;border-radius:2px"></textarea></label>
+</sc-if>
+<sc-if value="{{ s5 }}" hint-placeholder-val="{{ false }}">
+<h2 style="margin:22px 0 0;font:400 30px/1.3 'Marcellus',serif">And how shall we feed you?</h2>
+<p style="margin:14px 0 0;font:300 14.5px/1.8 'Karla',sans-serif;color:rgba(16,34,47,.65)">Our kitchen cooks for eight — every plate is made for someone in particular.</p>
+<div style="margin-top:40px;display:flex;flex-direction:column;gap:14px">
+<span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">The way you eat</span>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<sc-for list="{{ diets }}" as="o" hint-placeholder-count="4">
+<button onClick="{{ o.pick }}" style="padding:11px 20px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};font:300 13px/1 'Karla',sans-serif;cursor:pointer;border-radius:20px;transition:all .3s ease">{{ o.label }}</button>
+</sc-for>
+</div>
+</div>
+<label style="margin-top:36px;display:flex;flex-direction:column;gap:12px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Allergies &amp; things you'd rather not see on a plate</span><input type="text" placeholder="e.g. shellfish, cilantro, very spicy food" style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"></label>
+</sc-if>
+<sc-if value="{{ s6 }}" hint-placeholder-val="{{ false }}">
+<h2 style="margin:22px 0 0;font:400 30px/1.3 'Marcellus',serif">Lastly — the practical part.</h2>
+<p style="margin:14px 0 0;font:300 14.5px/1.8 'Karla',sans-serif;color:rgba(16,34,47,.65)">A seven-night stay begins at USD 9,800, all-inclusive. Knowing your range helps us shape the right proposal — nothing is binding yet.</p>
+<div style="margin-top:40px;display:flex;flex-direction:column;gap:14px">
+<span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">Comfortable investment range</span>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ budgets }}" as="o" hint-placeholder-count="3">
+<button onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:14px;padding:16px 20px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};font:300 14px/1 'Karla',sans-serif;cursor:pointer;text-align:left;border-radius:2px;transition:all .3s ease"><span style="width:14px;height:14px;border-radius:50%;border:1px solid {{ o.dotRing }};background:{{ o.dot }};flex-shrink:0"></span>{{ o.label }}</button>
+</sc-for>
+</div>
+</div>
+<label style="margin-top:36px;display:flex;flex-direction:column;gap:12px"><span style="font:400 11px/1 'Karla',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:rgba(16,34,47,.55)">How did you find us?</span><input type="text" placeholder="A friend, a therapist, a long search…" style="border:none;border-bottom:1px solid rgba(16,34,47,.25);padding:10px 0;font-size:15px"></label>
+</sc-if>
+<sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:10vh;text-align:center;max-width:520px;align-self:center">
+<div style="font:400 64px/0.6 'Marcellus',serif;color:#a97b2a">&ldquo;</div>
+<h2 style="margin:28px 0 0;font:400 32px/1.35 'Marcellus',serif">Thank you. It's on its way to us.</h2>
+<p style="margin:20px 0 0;font:300 15px/1.9 'Karla',sans-serif;color:rgba(16,34,47,.65)">Your application is now with our hosts in Ubud. You'll hear from one of us — a person, with a name — within two days.</p>
+<div style="margin:36px auto 0;width:24px;height:1px;background:rgba(16,34,47,.3)"></div>
+<a href="#top" style="display:inline-block;margin-top:28px;font:400 11px/1 'Karla',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#a97b2a">Return to the estate</a>
+</div>
+</sc-if>
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:auto;padding-top:64px;display:flex;justify-content:space-between;align-items:center;gap:20px">
+<button onClick="{{ back }}" style="border:none;background:none;cursor:pointer;font:400 11px/1 'Karla',sans-serif;letter-spacing:.24em;text-transform:uppercase;color:{{ backColor }};padding:12px 0">&larr; Back</button>
+<button onClick="{{ next }}" style="border:1px solid #10222f;background:#10222f;color:#f6f3e7;cursor:pointer;font:400 11px/1 'Karla',sans-serif;letter-spacing:.24em;text-transform:uppercase;padding:18px 40px;border-radius:2px;transition:all .3s ease" style-hover="background:#a97b2a;border-color:#a97b2a">{{ nextLabel }}</button>
+</div>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;startAtStep&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1,&quot;min&quot;:1,&quot;max&quot;:7,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Preview&quot;}}">
+class Component extends DCLogic {
+  state = { step: 1, stay: 0, intent: [], diet: 0, budget: -1 };
+  componentDidMount() {
+    const s = parseInt(this.props.startAtStep, 10);
+    if (s >= 1 && s <= 7 && s !== this.state.step) this.setState({ step: s });
+  }
+  renderVals() {
+    const st = this.state.step;
+    const labels = ["About you", "Dates & stay", "Your intention", "Health & wellbeing", "Table & diet", "Investment"];
+    const steps = labels.map((label, i) => {
+      const n = i + 1, active = st === n, doneS = st > n;
+      return {
+        label, go: () => this.setState({ step: n }),
+        mark: doneS ? "✓" : String(n),
+        bg: active ? "rgba(198,154,75,.12)" : "transparent",
+        ringColor: active || doneS ? "#c69a4b" : "rgba(233,228,216,.3)",
+        numColor: doneS ? "#10222f" : active ? "#c69a4b" : "rgba(233,228,216,.5)",
+        numBg: doneS ? "#c69a4b" : "transparent",
+        labelColor: active ? "#f6f3e7" : doneS ? "rgba(233,228,216,.75)" : "rgba(233,228,216,.45)"
+      };
+    });
+    const chip = (list, sel, multi, key) => list.map((label, i) => {
+      const on = multi ? this.state[key].includes(i) : this.state[key] === i;
+      return {
+        label, pick: () => multi
+          ? this.setState(s => ({ [key]: s[key].includes(i) ? s[key].filter(x => x !== i) : [...s[key], i] }))
+          : this.setState({ [key]: i }),
+        border: on ? "#a97b2a" : "rgba(16,34,47,.25)",
+        bg: on ? "#10222f" : "transparent",
+        color: on ? "#f6f3e7" : "#10222f",
+        dotRing: on ? "#c69a4b" : "rgba(16,34,47,.35)",
+        dot: on ? "#c69a4b" : "transparent"
+      };
+    });
+    return {
+      steps,
+      s1: st === 1, s2: st === 2, s3: st === 3, s4: st === 4, s5: st === 5, s6: st === 6,
+      done: st === 7,
+      showNav: st <= 6,
+      stepCounter: st <= 6 ? "Step " + st + " of 6 — " + labels[st - 1] : "Received",
+      nextLabel: st === 6 ? "Send application" : "Continue",
+      next: () => this.setState(s => ({ step: Math.min(7, s.step + 1) })),
+      back: () => this.setState(s => ({ step: Math.max(1, s.step - 1) })),
+      backColor: st === 1 ? "rgba(16,34,47,.25)" : "rgba(16,34,47,.65)",
+      stayOptions: chip(["7 nights", "10 nights", "14 nights"], null, false, "stay"),
+      intentions: chip(["Rest & burnout", "Grief or loss", "A life transition", "Reconnection", "Simply silence"], null, true, "intent"),
+      diets: chip(["Everything, gladly", "Vegetarian", "Vegan", "Pescatarian"], null, false, "diet"),
+      budgets: chip(["USD 9,800 – 14,000 (7 nights)", "USD 14,000 – 20,000 (10 nights)", "USD 20,000+ (14 nights or two guests)"], null, false, "budget")
+    };
+  }
+}
+</script>
+</body>
+</html>

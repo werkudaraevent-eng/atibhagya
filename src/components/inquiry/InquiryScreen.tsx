@@ -1,6 +1,7 @@
 import { InquiryForm } from '@/components/inquiry/InquiryForm'
 import { Motion } from '@/components/Motion'
 import { Footer } from '@/components/site/Footer'
+import { PageMarks } from '@/components/site/PageMarks'
 import { Divider } from '@/components/site/Ornament'
 import ornament from '@/components/site/Ornament.module.css'
 import { Nav } from '@/components/site/Nav'
@@ -45,9 +46,22 @@ export async function InquiryScreen({
           space it occupies reads as a gap. */}
       <Motion />
       <Nav locale={locale} dict={t} tone="light" />
+      <PageMarks
+        stages={[
+          { id: 'top', label: copy.eyebrow },
+          { id: 'foot', label: t.footer.enquiries },
+        ]}
+        label={t.yourPath}
+      />
 
       <main id="main">
-        <section className={page.section} style={{ paddingTop: 0 }}>
+        <section
+          id="top"
+          className={page.section}
+          style={{ paddingTop: 0 }}
+          data-stage={copy.eyebrow}
+          data-chapter="01"
+        >
           <InquiryForm
             locale={locale}
             dict={{ ...t, inquiry: copy }}

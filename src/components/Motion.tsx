@@ -55,6 +55,9 @@ function fresh(scope: ParentNode, selector: string): HTMLElement[] {
  *   data-para        image parallax inside a clipping parent
  *   data-clip        clip-path reveal tied to scroll position
  *   data-row-index   feeds the running N° in the margin
+ *   data-stage       a section (with an id) that is a stop on the path
+ *                    indicator; with data-chapter="01", also a chapter
+ *   data-dark        a dark section: the fixed marks switch to ivory over it
  *
  * The stylesheet holds every opted-in element at its start state, so nothing
  * flashes in before JavaScript runs — which also means an element that arrives
@@ -76,6 +79,7 @@ export function Motion() {
 
   useLayoutEffect(() => {
     let observer: MutationObserver | undefined
+    let chapterTimer = 0
 
     // Switching language re-renders the same page with other words. Playing
     // every entrance again — headlines rising, images opening — would make
@@ -104,12 +108,138 @@ export function Motion() {
           // trigger starting at 82vh would report itself inactive once the
           // scroll reached `max`, and the nav would fall back to transparent
           // at the very bottom of the page.
+          // The path indicator and the chapter mark, fed by the page's
+          // stages. The thread fills between one stage's top and the next,
+          // measured at 45% of the viewport; the knot and chapter are those
+          // of the last stage whose top has passed that line. Constants are
+          // the design's own.
+          const stages = gsap.utils.toArray<HTMLElement>('[data-stage]').filter((el) => el.id)
+          const path = document.querySelector<HTMLElement>('[data-role="path"]')
+          const thread = path?.querySelector<SVGPathElement>('[data-role="thread"]') ?? null
+          const knots = path ? gsap.utils.toArray<HTMLElement>('[data-knot]', path) : []
+          const chapter = document.querySelector<HTMLElement>('[data-role="chapter"]')
+          const darks = gsap.utils.toArray<HTMLElement>('[data-dark]')
+          const unit = gsap.utils.clamp(0, 1)
+          let tops: number[] = []
+          let active = -1
+
+          const measure = () => {
+            const y = window.scrollY
+            tops = stages.map((s) => s.getBoundingClientRect().top + y)
+          }
+
+          const overDark = (viewportY: number) =>
+            darks.some((d) => {
+              const r = d.getBoundingClientRect()
+              return viewportY >= r.top && viewportY <= r.bottom
+            })
+
+          /** The vertical middle of a fixed mark, in viewport pixels. */
+          const middleOf = (el: HTMLElement | null, fallback: number) => {
+            if (!el) return fallback
+            const r = el.getBoundingClientRect()
+            return r.height ? r.top + r.height / 2 : fallback
+          }
+
+          const flag = (el: HTMLElement | null, name: string, on: boolean) => {
+            if (!el) return
+            if (on) el.setAttribute(name, '')
+            else el.removeAttribute(name)
+          }
+
+          const followStages = (y: number, atEnd: boolean) => {
+            if (!stages.length || !tops.length) return
+            const vh = window.innerHeight
+            const line = y + vh * 0.45
+            const last = tops.length - 1
+
+            let prog = 0
+            for (let i = 0; i < last; i++) {
+              const a = tops[i]!
+              const b = tops[i + 1]!
+              if (line >= b) prog = i + 1
+              else if (line > a) {
+                prog = i + unit((line - a) / Math.max(1, b - a))
+                break
+              } else break
+            }
+            // A short last stage — the footer on a short page — may never
+            // climb to the 45% line. The bottom of the page is the end of
+            // the path regardless.
+            if (atEnd) prog = last
+            if (thread) {
+              thread.style.strokeDashoffset = (100 - (100 * prog) / Math.max(1, tops.length - 1)).toFixed(2)
+            }
+            knots.forEach((knot, i) => {
+              const drawn = i === 0 ? 1 : unit(prog - (i - 1))
+              const curl = knot.querySelector<SVGPathElement>('[data-role="curl"]')
+              if (curl) curl.style.strokeDashoffset = (100 - 100 * drawn).toFixed(1)
+            })
+
+            let now = 0
+            tops.forEach((t, i) => {
+              if (t <= line) now = i
+            })
+            if (atEnd) now = last
+            if (now !== active) {
+              active = now
+              knots.forEach((knot, i) => {
+                knot.dataset.state = i === now ? 'active' : i < now ? 'passed' : 'idle'
+              })
+              flag(path, 'data-last', now === stages.length - 1)
+
+              if (chapter) {
+                const stage = stages[now]!
+                const number = stage.dataset.chapter
+                chapter.removeAttribute('data-on')
+                window.clearTimeout(chapterTimer)
+                if (number) {
+                  // Out for 450ms, new words, back in — the design's own beat.
+                  chapterTimer = window.setTimeout(() => {
+                    const n = chapter.querySelector('[data-role="chapterN"]')
+                    const t = chapter.querySelector('[data-role="chapterT"]')
+                    if (n) n.textContent = number
+                    if (t) t.textContent = stage.dataset.stage ?? ''
+                    chapter.setAttribute('data-on', '')
+                  }, 450)
+                }
+              }
+            }
+
+            // Each mark switches to its ivory set when its own middle sits
+            // over a dark section — not a fixed point that may be in the
+            // footer while the mark is still over the page.
+            flag(path, 'data-on-dark', overDark(middleOf(path, vh - 100)))
+            flag(chapter, 'data-on-dark', overDark(middleOf(chapter, vh / 2)))
+          }
+
+          // A page that opens on the page colour has a solid header from the
+          // start, so its marks show from the start; over a hero they wait
+          // for the header to turn solid.
+          const opensLight = Boolean(document.querySelector('[data-role="nav"][data-tone="light"]'))
+
           const track = (self: ScrollTrigger) => {
             root.style.setProperty('--scroll-progress', `${(self.progress * 100).toFixed(2)}%`)
-            if (self.scroll() > window.innerHeight * 0.82) root.dataset.navSolid = '1'
+            const solid = self.scroll() > window.innerHeight * 0.82
+            if (solid) root.dataset.navSolid = '1'
             else delete root.dataset.navSolid
+            if (solid || opensLight) root.dataset.marks = '1'
+            else delete root.dataset.marks
+            followStages(self.scroll(), self.progress >= 0.995)
           }
-          ScrollTrigger.create({ start: 0, end: 'max', onUpdate: track, onRefresh: track })
+          const remeasure = (self: ScrollTrigger) => {
+            measure()
+            track(self)
+          }
+          const pageTrigger = ScrollTrigger.create({
+            start: 0,
+            end: 'max',
+            onUpdate: track,
+            onRefresh: remeasure,
+          })
+          // The first state now, not on the next refresh: a page that opens
+          // with its marks showing should not wait for one.
+          remeasure(pageTrigger)
 
           // 3. The catalogue's own N° travels down the margin, taking the
           // number of whichever experience is passing the middle of the screen.
@@ -431,6 +561,7 @@ export function Motion() {
 
     return () => {
       window.clearTimeout(refresh)
+      window.clearTimeout(chapterTimer)
       observer?.disconnect()
       context.revert()
       // Anything that survives the route change is back at its stylesheet

@@ -8,11 +8,14 @@ import styles from './ClosingCta.module.css'
 type Props = {
   cta: HomeContent['cta']
   href: string
+  /** Its name on the path indicator. */
+  stage: string
 }
 
-export function ClosingCta({ cta, href }: Props) {
+export function ClosingCta({ cta, href, stage }: Props) {
   return (
-    <section className={styles.section}>
+    // A photograph under a dark scrim: the fixed marks turn ivory over it.
+    <section id="inquiry" className={styles.section} data-stage={stage} data-dark>
       <div className={styles.para} data-para>
         <CreditImage image={cta.image} sizes="100vw" />
       </div>

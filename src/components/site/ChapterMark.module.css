@@ -1,0 +1,62 @@
+/* Vertical, reading bottom to top, as on a book's spine. */
+.mark {
+  position: fixed;
+  left: clamp(16px, 2.4vw, 40px);
+  top: 50%;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%) rotate(180deg);
+  font: 400 10px/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-label);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.7s ease,
+    color 0.7s ease;
+}
+
+.mark[data-on] {
+  opacity: 1;
+}
+
+.mark[data-on-dark] {
+  color: rgba(246, 243, 231, 0.6);
+}
+
+.number {
+  font: 400 15px/1 var(--font-marcellus), serif;
+  letter-spacing: 0.1em;
+  color: var(--emas-deep);
+}
+
+.mark[data-on-dark] .number {
+  color: #e3bd72;
+}
+
+.rule {
+  display: inline-block;
+  width: 1px;
+  height: 36px;
+  background: color-mix(in srgb, var(--emas-deep) 40%, transparent);
+}
+
+.title {
+  white-space: nowrap;
+}
+
+@media (max-width: 899px) {
+  .mark {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark {
+    transition: none;
+  }
+}

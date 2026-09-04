@@ -6,6 +6,7 @@ import { ProductGrid } from '@/components/products/ProductCard'
 import { Footer } from '@/components/site/Footer'
 import { SectionMark } from '@/components/site/Ornament'
 import { Nav } from '@/components/site/Nav'
+import { PageMarks } from '@/components/site/PageMarks'
 import page from '@/components/site/Page.module.css'
 import { getFeaturedProducts, getHome, getSite } from '@/lib/content'
 import { toCard, type Locale } from '@/lib/content/types'
@@ -32,16 +33,31 @@ export async function HomeScreen({ locale, draft = false }: Props) {
     getFeaturedProducts(locale),
   ])
 
+  // The stops on the path indicator, in the words the sections already use.
+  const stages = [
+    { id: 'top', label: 'Atibhagya' },
+    { id: 'why', label: home.why.eyebrow },
+    { id: 'featured', label: home.featured.eyebrow },
+    { id: 'inquiry', label: t.nav.inquiry },
+    { id: 'foot', label: t.footer.enquiries },
+  ]
+
   return (
     <>
       <Motion />
       <Nav locale={locale} dict={t} />
+      <PageMarks stages={stages} label={t.yourPath} />
 
       <main id="main">
         <Hero hero={home.hero} ctaHref={`${prefix}/product`} />
         <Why why={home.why} />
 
-        <section className={`${page.section} ${page.sectionAlt}`}>
+        <section
+          id="featured"
+          className={`${page.section} ${page.sectionAlt}`}
+          data-stage={home.featured.eyebrow}
+          data-chapter="02"
+        >
           <div className={page.container}>
             <SectionMark number="02" mark="wave" label={home.featured.eyebrow} align="start" />
             <h2 className={page.headline} data-headline style={{ marginBottom: 'clamp(40px, 6vh, 72px)' }}>
@@ -51,7 +67,7 @@ export async function HomeScreen({ locale, draft = false }: Props) {
           </div>
         </section>
 
-        <ClosingCta cta={home.cta} href={`${prefix}/inquiry`} />
+        <ClosingCta cta={home.cta} href={`${prefix}/inquiry`} stage={t.nav.inquiry} />
       </main>
 
       <Footer site={site} dict={t} locale={locale} />

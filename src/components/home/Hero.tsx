@@ -22,6 +22,7 @@ export function Hero({ hero, ctaHref }: Props) {
     <section
       className={styles.hero}
       id="top"
+      data-stage="Atibhagya"
       style={{ '--hero-darken': hero.darken } as CSSProperties}
     >
       <div className={styles.zoom} data-zoom>
