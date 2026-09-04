@@ -92,10 +92,12 @@
     /* 3. the header's ceiling */
     linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
     /* 2. the vignette behind the words */
+    /* Slightly wider and deeper than before, so the words sit on a quiet
+       ground whatever photograph an editor chooses. */
     radial-gradient(
-      ellipse 58% 46% at 50% 47%,
-      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 0.95)) 0%,
-      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 0.55)) 45%,
+      ellipse 62% 50% at 50% 47%,
+      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 1.05)) 0%,
+      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 0.62)) 45%,
       rgba(16, 34, 47, 0) 100%
     ),
     /* the base: a little at the top, more at the foot where the cue sits */
@@ -156,11 +158,15 @@
   will-change: transform, opacity;
 }
 
+/* Over a photograph the type has to win against texture, so every line
+   here is set a step firmer than it would be on plain ivory: full weight,
+   near-full opacity, and a soft shadow that gives each glyph an edge. */
 .eyebrow {
   font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: rgba(246, 243, 231, 0.8);
+  color: rgba(246, 243, 231, 0.92);
+  text-shadow: 0 1px 18px rgba(16, 34, 47, 0.45);
 }
 
 .headline {
@@ -170,15 +176,21 @@
   /* Over the photograph, always ivory — whatever the page theme. */
   color: #f6f3e7;
   letter-spacing: 0.012em;
-  text-shadow: 0 4px 44px rgba(16, 34, 47, 0.5);
+  /* Two shadows: a tight one for the edge, a wide one for the ground. */
+  text-shadow:
+    0 2px 10px rgba(16, 34, 47, 0.35),
+    0 6px 60px rgba(16, 34, 47, 0.6);
   text-wrap: balance;
 }
 
+/* Regular weight, not light: the light face reads as refined on paper and
+   as absent over a photograph. Still a step under the body's 500. */
 .statement {
   margin: 26px auto 0;
-  max-width: 46ch;
-  font: 300 calc(17px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
-  color: rgba(246, 243, 231, 0.88);
+  max-width: 44ch;
+  font: 400 calc(18px * var(--type-scale))/1.8 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.96);
+  text-shadow: 0 2px 24px rgba(16, 34, 47, 0.55);
 }
 
 .actions {

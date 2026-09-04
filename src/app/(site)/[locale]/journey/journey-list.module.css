@@ -57,7 +57,8 @@
   font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(246, 243, 231, 0.8);
+  color: rgba(246, 243, 231, 0.92);
+  text-shadow: 0 1px 18px rgba(16, 34, 47, 0.45);
 }
 
 .openingHeadline {
@@ -66,13 +67,16 @@
   font: 400 clamp(34px, 5vw, 72px) / 1.16 var(--font-marcellus), serif;
   /* Over the photograph, always ivory — whatever the page theme. */
   color: #f6f3e7;
-  text-shadow: 0 4px 44px rgba(16, 34, 47, 0.5);
+  text-shadow:
+    0 2px 10px rgba(16, 34, 47, 0.35),
+    0 6px 60px rgba(16, 34, 47, 0.6);
   text-wrap: balance;
 }
 
 .openingLede {
   margin: 20px 0 0;
   max-width: 46ch;
-  font: 300 calc(17px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
-  color: rgba(246, 243, 231, 0.86);
+  font: 400 calc(18px * var(--type-scale))/1.8 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.96);
+  text-shadow: 0 2px 24px rgba(16, 34, 47, 0.55);
 }
