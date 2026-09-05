@@ -47,6 +47,8 @@ function fresh(scope: ParentNode, selector: string): HTMLElement[] {
  *   data-words       split into words, each settling from a blur — the new
  *                    design's text effect, for heroes and section openings
  *   data-fade        fade and rise on entry
+ *   data-delay       seconds to wait before a data-fade / data-words plays,
+ *                    for choreographing an opening (eyebrow, then headline…)
  *   data-reveal      marks entry without moving, for blocks whose parts animate
  *   data-rule        a hairline that draws itself across
  *   data-draw        an SVG stroke (the ornaments) that draws itself in
@@ -377,6 +379,7 @@ export function Motion() {
                       duration: 1.3,
                       ease: EASE,
                       stagger: 0.07,
+                      delay: Number(el.dataset.delay ?? 0) || 0,
                       scrollTrigger: { trigger: el, start: ENTER, once: true },
                     },
                   )
@@ -400,6 +403,7 @@ export function Motion() {
                   y: 0,
                   duration: 1,
                   ease: EASE,
+                  delay: Number(el.dataset.delay ?? 0) || 0,
                   scrollTrigger: { trigger: el, start: ENTER, once: true },
                 },
               )

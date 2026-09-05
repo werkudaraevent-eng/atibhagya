@@ -26,7 +26,9 @@ export function Hero({ hero, ctaHref }: Props) {
       style={{ '--hero-darken': hero.darken } as CSSProperties}
     >
       <div className={styles.zoom} data-zoom>
-        <CreditImage image={hero.image} sizes="100vw" priority />
+        {/* `still`: the photograph drifts on a slow, breathing zoom while the
+            page is at rest, so the hero is never a frozen frame. */}
+        <CreditImage image={hero.image} sizes="100vw" priority className={styles.still} />
         {hero.video ? <HeroVideo src={hero.video} poster={hero.image.src} /> : null}
       </div>
 
@@ -41,13 +43,21 @@ export function Hero({ hero, ctaHref }: Props) {
       <div className={styles.mist} aria-hidden="true" />
       <div className={styles.veil} data-heroveil aria-hidden="true" />
 
+      {/* The arrival, in order: the small line first, then the headline
+          settling word by word, then the statement, then the invitation.
+          Each waits its turn (data-delay, seconds) — a door opening, not
+          a slide appearing. */}
       <div className={styles.word} data-heroword>
-        <div className={styles.eyebrow}>{hero.eyebrow}</div>
-        <h1 className={styles.headline} data-words>
+        <div className={styles.eyebrow} data-fade data-delay="0.15">
+          {hero.eyebrow}
+        </div>
+        <h1 className={styles.headline} data-words data-delay="0.5">
           <Lines text={hero.headline} />
         </h1>
-        <p className={styles.statement}>{hero.statement}</p>
-        <div className={styles.actions}>
+        <p className={styles.statement} data-fade data-delay="1.25">
+          {hero.statement}
+        </p>
+        <div className={styles.actions} data-fade data-delay="1.55">
           <Link href={ctaHref} className={page.buttonGhost}>
             {hero.ctaLabel}
           </Link>

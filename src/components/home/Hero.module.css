@@ -63,6 +63,15 @@
   mix-blend-mode: color;
 }
 
+/* At rest the photograph drifts: a 26-second breath from 1.00 to 1.06 and
+   back, with a fingertip of sideways travel so it reads as a slow pan and
+   not a pulse. Sits on the image's own wrapper, below `.zoom` — which the
+   scroll owns — so the two scales compose instead of fighting. */
+.still {
+  animation: kenburns 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
 .video {
   position: absolute;
   inset: 0;
@@ -134,8 +143,18 @@
   opacity: 0;
 }
 
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.06) translate(-1.2%, 0.6%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .mist {
+  .mist,
+  .still {
     animation: none;
   }
 }
