@@ -74,7 +74,17 @@ export const Events: CollectionConfig = {
             text('eyebrow', { description: 'The small line above the headline, e.g. "Prambanan Shiva Festival 2027 · Yogyakarta".' }),
             longText('headline', { description: 'The page’s first sentence, set large over the photograph.' }),
             longText('statement', { description: 'Two or three lines under the headline.' }),
-            { name: 'heroImage', type: 'upload', relationTo: 'media', validate: webImage },
+            {
+              name: 'heroImage',
+              type: 'upload',
+              relationTo: 'media',
+              validate: webImage,
+              label: 'Opening photograph',
+              admin: {
+                description:
+                  'Full-screen behind the headline at the top of the event page. Also the fallback for the closing and home page photographs.',
+              },
+            },
             {
               name: 'dates',
               type: 'array',
@@ -186,7 +196,14 @@ export const Events: CollectionConfig = {
             },
             longText('placeHeadline'),
             longText('placeBody'),
-            { name: 'placeImage', type: 'upload', relationTo: 'media', validate: webImage },
+            {
+              name: 'placeImage',
+              type: 'upload',
+              relationTo: 'media',
+              validate: webImage,
+              label: 'Photograph',
+              admin: { description: 'Tall (4:5) beside the number.' },
+            },
           ],
         },
         {
@@ -226,7 +243,14 @@ export const Events: CollectionConfig = {
             longText('closingHeadline'),
             longText('closingBody'),
             text('closingCtaLabel', { description: 'On the button; leads to the inquiry form.' }),
-            { name: 'closingImage', type: 'upload', relationTo: 'media', validate: webImage },
+            {
+              name: 'closingImage',
+              type: 'upload',
+              relationTo: 'media',
+              validate: webImage,
+              label: 'Closing photograph',
+              admin: { description: 'Behind the invitation at the foot of the page. Empty uses the opening photograph.' },
+            },
             {
               type: 'collapsible',
               label: 'Contact',
@@ -249,7 +273,17 @@ export const Events: CollectionConfig = {
             text('navLabel', { description: 'The word in the main menu while the event is live, e.g. "Festival 2027". Empty uses the title.' }),
             longText('homeHeadline', { description: 'The home page block’s headline. Empty uses the page headline.' }),
             longText('homeBody', { description: 'Empty uses the opening statement.' }),
-            { name: 'homeImage', type: 'upload', relationTo: 'media', validate: webImage, admin: { description: 'Empty uses the hero image.' } },
+            {
+              name: 'homeImage',
+              type: 'upload',
+              relationTo: 'media',
+              validate: webImage,
+              label: 'Home page photograph',
+              admin: {
+                description:
+                  'Only on the home page block and the events list — not on the event page itself. Empty uses the opening photograph.',
+              },
+            },
           ],
         },
         {
