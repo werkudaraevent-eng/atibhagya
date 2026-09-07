@@ -1,0 +1,189 @@
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 640px;
+  overflow: hidden;
+  background: var(--biru-footer);
+}
+
+/* The same grade as the home hero, at its default strength. */
+.zoom {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transform-origin: 50% 45%;
+  filter: brightness(0.85) saturate(0.72) contrast(1.02);
+}
+
+/* Darker at the foot than the home hero: the words sit there, not centred. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
+    linear-gradient(
+      180deg,
+      rgba(13, 28, 39, 0.35) 0%,
+      rgba(13, 28, 39, 0.15) 40%,
+      rgba(13, 28, 39, 0.85) 100%
+    );
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--ivory);
+  opacity: 0;
+}
+
+.word {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 clamp(24px, 5vw, 64px) 11vh;
+  color: #f6f3e7;
+  transform: translateY(var(--hero-shift, 0px));
+  will-change: transform, opacity;
+}
+
+.grid {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 40px;
+  align-items: end;
+}
+
+.text {
+  max-width: 760px;
+}
+
+.eyebrow {
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--emas-hover);
+  text-shadow: 0 1px 18px rgba(16, 34, 47, 0.45);
+}
+
+.headline {
+  margin: 26px 0 0;
+  font: 400 clamp(34px, 4.6vw, 66px) / 1.12 var(--font-marcellus), serif;
+  color: #f6f3e7;
+  text-shadow:
+    0 2px 10px rgba(16, 34, 47, 0.35),
+    0 6px 60px rgba(16, 34, 47, 0.6);
+  text-wrap: balance;
+}
+
+.statement {
+  margin: 26px 0 0;
+  max-width: 52ch;
+  font: 400 calc(16px * var(--type-scale))/1.8 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.9);
+  text-shadow: 0 2px 24px rgba(16, 34, 47, 0.55);
+}
+
+.actions {
+  margin-top: 36px;
+  display: flex;
+  gap: 16px 28px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* The second invitation is a word with a rule, not a second box. */
+.textLink {
+  padding: 6px 0;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 231, 0.78);
+  border-bottom: 1px solid rgba(246, 243, 231, 0.3);
+  transition:
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.textLink:hover {
+  color: var(--emas-hover);
+  border-color: var(--emas-hover);
+}
+
+.dates {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  text-align: right;
+  border-right: 1px solid rgba(227, 189, 114, 0.4);
+  padding-right: 24px;
+}
+
+.date {
+  margin: 0;
+}
+
+.dateLabel {
+  font: 400 calc(10px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 231, 0.55);
+}
+
+.dateValue {
+  margin: 8px 0 0;
+  font: 400 calc(22px * var(--type-scale))/1.2 var(--font-marcellus), serif;
+  color: #f6f3e7;
+}
+
+.cue {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: cue 2.6s ease-in-out infinite;
+}
+
+.cueLine {
+  display: block;
+  width: 1px;
+  height: 36px;
+  background: rgba(246, 243, 231, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue {
+    animation: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .hero {
+    min-height: 560px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .dates {
+    flex-direction: row;
+    gap: 28px;
+    text-align: left;
+    border-right: 0;
+    border-left: 1px solid rgba(227, 189, 114, 0.4);
+    padding: 0 0 0 18px;
+  }
+
+  .cue {
+    display: none;
+  }
+}

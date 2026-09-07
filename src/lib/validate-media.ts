@@ -43,6 +43,32 @@ export const videoFile: Validate = async (value, { req }) => {
   }
 }
 
+/** A programme or brochure: PDF only, and a size a phone will download. */
+export const pdfFile: Validate = async (value, { req }) => {
+  if (value === null || value === undefined || value === '') return true
+  const id =
+    typeof value === 'object' && value !== null && 'id' in value
+      ? (value as { id: string | number }).id
+      : (value as string | number)
+  try {
+    const media = (await req.payload.findByID({ collection: 'media', id, depth: 0 })) as {
+      mimeType?: string | null
+      filename?: string | null
+      filesize?: number | null
+    }
+    if ((media.mimeType ?? '') !== 'application/pdf') {
+      return `"${media.filename ?? id}" is not a PDF.`
+    }
+    const mb = (media.filesize ?? 0) / 1_048_576
+    if (mb > 20) {
+      return `"${media.filename}" is ${mb.toFixed(1)} MB. Keep a programme under 20 MB — export it for screen, with images at 150 dpi.`
+    }
+    return true
+  } catch {
+    return true
+  }
+}
+
 export const webImage: Validate = async (value, { req }) => {
   if (value === null || value === undefined || value === '') return true
 

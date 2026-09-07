@@ -56,7 +56,7 @@ export const siteEn: SiteContent = {
   footerLegal: '© 2026 Atibhagya. All rights reserved.',
   parentBrand: 'Werkudara Group',
   responseTime: 'within two working days',
-  nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry' },
+  nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry', events: 'Events' },
 }
 
 export const homeEn: HomeContent = {
@@ -96,6 +96,10 @@ export const homeEn: HomeContent = {
   featured: {
     eyebrow: 'Selected experiences',
     headline: 'Featured experiences',
+  },
+  event: {
+    label: 'A season at Prambanan',
+    ctaLabel: 'Discover the festival',
   },
   cta: {
     headline: 'Design a wellness journey.',

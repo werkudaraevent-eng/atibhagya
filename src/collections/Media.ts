@@ -28,7 +28,7 @@ export const Media: CollectionConfig = {
     group: 'Content',
     useAsTitle: 'filename',
     description:
-      'Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge and under 4 MB — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.',
+      'Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge and under 4 MB — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB. PDF (event programmes only): under 20 MB.',
   },
   access: {
     read: () => true,
@@ -86,7 +86,17 @@ export const Media: CollectionConfig = {
     // Only what the image pipeline can actually process. Sharp cannot decode
     // BMP or TIFF, and `next/image` cannot optimise them, so accepting them
     // produces an upload that saves but never renders.
-    mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'video/mp4', 'video/webm'],
+    // PDF is for an event's programme; it gets no renditions and is only
+    // ever linked, never rendered.
+    mimeTypes: [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/avif',
+      'video/mp4',
+      'video/webm',
+      'application/pdf',
+    ],
   },
   fields: [
     updatedBy,

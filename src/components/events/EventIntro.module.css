@@ -1,0 +1,23 @@
+.section {
+  padding-top: clamp(80px, 16vh, 160px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(40px, 6vw, 100px);
+  align-items: start;
+}
+
+.headline {
+  margin: 0;
+  font: 400 clamp(24px, 2.6vw, 36px) / 1.4 var(--font-marcellus), serif;
+  text-wrap: balance;
+}
+
+.body {
+  margin: 28px 0 0;
+  max-width: 560px;
+  font: 300 calc(15px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
+  color: var(--ink-body);
+}

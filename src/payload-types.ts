@@ -70,6 +70,7 @@ export interface Config {
     'product-categories': ProductCategory;
     products: Product;
     journeys: Journey;
+    events: Event;
     venues: Venue;
     facilitators: Facilitator;
     inquiries: Inquiry;
@@ -102,6 +103,7 @@ export interface Config {
     'product-categories': ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     journeys: JourneysSelect<false> | JourneysSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     venues: VenuesSelect<false> | VenuesSelect<true>;
     facilitators: FacilitatorsSelect<false> | FacilitatorsSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
@@ -316,7 +318,7 @@ export interface Venue {
   createdAt: string;
 }
 /**
- * Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge and under 4 MB — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.
+ * Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge and under 4 MB — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB. PDF (event programmes only): under 20 MB.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
@@ -432,6 +434,14 @@ export interface Journey {
   days?:
     | {
         title: string;
+        /**
+         * A few words under the title on an event page, e.g. "Arrive & settle".
+         */
+        kicker?: string | null;
+        /**
+         * The day of the event itself. On an event page it is marked in gold and its panel turns dark.
+         */
+        highlight?: boolean | null;
         note?: string | null;
         items?:
           | {
@@ -453,6 +463,10 @@ export interface Journey {
       }[]
     | null;
   durationText?: string | null;
+  /**
+   * The code on an event page’s journey chips, e.g. 4D3N.
+   */
+  durationShort?: string | null;
   facilities?:
     | {
         label: string;
@@ -535,6 +549,187 @@ export interface FolderInterface {
   folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Dated occasions with their own page: a festival, a season. Published and still to come, an event appears in the menu and on the home page; once its last date has passed it moves to the archive by itself.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  /**
+   * The event’s name, e.g. "Prambanan Shiva Festival 2027".
+   */
+  title: string;
+  /**
+   * The small line above the headline, e.g. "Prambanan Shiva Festival 2027 · Yogyakarta".
+   */
+  eyebrow?: string | null;
+  /**
+   * The page’s first sentence, set large over the photograph.
+   */
+  headline?: string | null;
+  /**
+   * Two or three lines under the headline.
+   */
+  statement?: string | null;
+  heroImage?: (number | null) | Media;
+  /**
+   * One row per day of the event. The last date decides when the event moves to the archive.
+   */
+  dates?:
+    | {
+        /**
+         * e.g. Mahashivaratri
+         */
+        label: string;
+        date: string;
+        /**
+         * e.g. 14.00 – 08.00 WIB
+         */
+        time?: string | null;
+        /**
+         * e.g. Wisnu Park, Prambanan Temple
+         */
+        venue?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The chapter’s name, e.g. "Why we walk to Prambanan".
+   */
+  introLabel?: string | null;
+  introHeadline?: string | null;
+  introBody?: string | null;
+  /**
+   * e.g. "The sacred days · 6 – 7 March 2027"
+   */
+  daysLabel?: string | null;
+  daysHeadline?: string | null;
+  days?:
+    | {
+        /**
+         * e.g. Saturday · 6 March
+         */
+        kicker?: string | null;
+        /**
+         * e.g. 14.00 – 08.00 WIB · Wisnu Park
+         */
+        meta?: string | null;
+        title: string;
+        body?: string | null;
+        /**
+         * Above the list, e.g. "The sacred procession".
+         */
+        listLabel?: string | null;
+        listStyle?: ('thread' | 'rows') | null;
+        list?:
+          | {
+              title: string;
+              body?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Two short asides under the list, e.g. "Chanting the 1,008 Names".
+         */
+        notes?:
+          | {
+              title: string;
+              body?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * e.g. Vasudhaiva Kutumbakam
+         */
+        quoteEyebrow?: string | null;
+        quote?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * e.g. "The spirit of Prambanan"
+   */
+  placeLabel?: string | null;
+  /**
+   * Set very large, e.g. 856
+   */
+  placeNumber?: string | null;
+  /**
+   * Beside the number, e.g. "CE · Wantil Inscription"
+   */
+  placeCaption?: string | null;
+  placeHeadline?: string | null;
+  placeBody?: string | null;
+  placeImage?: (number | null) | Media;
+  /**
+   * e.g. "Three curated journeys"
+   */
+  journeysLabel?: string | null;
+  journeysHeadline?: string | null;
+  /**
+   * The journeys that lead to this event, in the order they are offered. Each day’s kicker and "festival day" mark are set on the journey itself.
+   */
+  journeys?: (number | Journey)[] | null;
+  /**
+   * The one shown first. Leave empty for the first in the list.
+   */
+  defaultJourney?: (number | null) | Journey;
+  /**
+   * The full programme as a PDF, offered beside each itinerary. Optional.
+   */
+  pdf?: (number | null) | Media;
+  /**
+   * e.g. "Reserve a place · March 2027"
+   */
+  closingEyebrow?: string | null;
+  closingHeadline?: string | null;
+  closingBody?: string | null;
+  /**
+   * On the button; leads to the inquiry form.
+   */
+  closingCtaLabel?: string | null;
+  closingImage?: (number | null) | Media;
+  contactName?: string | null;
+  /**
+   * e.g. an Instagram handle. A phone number here appears on the public page.
+   */
+  contactLine?: string | null;
+  /**
+   * e.g. "In collaboration with Prambanan Shiva Festival · Atibhagya Wellness"
+   */
+  collaborationLine?: string | null;
+  /**
+   * The word in the main menu while the event is live, e.g. "Festival 2027". Empty uses the title.
+   */
+  navLabel?: string | null;
+  /**
+   * The home page block’s headline. Empty uses the page headline.
+   */
+  homeHeadline?: string | null;
+  /**
+   * Empty uses the opening statement.
+   */
+  homeBody?: string | null;
+  /**
+   * Empty uses the hero image.
+   */
+  homeImage?: (number | null) | Media;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  /**
+   * The address: /events/<slug>
+   */
+  slug: string;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -831,6 +1026,10 @@ export interface PayloadLockedDocument {
         value: number | Journey;
       } | null)
     | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
         relationTo: 'venues';
         value: number | Venue;
       } | null)
@@ -963,6 +1162,8 @@ export interface JourneysSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        kicker?: T;
+        highlight?: T;
         note?: T;
         items?:
           | T
@@ -977,6 +1178,7 @@ export interface JourneysSelect<T extends boolean = true> {
         id?: T;
       };
   durationText?: T;
+  durationShort?: T;
   facilities?:
     | T
     | {
@@ -1006,6 +1208,88 @@ export interface JourneysSelect<T extends boolean = true> {
       };
   slug?: T;
   order?: T;
+  updatedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  eyebrow?: T;
+  headline?: T;
+  statement?: T;
+  heroImage?: T;
+  dates?:
+    | T
+    | {
+        label?: T;
+        date?: T;
+        time?: T;
+        venue?: T;
+        id?: T;
+      };
+  introLabel?: T;
+  introHeadline?: T;
+  introBody?: T;
+  daysLabel?: T;
+  daysHeadline?: T;
+  days?:
+    | T
+    | {
+        kicker?: T;
+        meta?: T;
+        title?: T;
+        body?: T;
+        listLabel?: T;
+        listStyle?: T;
+        list?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              id?: T;
+            };
+        notes?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              id?: T;
+            };
+        quoteEyebrow?: T;
+        quote?: T;
+        id?: T;
+      };
+  placeLabel?: T;
+  placeNumber?: T;
+  placeCaption?: T;
+  placeHeadline?: T;
+  placeBody?: T;
+  placeImage?: T;
+  journeysLabel?: T;
+  journeysHeadline?: T;
+  journeys?: T;
+  defaultJourney?: T;
+  pdf?: T;
+  closingEyebrow?: T;
+  closingHeadline?: T;
+  closingBody?: T;
+  closingCtaLabel?: T;
+  closingImage?: T;
+  contactName?: T;
+  contactLine?: T;
+  collaborationLine?: T;
+  navLabel?: T;
+  homeHeadline?: T;
+  homeBody?: T;
+  homeImage?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  slug?: T;
   updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1366,6 +1650,18 @@ export interface Home {
    * Leave empty to fall back to products marked "featured".
    */
   featuredProducts?: (number | Product)[] | null;
+  /**
+   * The chapter’s name, e.g. "A season at Prambanan".
+   */
+  eventLabel?: string | null;
+  /**
+   * On the button, e.g. "Discover the festival".
+   */
+  eventCtaLabel?: string | null;
+  /**
+   * Which event to show. Leave empty for the nearest one still to come; nothing renders once it has passed.
+   */
+  featuredEvent?: (number | null) | Event;
   ctaHeadline?: string | null;
   ctaBody?: string | null;
   ctaLabel?: string | null;
@@ -1623,6 +1919,18 @@ export interface Site {
    * Set automatically on every save.
    */
   updatedBy?: (number | null) | User;
+  navProducts?: string | null;
+  navJourneys?: string | null;
+  navAbout?: string | null;
+  navInquiry?: string | null;
+  /**
+   * Shown when there are events but none still to come; the menu then leads to the events page (/events).
+   */
+  navEvents?: string | null;
+  /**
+   * While an event is published and still to come, the menu shows that event’s own word and opens its page. Off: the menu always says the word to the left and opens the events page.
+   */
+  navEventDirect?: boolean | null;
   email?: string | null;
   phone?: string | null;
   /**
@@ -1699,6 +2007,9 @@ export interface HomeSelect<T extends boolean = true> {
   featuredEyebrow?: T;
   featuredHeadline?: T;
   featuredProducts?: T;
+  eventLabel?: T;
+  eventCtaLabel?: T;
+  featuredEvent?: T;
   ctaHeadline?: T;
   ctaBody?: T;
   ctaLabel?: T;
@@ -1816,6 +2127,12 @@ export interface InquiryFormSelect<T extends boolean = true> {
  */
 export interface SiteSelect<T extends boolean = true> {
   updatedBy?: T;
+  navProducts?: T;
+  navJourneys?: T;
+  navAbout?: T;
+  navInquiry?: T;
+  navEvents?: T;
+  navEventDirect?: T;
   email?: T;
   phone?: T;
   whatsapp?: T;
@@ -1868,6 +2185,7 @@ export interface TaskCreateCollectionExport {
       | 'product-categories'
       | 'products'
       | 'journeys'
+      | 'events'
       | 'venues'
       | 'facilitators'
       | 'inquiries'

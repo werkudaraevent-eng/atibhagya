@@ -98,7 +98,7 @@ const nextConfig = {
   async rewrites() {
     // Listed explicitly rather than pattern-matched, so `/admin`, `/api` and
     // the static routes can never be caught by accident.
-    const sections = ['product', 'journey', 'about', 'inquiry']
+    const sections = ['product', 'journey', 'events', 'about', 'inquiry']
     return {
       beforeFiles: [
         { source: '/', destination: '/en' },

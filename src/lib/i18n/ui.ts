@@ -1,9 +1,11 @@
-import type { Locale, SiteContent } from '../content/types'
+import type { EventLink, Locale, SiteContent } from '../content/types'
 import type { Element } from '../elements'
 import { defaultFields, type FormField, type LabelKey } from '../inquiry-fields'
 
 export type Dict = {
-  nav: { products: string; journeys: string; about: string; inquiry: string }
+  nav: { products: string; journeys: string; about: string; inquiry: string; events: string }
+  /** Where the menu's event entry leads, when there is one. See `withSite`. */
+  eventLink?: EventLink
   menu: string
   close: string
   languageLabel: string
@@ -67,6 +69,28 @@ export type Dict = {
     location: string
     inquire: string
     empty: string
+  }
+  events: {
+    eyebrow: string
+    headline: string
+    intro: string
+    detailEyebrow: string
+    upcoming: string
+    past: string
+    ended: string
+    empty: string
+    /** The hero's two invitations: down to the journeys, down to the days. */
+    toJourneys: string
+    toDays: string
+    chooseJourney: string
+    day: string
+    enquire: string
+    programme: string
+    pdf: string
+    contact: string
+    viewJourney: string
+    /** Between the day list and its detail on small screens. */
+    dayOf: string
   }
   inquiry: {
     metaTitle: string
@@ -138,7 +162,7 @@ const inquiryFields = (labels: Record<LabelKey, string>) => ({
 })
 
 const en: Dict = {
-  nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry' },
+  nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry', events: 'Events' },
   menu: 'Menu',
   close: 'Close',
   languageLabel: 'Language',
@@ -202,6 +226,26 @@ const en: Dict = {
     inquire: 'Inquire this journey',
     empty: 'Journeys are being prepared.',
   },
+  events: {
+    eyebrow: 'Events',
+    headline: 'Seasons we walk\ntowards together.',
+    intro: 'Festivals and gatherings, with the journeys that lead to them.',
+    detailEyebrow: 'Event',
+    upcoming: 'Coming up',
+    past: 'Past events',
+    ended: 'This event has passed. Its journeys can still be shaped for you.',
+    empty: 'No events are announced yet.',
+    toJourneys: 'Choose your journey',
+    toDays: 'The days',
+    chooseJourney: 'Choose your journey',
+    day: 'Day',
+    enquire: 'Enquire',
+    programme: 'Full programme (PDF)',
+    pdf: 'PDF',
+    contact: 'Contact',
+    viewJourney: 'See the full journey',
+    dayOf: 'of',
+  },
   inquiry: {
     metaTitle: 'Inquiry · Atibhagya',
     metaDescription: 'A few details help us shape the right wellness experience.',
@@ -260,7 +304,7 @@ const en: Dict = {
 }
 
 const id: Dict = {
-  nav: { products: 'Pengalaman', journeys: 'Perjalanan', about: 'Tentang', inquiry: 'Kontak' },
+  nav: { products: 'Pengalaman', journeys: 'Perjalanan', about: 'Tentang', inquiry: 'Kontak', events: 'Acara' },
   menu: 'Menu',
   close: 'Tutup',
   languageLabel: 'Bahasa',
@@ -323,6 +367,26 @@ const id: Dict = {
     location: 'Preferensi lokasi',
     inquire: 'Tanyakan perjalanan ini',
     empty: 'Perjalanan sedang disiapkan.',
+  },
+  events: {
+    eyebrow: 'Acara',
+    headline: 'Musim yang kita\ntempuh bersama.',
+    intro: 'Festival dan perayaan, beserta perjalanan yang menuju ke sana.',
+    detailEyebrow: 'Acara',
+    upcoming: 'Akan datang',
+    past: 'Telah berlalu',
+    ended: 'Acara ini telah berlalu. Perjalanannya tetap bisa kami rangkai untuk Anda.',
+    empty: 'Belum ada acara yang diumumkan.',
+    toJourneys: 'Pilih perjalanan Anda',
+    toDays: 'Hari-harinya',
+    chooseJourney: 'Pilih perjalanan Anda',
+    day: 'Hari',
+    enquire: 'Tanyakan',
+    programme: 'Program lengkap (PDF)',
+    pdf: 'PDF',
+    contact: 'Narahubung',
+    viewJourney: 'Lihat perjalanan lengkap',
+    dayOf: 'dari',
   },
   inquiry: {
     metaTitle: 'Kontak · Atibhagya',
@@ -392,4 +456,5 @@ export const dict = (locale: Locale): Dict => (locale === 'id' ? id : en)
 export const withSite = (t: Dict, site: SiteContent): Dict => ({
   ...t,
   nav: { ...t.nav, ...site.nav },
+  eventLink: site.eventLink,
 })

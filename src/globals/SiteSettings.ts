@@ -35,10 +35,11 @@ export const SiteSettings: GlobalConfig = {
         navJourneys: text((l) => defaults(l).site.nav.journeys),
         navAbout: text((l) => defaults(l).site.nav.about),
         navInquiry: text((l) => defaults(l).site.nav.inquiry),
+        navEvents: text((l) => defaults(l).site.nav.events),
       }),
     ],
     beforeChange: [stampUpdatedByGlobal],
-    afterChange: [revalidateGlobal(['/', '/product', '/journey', '/about', '/inquiry'])],
+    afterChange: [revalidateGlobal(['/', '/product', '/journey', '/about', '/inquiry', '/events'])],
   },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
@@ -69,6 +70,31 @@ export const SiteSettings: GlobalConfig = {
           fields: [
             { name: 'navAbout', type: 'text', localized: true, label: 'About page' },
             { name: 'navInquiry', type: 'text', localized: true, label: 'Inquiry' },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'navEvents',
+              type: 'text',
+              localized: true,
+              label: 'Events page',
+              admin: {
+                description:
+                  'Shown when there are events but none still to come; the menu then leads to the events page (/events).',
+              },
+            },
+            {
+              name: 'navEventDirect',
+              type: 'checkbox',
+              defaultValue: true,
+              label: 'Menu leads straight to the live event',
+              admin: {
+                description:
+                  'While an event is published and still to come, the menu shows that event’s own word and opens its page. Off: the menu always says the word to the left and opens the events page.',
+              },
+            },
           ],
         },
       ],

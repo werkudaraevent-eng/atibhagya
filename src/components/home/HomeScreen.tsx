@@ -1,6 +1,7 @@
 import { Motion } from '@/components/Motion'
 import { ClosingCta } from '@/components/home/ClosingCta'
 import { Hero } from '@/components/home/Hero'
+import { HomeEvent } from '@/components/home/HomeEvent'
 import { Why } from '@/components/home/Why'
 import { ProductGrid } from '@/components/products/ProductCard'
 import { Footer } from '@/components/site/Footer'
@@ -8,7 +9,7 @@ import { SectionMark } from '@/components/site/Ornament'
 import { Nav } from '@/components/site/Nav'
 import { PageMarks } from '@/components/site/PageMarks'
 import page from '@/components/site/Page.module.css'
-import { getFeaturedProducts, getHome, getSite } from '@/lib/content'
+import { getFeaturedProducts, getHome, getHomeEvent, getSite } from '@/lib/content'
 import { toCard, type Locale } from '@/lib/content/types'
 import { dict, withSite } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
@@ -32,12 +33,15 @@ export async function HomeScreen({ locale, draft = false }: Props) {
     getFeaturedProducts(locale),
   ])
   const t = withSite(dict(locale), site)
+  // The season's chapter, while there is one still to come.
+  const event = await getHomeEvent(locale, home.event.featuredId)
 
   // The stops on the path indicator, in the words the sections already use.
   const stages = [
     { id: 'top', label: 'Atibhagya' },
     { id: 'why', label: home.why.eyebrow },
     { id: 'featured', label: home.featured.eyebrow },
+    ...(event ? [{ id: 'event', label: home.event.label }] : []),
     { id: 'inquiry', label: t.nav.inquiry },
     { id: 'foot', label: t.footer.enquiries },
   ]
@@ -66,6 +70,8 @@ export async function HomeScreen({ locale, draft = false }: Props) {
             <ProductGrid products={featured.map(toCard)} locale={locale} />
           </div>
         </section>
+
+        {event ? <HomeEvent event={event} copy={home.event} locale={locale} number="03" /> : null}
 
         <ClosingCta cta={home.cta} href={`${prefix}/inquiry`} stage={t.nav.inquiry} />
       </main>

@@ -12,6 +12,7 @@ import { id } from '@payloadcms/translations/languages/id'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 
+import { Events } from './collections/Events'
 import { Facilitators } from './collections/Facilitators'
 import { Inquiries } from './collections/Inquiries'
 import { Journeys } from './collections/Journeys'
@@ -87,7 +88,13 @@ const storage = process.env.S3_BUCKET
  * production; a push is none of those.
  */
 const db = databaseURI.startsWith('file:')
-  ? sqliteAdapter({ client: { url: databaseURI } })
+  ? sqliteAdapter({
+      client: { url: databaseURI },
+      // A script run beside `next dev` must not push too: two pushes at
+      // once leave the file half-reshaped. `DB_PUSH=false npm run seed:…`
+      // lets the dev server own the schema.
+      push: process.env.DB_PUSH !== 'false',
+    })
   : postgresAdapter({
       pool: { connectionString: databaseURI },
       push: false,
@@ -105,6 +112,7 @@ const pathFor = (collection: string, slug: unknown, locale?: string) => {
   const prefix = locale === 'id' ? '/id' : ''
   if (collection === 'products') return `${prefix}/preview/product/${slug}`
   if (collection === 'journeys') return `${prefix}/preview/journey/${slug}`
+  if (collection === 'events') return `${prefix}/preview/event/${slug}`
   if (collection === 'about') return `${prefix}/preview/about`
   if (collection === 'inquiry-form') return `${prefix}/preview/inquiry`
   if (collection === 'catalogue') return `${prefix}/preview/catalogue`
@@ -148,7 +156,7 @@ export default buildConfig({
       // Everything that has a page to show. Venues and facilitators appear
       // inside product pages and have none of their own; media has its
       // "where used" panel; inquiries and users are records, not pages.
-      collections: ['products', 'journeys', 'product-categories'],
+      collections: ['products', 'journeys', 'events', 'product-categories'],
       globals: ['home', 'about', 'catalogue', 'inquiry-form', 'site'],
       url: ({ data, collectionConfig, globalConfig, locale }) =>
         `${serverURL}${pathFor(
@@ -168,6 +176,7 @@ export default buildConfig({
     ProductCategories,
     Products,
     Journeys,
+    Events,
     Venues,
     Facilitators,
     Inquiries,

@@ -100,6 +100,11 @@
   transform: scaleX(1);
 }
 
+/* The live event, in the menu's gold. */
+.linkLive {
+  color: var(--emas-hover);
+}
+
 .social {
   margin-top: 6px;
   font: 300 calc(14.5px * var(--type-scale))/1.5 var(--font-karla), sans-serif;

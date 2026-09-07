@@ -42,6 +42,17 @@ export const revalidateCatalogue =
       ...both(`/${section}`),
       ...[...slugs].flatMap((slug) => both(`/${section}/${slug}`)),
     ])
+    // A journey also appears on any event that offers it. Which events
+    // cannot be told from here, so every event page is rebuilt.
+    if (section === 'journey') {
+      try {
+        const { revalidatePath } = await import('next/cache')
+        revalidatePath('/[locale]/events/[slug]', 'page')
+        revalidatePath('/[locale]/events', 'page')
+      } catch {
+        // Outside Next: nothing to revalidate.
+      }
+    }
     return doc
   }
 

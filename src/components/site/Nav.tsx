@@ -72,10 +72,16 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
     { label: dict.nav.products, href: `${prefix}/product` },
     { label: dict.nav.journeys, href: `${prefix}/journey` },
     { label: dict.nav.about, href: `${prefix}/about` },
+    // The season, while there is one: a live event by its own word, marked
+    // with a breathing gold point; otherwise the events page, unmarked.
+    ...(dict.eventLink
+      ? [{ label: dict.eventLink.label, href: `${prefix}${dict.eventLink.href}`, live: dict.eventLink.live }]
+      : []),
   ]
   const inquiryHref = `${prefix}/inquiry`
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
+  const isEventPage = (href: string) => href.includes('/events')
 
   return (
     // `data-menu-open`, not `data-open`: the latter is the motion system's
@@ -99,8 +105,17 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
             <Link
               key={link.href}
               href={link.href}
-              className={isActive(link.href) ? `${styles.link} ${styles.linkActive}` : styles.link}
+              className={[
+                styles.link,
+                isActive(link.href) || (isEventPage(link.href) && pathname.includes('/events'))
+                  ? styles.linkActive
+                  : '',
+                'live' in link && link.live ? styles.linkLive : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
+              {'live' in link && link.live ? <span className={styles.livePoint} aria-hidden="true" /> : null}
               {link.label}
             </Link>
           ))}
@@ -149,10 +164,15 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
             <Link
               key={link.href}
               href={link.href}
-              className={isActive(link.href) ? styles.panelLinkActive : undefined}
+              className={
+                isActive(link.href) || (isEventPage(link.href) && pathname.includes('/events'))
+                  ? styles.panelLinkActive
+                  : undefined
+              }
               style={{ transitionDelay: open ? `${80 + i * 60}ms` : '0ms' }}
               onClick={() => setOpen(false)}
             >
+              {'live' in link && link.live ? <span className={styles.livePoint} aria-hidden="true" /> : null}
               {link.label}
             </Link>
           ))}

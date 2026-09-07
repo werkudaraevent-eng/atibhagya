@@ -24,7 +24,9 @@
     "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed.ts",
     "import:products": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/import-products.ts",
     "import:products:staging": "tsx src/scripts/on-staging.ts import:products",
-    "seed:staging": "tsx src/scripts/on-staging.ts seed"
+    "seed:staging": "tsx src/scripts/on-staging.ts seed",
+    "seed:event": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-event.ts",
+    "seed:event:staging": "tsx src/scripts/on-staging.ts seed:event"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

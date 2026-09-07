@@ -61,6 +61,7 @@ function fresh(scope: ParentNode, selector: string): HTMLElement[] {
  *   data-heroword    hero text parallax and fade
  *   data-para        image parallax inside a clipping parent
  *   data-clip        clip-path reveal tied to scroll position
+ *   data-procline    a vertical thread whose fill follows the scroll
  *   data-row-index   feeds the running N° in the margin
  *   data-stage       a section (with an id) that is a stop on the path
  *                    indicator; with data-chapter="01", also a chapter
@@ -593,6 +594,22 @@ export function Motion() {
                     end: 'bottom top',
                     scrub: true,
                   },
+                },
+              )
+            })
+
+            // A thread that fills as it is read: its height follows the
+            // scroll from the moment its top passes three quarters of the
+            // viewport until its bottom does. The design's own mapping.
+            gsap.utils.toArray<HTMLElement>('[data-procline]').forEach((el) => {
+              const track = el.parentElement ?? el
+              gsap.fromTo(
+                el,
+                { height: '0%' },
+                {
+                  height: '100%',
+                  ease: 'none',
+                  scrollTrigger: { trigger: track, start: 'top 75%', end: 'bottom 75%', scrub: 0.4 },
                 },
               )
             })
