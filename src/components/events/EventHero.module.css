@@ -39,12 +39,17 @@
   opacity: 0;
 }
 
+/* Spans the whole hero and pushes its words to the foot, rather than
+   sitting at the foot: the scroll fade (data-heroword) starts when this
+   box's top meets the viewport's, so the box has to start where the hero
+   does — or the words would still be solid as they slid under the header. */
 .word {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0 clamp(24px, 5vw, 64px) 11vh;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 120px clamp(24px, 5vw, 64px) 11vh;
   color: #f6f3e7;
   transform: translateY(var(--hero-shift, 0px));
   will-change: transform, opacity;

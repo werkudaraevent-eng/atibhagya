@@ -41,12 +41,17 @@
     );
 }
 
+/* Spans the whole opening and pushes its words to the foot, so the scroll
+   fade (data-heroword, which starts when this box's top meets the
+   viewport's) begins with the first scroll — not once the words are already
+   sliding under the header. */
 .openingContent {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: clamp(48px, 10vh, 96px);
-  padding: 0 clamp(24px, 5vw, 64px);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 120px clamp(24px, 5vw, 64px) clamp(48px, 10vh, 96px);
   max-width: 1160px;
   margin: 0 auto;
   transform: translateY(var(--hero-shift, 0px));
