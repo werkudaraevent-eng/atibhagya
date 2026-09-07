@@ -3,7 +3,7 @@ import type { FieldAccess, GlobalConfig } from 'payload'
 import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { plain, prefillGlobal, text } from '../lib/prefill'
-import { revalidateGlobal } from '../lib/revalidate'
+import { revalidateEverythingGlobal } from '../lib/revalidate'
 
 /** Internal addresses stay out of the public API response. */
 const staffOnly: FieldAccess = ({ req: { user } }) => Boolean(user)
@@ -39,7 +39,7 @@ export const SiteSettings: GlobalConfig = {
       }),
     ],
     beforeChange: [stampUpdatedByGlobal],
-    afterChange: [revalidateGlobal(['/', '/product', '/journey', '/about', '/inquiry', '/events'])],
+    afterChange: [revalidateEverythingGlobal],
   },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document

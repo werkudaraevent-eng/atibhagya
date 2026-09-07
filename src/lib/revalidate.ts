@@ -71,6 +71,20 @@ export const revalidateEverything: CollectionAfterChangeHook = async ({ doc }) =
   return doc
 }
 
+/**
+ * Site settings sit in the header and footer of every page — the menu
+ * words, the event link — so every page under the locale layout is rebuilt.
+ */
+export const revalidateEverythingGlobal: GlobalAfterChangeHook = async ({ doc }) => {
+  try {
+    const { revalidatePath } = await import('next/cache')
+    revalidatePath('/[locale]', 'layout')
+  } catch {
+    // Outside Next (scripts, tests): nothing to revalidate.
+  }
+  return doc
+}
+
 /** A global maps to a handful of known routes. */
 export const revalidateGlobal =
   (paths: string[]): GlobalAfterChangeHook =>

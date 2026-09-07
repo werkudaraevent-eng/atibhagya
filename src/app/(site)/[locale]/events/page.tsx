@@ -11,6 +11,7 @@ import { getEvents, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
 import { dict, withSite } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
+import styles from './events-list.module.css'
 
 export const revalidate = 300
 
@@ -83,7 +84,12 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
         ) : null}
 
         {upcoming.length ? (
-          <section id="upcoming" className={page.section} data-stage={t.events.upcoming} data-chapter="01">
+          <section
+            id="upcoming"
+            className={`${page.section} ${styles.first}`}
+            data-stage={t.events.upcoming}
+            data-chapter="01"
+          >
             <div className={page.container}>
               <SectionMark number="01" mark="wave" label={t.events.upcoming} align="start" />
               <EventList events={upcoming} locale={locale} dict={t} lead />
@@ -94,7 +100,9 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
         {past.length ? (
           <section
             id="past"
-            className={`${page.section} ${page.sectionAlt}`}
+            className={
+              upcoming.length ? `${page.section} ${page.sectionAlt}` : `${page.section} ${page.sectionAlt} ${styles.first}`
+            }
             data-stage={t.events.past}
             data-chapter={upcoming.length ? '02' : '01'}
           >
