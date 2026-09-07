@@ -2,7 +2,7 @@
   position: relative;
   height: 100vh;
   height: 100svh;
-  min-height: 640px;
+  min-height: 560px;
   overflow: hidden;
   background: var(--biru-footer);
 }
@@ -49,7 +49,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 120px clamp(24px, 5vw, 64px) 11vh;
+  padding: 110px clamp(24px, 5vw, 64px) clamp(40px, 9vh, 96px);
   color: #f6f3e7;
   transform: translateY(var(--hero-shift, 0px));
   will-change: transform, opacity;
@@ -169,11 +169,44 @@
   }
 }
 
-@media (max-width: 860px) {
-  .hero {
-    min-height: 560px;
+/* A short viewport — a laptop at 125% with the taskbar — gets the same
+   words at a smaller size and tighter spacing, so the whole opening still
+   fits one screen. */
+@media (max-height: 720px) {
+  .word {
+    padding-top: 96px;
   }
 
+  .eyebrow {
+    font-size: calc(10px * var(--type-scale));
+  }
+
+  .headline {
+    margin-top: 18px;
+    font-size: clamp(30px, 3.8vw, 52px);
+  }
+
+  .statement {
+    margin-top: 18px;
+    max-width: 56ch;
+    font-size: calc(15px * var(--type-scale));
+    line-height: 1.7;
+  }
+
+  .actions {
+    margin-top: 26px;
+  }
+
+  .dates {
+    gap: 16px;
+  }
+
+  .dateValue {
+    font-size: calc(19px * var(--type-scale));
+  }
+}
+
+@media (max-width: 860px) {
   .grid {
     grid-template-columns: 1fr;
     gap: 28px;
