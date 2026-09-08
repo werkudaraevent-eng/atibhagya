@@ -296,7 +296,9 @@ export async function getHome(locale: Locale, options: ReadOptions = {}): Promis
         description: or(home.metaDescription, fallback.meta.description),
       },
       hero: {
-        eyebrow: or(home.heroEyebrow, fallback.hero.eyebrow),
+        // Empty falls back to the approved line; the checkbox is how the
+        // team asks for nothing there.
+        eyebrow: home.heroEyebrowHidden === true ? '' : or(home.heroEyebrow, fallback.hero.eyebrow),
         headline: or(home.heroHeadline, fallback.hero.headline),
         statement: or(home.heroStatement, fallback.hero.statement),
         ctaLabel: or(home.heroCtaLabel, fallback.hero.ctaLabel),
