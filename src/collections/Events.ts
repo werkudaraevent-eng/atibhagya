@@ -244,6 +244,21 @@ export const Events: CollectionConfig = {
             longText('closingBody'),
             text('closingCtaLabel', { description: 'On the button; leads to the inquiry form.' }),
             {
+              name: 'downloads',
+              type: 'array',
+              labels: { singular: 'Download', plural: 'Downloads' },
+              maxRows: 4,
+              admin: {
+                description:
+                  'Brochures and other PDFs, offered as links beside the button — e.g. "Festival brochure (PDF)". The journey programme has its own field on the Journeys tab.',
+                components: { RowLabel: '@/admin/RowLabel#RowLabel' },
+              },
+              fields: [
+                text('label', { required: true, description: 'e.g. Festival brochure (PDF)' }),
+                { name: 'file', type: 'upload', relationTo: 'media', required: true, validate: pdfFile },
+              ],
+            },
+            {
               name: 'closingImage',
               type: 'upload',
               relationTo: 'media',

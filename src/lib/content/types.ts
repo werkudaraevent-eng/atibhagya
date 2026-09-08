@@ -267,6 +267,8 @@ export type EventContent = {
     headline?: string
     body?: string
     ctaLabel?: string
+    /** Brochures and the like, as links beside the button. */
+    downloads: { label: string; href: string }[]
     image: Img
     contactName?: string
     contactLine?: string

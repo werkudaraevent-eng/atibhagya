@@ -50,6 +50,11 @@ export function EventClosing({ closing, id, stage, inquiryHref, dict }: Props) {
             <Link href={inquiryHref} className={page.buttonGhost}>
               {closing.ctaLabel ?? dict.inquiry.eyebrow}
             </Link>
+            {closing.downloads.map((d) => (
+              <a key={d.href} href={d.href} className={styles.download} target="_blank" rel="noopener noreferrer">
+                {d.label}
+              </a>
+            ))}
           </div>
         </div>
 

@@ -825,6 +825,9 @@ const toEvent = (doc: Any): EventContent => {
       headline: str(doc.closingHeadline),
       body: str(doc.closingBody),
       ctaLabel: str(doc.closingCtaLabel),
+      downloads: (Array.isArray(doc.downloads) ? doc.downloads : [])
+        .filter((d: Any) => d?.label && d?.file && typeof d.file === 'object' && d.file.url)
+        .map((d: Any) => ({ label: String(d.label), href: localise(String(d.file.url)) })),
       image: toImg(doc.closingImage, heroImage),
       contactName: str(doc.contactName),
       contactLine: str(doc.contactLine),

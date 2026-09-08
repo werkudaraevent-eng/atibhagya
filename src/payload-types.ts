@@ -574,6 +574,9 @@ export interface Event {
    * Two or three lines under the headline.
    */
   statement?: string | null;
+  /**
+   * Full-screen behind the headline at the top of the event page. Also the fallback for the closing and home page photographs.
+   */
   heroImage?: (number | null) | Media;
   /**
    * One row per day of the event. The last date decides when the event moves to the archive.
@@ -663,6 +666,9 @@ export interface Event {
   placeCaption?: string | null;
   placeHeadline?: string | null;
   placeBody?: string | null;
+  /**
+   * Tall (4:5) beside the number.
+   */
   placeImage?: (number | null) | Media;
   /**
    * e.g. "Three curated journeys"
@@ -691,6 +697,22 @@ export interface Event {
    * On the button; leads to the inquiry form.
    */
   closingCtaLabel?: string | null;
+  /**
+   * Brochures and other PDFs, offered as links beside the button — e.g. "Festival brochure (PDF)". The journey programme has its own field on the Journeys tab.
+   */
+  downloads?:
+    | {
+        /**
+         * e.g. Festival brochure (PDF)
+         */
+        label: string;
+        file: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Behind the invitation at the foot of the page. Empty uses the opening photograph.
+   */
   closingImage?: (number | null) | Media;
   contactName?: string | null;
   /**
@@ -714,7 +736,7 @@ export interface Event {
    */
   homeBody?: string | null;
   /**
-   * Empty uses the hero image.
+   * Only on the home page block and the events list — not on the event page itself. Empty uses the opening photograph.
    */
   homeImage?: (number | null) | Media;
   metaTitle?: string | null;
@@ -1279,6 +1301,13 @@ export interface EventsSelect<T extends boolean = true> {
   closingHeadline?: T;
   closingBody?: T;
   closingCtaLabel?: T;
+  downloads?:
+    | T
+    | {
+        label?: T;
+        file?: T;
+        id?: T;
+      };
   closingImage?: T;
   contactName?: T;
   contactLine?: T;

@@ -6,6 +6,7 @@ import * as migration_20260903_040716_privacy_note from './20260903_040716_priva
 import * as migration_20260903_042749_updated_by from './20260903_042749_updated_by';
 import * as migration_20260904_122027_nav_labels from './20260904_122027_nav_labels';
 import * as migration_20260907_100513_events from './20260907_100513_events';
+import * as migration_20260908_005848_event_downloads from './20260908_005848_event_downloads';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260907_100513_events.up,
     down: migration_20260907_100513_events.down,
-    name: '20260907_100513_events'
+    name: '20260907_100513_events',
+  },
+  {
+    up: migration_20260908_005848_event_downloads.up,
+    down: migration_20260908_005848_event_downloads.down,
+    name: '20260908_005848_event_downloads'
   },
 ];

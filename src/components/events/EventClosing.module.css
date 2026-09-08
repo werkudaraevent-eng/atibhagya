@@ -67,6 +67,28 @@
 
 .actions {
   margin-top: 34px;
+  display: flex;
+  align-items: center;
+  gap: 16px 28px;
+  flex-wrap: wrap;
+}
+
+/* A brochure is a word with a rule beside the button, in the hero's voice. */
+.download {
+  padding: 6px 0;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 231, 0.78);
+  border-bottom: 1px solid rgba(246, 243, 231, 0.3);
+  transition:
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.download:hover {
+  color: var(--emas-hover);
+  border-color: var(--emas-hover);
 }
 
 .contact {
