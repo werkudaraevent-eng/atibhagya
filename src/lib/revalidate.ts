@@ -57,31 +57,49 @@ export const revalidateCatalogue =
   }
 
 /**
- * Master data — a venue, a facilitator, a photograph — appears on pages that
- * cannot be enumerated from here, so every page under the locale layout is
- * rebuilt on next request rather than a guessed subset.
+ * Every route the site has, as the patterns Next knows them by. Naming each
+ * with type `page` is what actually clears them on Vercel: asking for the
+ * `/[locale]` layout looked right but left the prerendered pages in place,
+ * and a change to the footer took the full ISR window to show.
  */
-export const revalidateEverything: CollectionAfterChangeHook = async ({ doc }) => {
+const EVERY_ROUTE = [
+  '/[locale]',
+  '/[locale]/product',
+  '/[locale]/product/[slug]',
+  '/[locale]/journey',
+  '/[locale]/journey/[slug]',
+  '/[locale]/events',
+  '/[locale]/events/[slug]',
+  '/[locale]/about',
+  '/[locale]/inquiry',
+]
+
+async function revalidateAll() {
   try {
     const { revalidatePath } = await import('next/cache')
+    for (const route of EVERY_ROUTE) revalidatePath(route, 'page')
     revalidatePath('/[locale]', 'layout')
   } catch {
     // Outside Next (scripts, tests): nothing to revalidate.
   }
+}
+
+/**
+ * Master data — a venue, a facilitator, a photograph, an event in the menu —
+ * appears on pages that cannot be enumerated from here, so every page is
+ * rebuilt on next request rather than a guessed subset.
+ */
+export const revalidateEverything: CollectionAfterChangeHook = async ({ doc }) => {
+  await revalidateAll()
   return doc
 }
 
 /**
  * Site settings sit in the header and footer of every page — the menu
- * words, the event link — so every page under the locale layout is rebuilt.
+ * words, the contact details, the event link — so every page is rebuilt.
  */
 export const revalidateEverythingGlobal: GlobalAfterChangeHook = async ({ doc }) => {
-  try {
-    const { revalidatePath } = await import('next/cache')
-    revalidatePath('/[locale]', 'layout')
-  } catch {
-    // Outside Next (scripts, tests): nothing to revalidate.
-  }
+  await revalidateAll()
   return doc
 }
 
