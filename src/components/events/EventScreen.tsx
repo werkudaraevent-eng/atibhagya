@@ -118,6 +118,7 @@ export async function EventScreen({ locale, slug, draft = false }: Props) {
             stage={labels.closing}
             inquiryHref={inquiryHref}
             dict={t}
+            programmeUrl={hasJourneys ? event.pdfUrl : undefined}
           />
         ) : null}
       </main>

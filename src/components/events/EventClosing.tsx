@@ -13,14 +13,22 @@ type Props = {
   stage: string
   inquiryHref: string
   dict: Dict
+  /** The journeys' programme, offered here again so the foot of the page has every file. */
+  programmeUrl?: string
 }
 
 /**
  * The invitation: a full-bleed photograph under a dark scrim, the words at
  * its foot, and — when the team has given one — the festival's contact.
  */
-export function EventClosing({ closing, id, stage, inquiryHref, dict }: Props) {
+export function EventClosing({ closing, id, stage, inquiryHref, dict, programmeUrl }: Props) {
   const hasContact = closing.contactName || closing.contactLine || closing.collaborationLine
+  const downloads = [
+    ...closing.downloads,
+    ...(programmeUrl && !closing.downloads.some((d) => d.href === programmeUrl)
+      ? [{ label: dict.events.programme, href: programmeUrl }]
+      : []),
+  ]
 
   return (
     <section id={id} className={styles.section} data-stage={stage} data-dark>
@@ -50,7 +58,7 @@ export function EventClosing({ closing, id, stage, inquiryHref, dict }: Props) {
             <Link href={inquiryHref} className={page.buttonGhost}>
               {closing.ctaLabel ?? dict.inquiry.eyebrow}
             </Link>
-            {closing.downloads.map((d) => (
+            {downloads.map((d) => (
               <a key={d.href} href={d.href} className={styles.download} target="_blank" rel="noopener noreferrer">
                 {d.label}
               </a>
