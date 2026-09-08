@@ -181,6 +181,7 @@ export type Pillar = {
 export type HomeContent = {
   meta: { title: string; description: string }
   hero: {
+    /** Empty when the team has chosen to show no small line. */
     eyebrow: string
     headline: string
     statement: string

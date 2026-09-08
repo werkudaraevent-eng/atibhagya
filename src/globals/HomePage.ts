@@ -57,7 +57,21 @@ export const HomePage: GlobalConfig = {
         {
           label: 'Opening',
           fields: [
-            { name: 'heroEyebrow', type: 'text', localized: true },
+            {
+              type: 'row',
+              fields: [
+                { name: 'heroEyebrow', type: 'text', localized: true },
+                {
+                  name: 'heroEyebrowHidden',
+                  type: 'checkbox',
+                  label: 'Hide the small line above the headline',
+                  admin: {
+                    description:
+                      'An empty box would fall back to the approved words; tick this to show nothing there.',
+                  },
+                },
+              ],
+            },
             {
               name: 'heroHeadline',
               type: 'textarea',

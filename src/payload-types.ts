@@ -1647,6 +1647,10 @@ export interface Home {
   updatedBy?: (number | null) | User;
   heroEyebrow?: string | null;
   /**
+   * An empty box would fall back to the approved words; tick this to show nothing there.
+   */
+  heroEyebrowHidden?: boolean | null;
+  /**
    * Line breaks are kept — they set the shape of the headline.
    */
   heroHeadline?: string | null;
@@ -2021,6 +2025,7 @@ export interface Site {
 export interface HomeSelect<T extends boolean = true> {
   updatedBy?: T;
   heroEyebrow?: T;
+  heroEyebrowHidden?: T;
   heroHeadline?: T;
   heroStatement?: T;
   heroCtaLabel?: T;

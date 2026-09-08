@@ -48,9 +48,11 @@ export function Hero({ hero, ctaHref }: Props) {
           Each waits its turn (data-delay, seconds) — a door opening, not
           a slide appearing. */}
       <div className={styles.word} data-heroword>
-        <div className={styles.eyebrow} data-fade data-delay="0.15">
-          {hero.eyebrow}
-        </div>
+        {hero.eyebrow ? (
+          <div className={styles.eyebrow} data-fade data-delay="0.15">
+            {hero.eyebrow}
+          </div>
+        ) : null}
         <h1 className={styles.headline} data-words data-delay="0.5">
           <Lines text={hero.headline} />
         </h1>
