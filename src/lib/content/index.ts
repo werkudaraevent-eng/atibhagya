@@ -797,6 +797,8 @@ const toEvent = (doc: Any): EventContent => {
     headline,
     statement: str(doc.statement),
     heroImage,
+    heroDarken:
+      typeof doc.heroDarken === 'number' ? Math.min(100, Math.max(0, doc.heroDarken)) / 100 : 0.35,
     dates,
     live: isLive(dates),
     intro: { label: str(doc.introLabel), headline: str(doc.introHeadline), body: str(doc.introBody) },

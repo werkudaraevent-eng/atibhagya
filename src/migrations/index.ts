@@ -7,6 +7,7 @@ import * as migration_20260903_042749_updated_by from './20260903_042749_updated
 import * as migration_20260904_122027_nav_labels from './20260904_122027_nav_labels';
 import * as migration_20260907_100513_events from './20260907_100513_events';
 import * as migration_20260908_005848_event_downloads from './20260908_005848_event_downloads';
+import * as migration_20260908_013334_event_hero_darken from './20260908_013334_event_hero_darken';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260908_005848_event_downloads.up,
     down: migration_20260908_005848_event_downloads.down,
-    name: '20260908_005848_event_downloads'
+    name: '20260908_005848_event_downloads',
+  },
+  {
+    up: migration_20260908_013334_event_hero_darken.up,
+    down: migration_20260908_013334_event_hero_darken.down,
+    name: '20260908_013334_event_hero_darken'
   },
 ];

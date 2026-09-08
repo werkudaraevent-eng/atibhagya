@@ -7,13 +7,14 @@
   background: var(--biru-footer);
 }
 
-/* The same grade as the home hero, at its default strength. */
+/* The same grade as the home hero, on the event's own Darken slider. */
 .zoom {
   position: absolute;
   inset: 0;
   will-change: transform;
   transform-origin: 50% 45%;
-  filter: brightness(0.85) saturate(0.72) contrast(1.02);
+  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.35))
+    saturate(calc(1 - var(--hero-darken, 0.35) * 0.45)) contrast(1.02);
 }
 
 /* Darker at the foot than the home hero: the words sit there, not centred. */
@@ -25,9 +26,9 @@
     linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
     linear-gradient(
       180deg,
-      rgba(13, 28, 39, 0.35) 0%,
-      rgba(13, 28, 39, 0.15) 40%,
-      rgba(13, 28, 39, 0.85) 100%
+      rgba(13, 28, 39, calc(var(--hero-darken, 0.35) * 0.6)) 0%,
+      rgba(13, 28, 39, calc(var(--hero-darken, 0.35) * 0.3)) 40%,
+      rgba(13, 28, 39, calc(0.55 + var(--hero-darken, 0.35) * 0.6)) 100%
     );
 }
 

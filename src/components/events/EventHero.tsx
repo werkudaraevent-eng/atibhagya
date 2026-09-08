@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 
 import { CreditImage } from '@/components/CreditImage'
 import page from '@/components/site/Page.module.css'
@@ -25,7 +26,12 @@ export function EventHero({ event, locale, dict, journeysId, daysId }: Props) {
   const t = dict.events
 
   return (
-    <section id="top" className={styles.hero} data-stage={event.eyebrow ?? t.detailEyebrow}>
+    <section
+      id="top"
+      className={styles.hero}
+      data-stage={event.eyebrow ?? t.detailEyebrow}
+      style={{ '--hero-darken': event.heroDarken } as CSSProperties}
+    >
       <div className={styles.zoom} data-zoom>
         <CreditImage image={event.heroImage} sizes="100vw" priority />
       </div>

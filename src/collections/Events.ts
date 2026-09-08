@@ -86,6 +86,18 @@ export const Events: CollectionConfig = {
               },
             },
             {
+              name: 'heroDarken',
+              type: 'number',
+              label: 'Darken photograph',
+              min: 0,
+              max: 100,
+              defaultValue: 35,
+              admin: {
+                description:
+                  '0–100. How much the photograph is toned down behind the words. 0 shows it exactly as shot, with only a soft shade at the foot for the words; a bright or busy photograph needs 40–60. Watch the preview while you change it.',
+              },
+            },
+            {
               name: 'dates',
               type: 'array',
               labels: { singular: 'Date', plural: 'Dates' },

@@ -247,6 +247,8 @@ export type EventContent = {
   headline: string
   statement?: string
   heroImage: Img
+  /** 0–1: how far the opening photograph is toned down behind the type. */
+  heroDarken: number
   dates: EventDate[]
   /** Worked out from the dates: still to come (or on), or already past. */
   live: boolean

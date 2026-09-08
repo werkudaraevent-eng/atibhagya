@@ -23,10 +23,12 @@
   inset: 0;
   will-change: transform;
   transform-origin: 50% 45%;
-  /* The grade, part one: quieter colour. Saturation comes down further than
-     before, so a bright blue noon or a red bloom stops shouting over the
-     ivory type; contrast stays gentle. */
-  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.42)) saturate(0.72) contrast(1.02);
+  /* The grade, part one: quieter colour — but only as much as the Darken
+     slider asks. At 0 the photograph is untouched; at the default 35 it
+     loses a sixth of its saturation, at 60 a quarter. A photograph the
+     client shot for the brand needs little of this; a stock noon needs more. */
+  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.35))
+    saturate(calc(1 - var(--hero-darken, 0.35) * 0.45)) contrast(1.02);
 }
 
 /* The grade, part two: the brand's own light, laid over any photograph.
@@ -41,12 +43,12 @@
   background:
     linear-gradient(
       205deg,
-      rgba(246, 236, 214, calc(0.28 + var(--hero-darken, 0.35) * 0.3)) 0%,
+      rgba(246, 236, 214, calc(0.1 + var(--hero-darken, 0.35) * 0.3)) 0%,
       rgba(246, 236, 214, 0) 44%
     ),
     linear-gradient(
       12deg,
-      rgba(16, 34, 47, calc(0.5 + var(--hero-darken, 0.35) * 0.5)) 0%,
+      rgba(16, 34, 47, calc(0.2 + var(--hero-darken, 0.35) * 0.5)) 0%,
       rgba(16, 34, 47, 0) 62%
     );
   mix-blend-mode: soft-light;
@@ -59,7 +61,7 @@
   inset: 0;
   pointer-events: none;
   background: #10222f;
-  opacity: calc(0.1 + var(--hero-darken, 0.35) * 0.14);
+  opacity: calc(var(--hero-darken, 0.35) * 0.2);
   mix-blend-mode: color;
 }
 

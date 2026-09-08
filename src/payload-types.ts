@@ -579,6 +579,10 @@ export interface Event {
    */
   heroImage?: (number | null) | Media;
   /**
+   * 0–100. How much the photograph is toned down behind the words. 0 shows it exactly as shot, with only a soft shade at the foot for the words; a bright or busy photograph needs 40–60. Watch the preview while you change it.
+   */
+  heroDarken?: number | null;
+  /**
    * One row per day of the event. The last date decides when the event moves to the archive.
    */
   dates?:
@@ -1245,6 +1249,7 @@ export interface EventsSelect<T extends boolean = true> {
   headline?: T;
   statement?: T;
   heroImage?: T;
+  heroDarken?: T;
   dates?:
     | T
     | {
