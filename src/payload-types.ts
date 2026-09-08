@@ -70,6 +70,7 @@ export interface Config {
     'product-categories': ProductCategory;
     products: Product;
     journeys: Journey;
+    events: Event;
     venues: Venue;
     facilitators: Facilitator;
     inquiries: Inquiry;
@@ -102,6 +103,7 @@ export interface Config {
     'product-categories': ProductCategoriesSelect<false> | ProductCategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     journeys: JourneysSelect<false> | JourneysSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     venues: VenuesSelect<false> | VenuesSelect<true>;
     facilitators: FacilitatorsSelect<false> | FacilitatorsSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
@@ -176,6 +178,10 @@ export interface UserAuthOperations {
  */
 export interface ProductCategory {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   name: string;
   /**
    * Used in filter links, e.g. body-fit-care.
@@ -184,6 +190,38 @@ export interface ProductCategory {
   order?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Admins manage accounts and can delete content. Editors write and publish, but cannot create accounts or delete.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  /**
+   * Only an admin can change this.
+   */
+  roles: ('admin' | 'editor')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * Each experience in the catalogue. The reference code matches the printed catalogue.
@@ -254,6 +292,10 @@ export interface Product {
    */
   featured?: boolean | null;
   order?: number | null;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -264,6 +306,10 @@ export interface Product {
  */
 export interface Venue {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   name: string;
   location?: string | null;
   description?: string | null;
@@ -272,13 +318,17 @@ export interface Venue {
   createdAt: string;
 }
 /**
- * Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB.
+ * Photographs: JPEG, PNG, WebP or AVIF, exported at 2400px on the long edge and under 4 MB — BMP and TIFF cannot be shown on the web. Video (hero only): MP4 H.264 or WebM, 1920×1080, 10–15 s, no audio, under 12 MB. PDF (event programmes only): under 20 MB.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   /**
    * Described for screen readers, in the guest’s own language.
    */
@@ -384,6 +434,14 @@ export interface Journey {
   days?:
     | {
         title: string;
+        /**
+         * A few words under the title on an event page, e.g. "Arrive & settle".
+         */
+        kicker?: string | null;
+        /**
+         * The day of the event itself. On an event page it is marked in gold and its panel turns dark.
+         */
+        highlight?: boolean | null;
         note?: string | null;
         items?:
           | {
@@ -405,6 +463,10 @@ export interface Journey {
       }[]
     | null;
   durationText?: string | null;
+  /**
+   * The code on an event page’s journey chips, e.g. 4D3N.
+   */
+  durationShort?: string | null;
   facilities?:
     | {
         label: string;
@@ -434,6 +496,10 @@ export interface Journey {
     | null;
   slug: string;
   order?: number | null;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -444,6 +510,10 @@ export interface Journey {
  */
 export interface Facilitator {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   name: string;
   /**
    * Title or role.
@@ -479,6 +549,213 @@ export interface FolderInterface {
   folderType?: 'media'[] | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Dated occasions with their own page: a festival, a season. Published and still to come, an event appears in the menu and on the home page; once its last date has passed it moves to the archive by itself.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  /**
+   * The event’s name, e.g. "Prambanan Shiva Festival 2027".
+   */
+  title: string;
+  /**
+   * The small line above the headline, e.g. "Prambanan Shiva Festival 2027 · Yogyakarta".
+   */
+  eyebrow?: string | null;
+  /**
+   * The page’s first sentence, set large over the photograph.
+   */
+  headline?: string | null;
+  /**
+   * Two or three lines under the headline.
+   */
+  statement?: string | null;
+  /**
+   * Full-screen behind the headline at the top of the event page. Also the fallback for the closing and home page photographs.
+   */
+  heroImage?: (number | null) | Media;
+  /**
+   * 0–100. How much the photograph is toned down behind the words. 0 shows it exactly as shot, with only a soft shade at the foot for the words; a bright or busy photograph needs 40–60. Watch the preview while you change it.
+   */
+  heroDarken?: number | null;
+  /**
+   * One row per day of the event. The last date decides when the event moves to the archive.
+   */
+  dates?:
+    | {
+        /**
+         * e.g. Mahashivaratri
+         */
+        label: string;
+        date: string;
+        /**
+         * e.g. 14.00 – 08.00 WIB
+         */
+        time?: string | null;
+        /**
+         * e.g. Wisnu Park, Prambanan Temple
+         */
+        venue?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The chapter’s name, e.g. "Why we walk to Prambanan".
+   */
+  introLabel?: string | null;
+  introHeadline?: string | null;
+  introBody?: string | null;
+  /**
+   * e.g. "The sacred days · 6 – 7 March 2027"
+   */
+  daysLabel?: string | null;
+  daysHeadline?: string | null;
+  days?:
+    | {
+        /**
+         * e.g. Saturday · 6 March
+         */
+        kicker?: string | null;
+        /**
+         * e.g. 14.00 – 08.00 WIB · Wisnu Park
+         */
+        meta?: string | null;
+        title: string;
+        body?: string | null;
+        /**
+         * Above the list, e.g. "The sacred procession".
+         */
+        listLabel?: string | null;
+        listStyle?: ('thread' | 'rows') | null;
+        list?:
+          | {
+              title: string;
+              body?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Two short asides under the list, e.g. "Chanting the 1,008 Names".
+         */
+        notes?:
+          | {
+              title: string;
+              body?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * e.g. Vasudhaiva Kutumbakam
+         */
+        quoteEyebrow?: string | null;
+        quote?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * e.g. "The spirit of Prambanan"
+   */
+  placeLabel?: string | null;
+  /**
+   * Set very large, e.g. 856
+   */
+  placeNumber?: string | null;
+  /**
+   * Beside the number, e.g. "CE · Wantil Inscription"
+   */
+  placeCaption?: string | null;
+  placeHeadline?: string | null;
+  placeBody?: string | null;
+  /**
+   * Tall (4:5) beside the number.
+   */
+  placeImage?: (number | null) | Media;
+  /**
+   * e.g. "Three curated journeys"
+   */
+  journeysLabel?: string | null;
+  journeysHeadline?: string | null;
+  /**
+   * The journeys that lead to this event, in the order they are offered. Each day’s kicker and "festival day" mark are set on the journey itself.
+   */
+  journeys?: (number | Journey)[] | null;
+  /**
+   * The one shown first. Leave empty for the first in the list.
+   */
+  defaultJourney?: (number | null) | Journey;
+  /**
+   * The full programme as a PDF, offered beside each itinerary. Optional.
+   */
+  pdf?: (number | null) | Media;
+  /**
+   * e.g. "Reserve a place · March 2027"
+   */
+  closingEyebrow?: string | null;
+  closingHeadline?: string | null;
+  closingBody?: string | null;
+  /**
+   * On the button; leads to the inquiry form.
+   */
+  closingCtaLabel?: string | null;
+  /**
+   * Brochures and other PDFs, offered as links beside the button — e.g. "Festival brochure (PDF)". The journey programme has its own field on the Journeys tab.
+   */
+  downloads?:
+    | {
+        /**
+         * e.g. Festival brochure (PDF)
+         */
+        label: string;
+        file: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Behind the invitation at the foot of the page. Empty uses the opening photograph.
+   */
+  closingImage?: (number | null) | Media;
+  contactName?: string | null;
+  /**
+   * e.g. an Instagram handle. A phone number here appears on the public page.
+   */
+  contactLine?: string | null;
+  /**
+   * e.g. "In collaboration with Prambanan Shiva Festival · Atibhagya Wellness"
+   */
+  collaborationLine?: string | null;
+  /**
+   * The word in the main menu while the event is live, e.g. "Festival 2027". Empty uses the title.
+   */
+  navLabel?: string | null;
+  /**
+   * The home page block’s headline. Empty uses the page headline.
+   */
+  homeHeadline?: string | null;
+  /**
+   * Empty uses the opening statement.
+   */
+  homeBody?: string | null;
+  /**
+   * Only on the home page block and the events list — not on the event page itself. Empty uses the opening photograph.
+   */
+  homeImage?: (number | null) | Media;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  /**
+   * The address: /events/<slug>
+   */
+  slug: string;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -543,6 +820,10 @@ export interface Inquiry {
  */
 export interface Post {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   title: string;
   slug: string;
   excerpt?: string | null;
@@ -566,38 +847,6 @@ export interface Post {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * Admins manage accounts and can delete content. Editors write and publish, but cannot create accounts or delete.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  name?: string | null;
-  /**
-   * Only an admin can change this.
-   */
-  roles: ('admin' | 'editor')[];
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -803,6 +1052,10 @@ export interface PayloadLockedDocument {
         value: number | Journey;
       } | null)
     | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
         relationTo: 'venues';
         value: number | Venue;
       } | null)
@@ -877,6 +1130,7 @@ export interface PayloadMigration {
  * via the `definition` "product-categories_select".
  */
 export interface ProductCategoriesSelect<T extends boolean = true> {
+  updatedBy?: T;
   name?: T;
   slug?: T;
   order?: T;
@@ -916,6 +1170,7 @@ export interface ProductsSelect<T extends boolean = true> {
   slug?: T;
   featured?: T;
   order?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -933,6 +1188,8 @@ export interface JourneysSelect<T extends boolean = true> {
     | T
     | {
         title?: T;
+        kicker?: T;
+        highlight?: T;
         note?: T;
         items?:
           | T
@@ -947,6 +1204,7 @@ export interface JourneysSelect<T extends boolean = true> {
         id?: T;
       };
   durationText?: T;
+  durationShort?: T;
   facilities?:
     | T
     | {
@@ -976,6 +1234,97 @@ export interface JourneysSelect<T extends boolean = true> {
       };
   slug?: T;
   order?: T;
+  updatedBy?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  eyebrow?: T;
+  headline?: T;
+  statement?: T;
+  heroImage?: T;
+  heroDarken?: T;
+  dates?:
+    | T
+    | {
+        label?: T;
+        date?: T;
+        time?: T;
+        venue?: T;
+        id?: T;
+      };
+  introLabel?: T;
+  introHeadline?: T;
+  introBody?: T;
+  daysLabel?: T;
+  daysHeadline?: T;
+  days?:
+    | T
+    | {
+        kicker?: T;
+        meta?: T;
+        title?: T;
+        body?: T;
+        listLabel?: T;
+        listStyle?: T;
+        list?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              id?: T;
+            };
+        notes?:
+          | T
+          | {
+              title?: T;
+              body?: T;
+              id?: T;
+            };
+        quoteEyebrow?: T;
+        quote?: T;
+        id?: T;
+      };
+  placeLabel?: T;
+  placeNumber?: T;
+  placeCaption?: T;
+  placeHeadline?: T;
+  placeBody?: T;
+  placeImage?: T;
+  journeysLabel?: T;
+  journeysHeadline?: T;
+  journeys?: T;
+  defaultJourney?: T;
+  pdf?: T;
+  closingEyebrow?: T;
+  closingHeadline?: T;
+  closingBody?: T;
+  closingCtaLabel?: T;
+  downloads?:
+    | T
+    | {
+        label?: T;
+        file?: T;
+        id?: T;
+      };
+  closingImage?: T;
+  contactName?: T;
+  contactLine?: T;
+  collaborationLine?: T;
+  navLabel?: T;
+  homeHeadline?: T;
+  homeBody?: T;
+  homeImage?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  slug?: T;
+  updatedBy?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -985,6 +1334,7 @@ export interface JourneysSelect<T extends boolean = true> {
  * via the `definition` "venues_select".
  */
 export interface VenuesSelect<T extends boolean = true> {
+  updatedBy?: T;
   name?: T;
   location?: T;
   description?: T;
@@ -997,6 +1347,7 @@ export interface VenuesSelect<T extends boolean = true> {
  * via the `definition` "facilitators_select".
  */
 export interface FacilitatorsSelect<T extends boolean = true> {
+  updatedBy?: T;
   name?: T;
   role?: T;
   bio?: T;
@@ -1045,6 +1396,7 @@ export interface InquiriesSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  updatedBy?: T;
   alt?: T;
   credit?: T;
   creditUrl?: T;
@@ -1106,6 +1458,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
+  updatedBy?: T;
   title?: T;
   slug?: T;
   excerpt?: T;
@@ -1288,6 +1641,10 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Home {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   heroEyebrow?: string | null;
   /**
    * Line breaks are kept — they set the shape of the headline.
@@ -1327,6 +1684,18 @@ export interface Home {
    * Leave empty to fall back to products marked "featured".
    */
   featuredProducts?: (number | Product)[] | null;
+  /**
+   * The chapter’s name, e.g. "A season at Prambanan".
+   */
+  eventLabel?: string | null;
+  /**
+   * On the button, e.g. "Discover the festival".
+   */
+  eventCtaLabel?: string | null;
+  /**
+   * Which event to show. Leave empty for the nearest one still to come; nothing renders once it has passed.
+   */
+  featuredEvent?: (number | null) | Event;
   ctaHeadline?: string | null;
   ctaBody?: string | null;
   ctaLabel?: string | null;
@@ -1343,6 +1712,10 @@ export interface Home {
  */
 export interface About {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   eyebrow?: string | null;
   /**
    * Line breaks are kept.
@@ -1387,6 +1760,10 @@ export interface About {
 export interface Catalogue {
   id: number;
   /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
+  /**
    * The small label above the heading.
    */
   productsEyebrow?: string | null;
@@ -1424,6 +1801,10 @@ export interface Catalogue {
  */
 export interface InquiryForm {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
   fields?:
     | {
         /**
@@ -1538,6 +1919,10 @@ export interface InquiryForm {
    */
   submitLabel?: string | null;
   /**
+   * The short line under the submit button saying what happens to what the visitor writes. Indonesia’s personal-data law (UU 27/2022) expects one; keep it honest and plain. Clear it to return to the approved wording.
+   */
+  privacyNote?: string | null;
+  /**
    * The small word above the thank-you. Default "Received".
    */
   doneEyebrow?: string | null;
@@ -1564,6 +1949,22 @@ export interface InquiryForm {
  */
 export interface Site {
   id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
+  navProducts?: string | null;
+  navJourneys?: string | null;
+  navAbout?: string | null;
+  navInquiry?: string | null;
+  /**
+   * Shown when there are events but none still to come; the menu then leads to the events page (/events).
+   */
+  navEvents?: string | null;
+  /**
+   * While an event is published and still to come, the menu shows that event’s own word and opens its page. Off: the menu always says the word to the left and opens the events page.
+   */
+  navEventDirect?: boolean | null;
   email?: string | null;
   phone?: string | null;
   /**
@@ -1618,6 +2019,7 @@ export interface Site {
  * via the `definition` "home_select".
  */
 export interface HomeSelect<T extends boolean = true> {
+  updatedBy?: T;
   heroEyebrow?: T;
   heroHeadline?: T;
   heroStatement?: T;
@@ -1639,6 +2041,9 @@ export interface HomeSelect<T extends boolean = true> {
   featuredEyebrow?: T;
   featuredHeadline?: T;
   featuredProducts?: T;
+  eventLabel?: T;
+  eventCtaLabel?: T;
+  featuredEvent?: T;
   ctaHeadline?: T;
   ctaBody?: T;
   ctaLabel?: T;
@@ -1655,6 +2060,7 @@ export interface HomeSelect<T extends boolean = true> {
  * via the `definition` "about_select".
  */
 export interface AboutSelect<T extends boolean = true> {
+  updatedBy?: T;
   eyebrow?: T;
   headline?: T;
   lede?: T;
@@ -1687,6 +2093,7 @@ export interface AboutSelect<T extends boolean = true> {
  * via the `definition` "catalogue_select".
  */
 export interface CatalogueSelect<T extends boolean = true> {
+  updatedBy?: T;
   productsEyebrow?: T;
   productsHeadline?: T;
   productsIntro?: T;
@@ -1705,6 +2112,7 @@ export interface CatalogueSelect<T extends boolean = true> {
  * via the `definition` "inquiry-form_select".
  */
 export interface InquiryFormSelect<T extends boolean = true> {
+  updatedBy?: T;
   fields?:
     | T
     | {
@@ -1736,6 +2144,7 @@ export interface InquiryFormSelect<T extends boolean = true> {
   addCustomLabel?: T;
   requiredNote?: T;
   submitLabel?: T;
+  privacyNote?: T;
   doneEyebrow?: T;
   doneHeading?: T;
   doneBody?: T;
@@ -1751,6 +2160,13 @@ export interface InquiryFormSelect<T extends boolean = true> {
  * via the `definition` "site_select".
  */
 export interface SiteSelect<T extends boolean = true> {
+  updatedBy?: T;
+  navProducts?: T;
+  navJourneys?: T;
+  navAbout?: T;
+  navInquiry?: T;
+  navEvents?: T;
+  navEventDirect?: T;
   email?: T;
   phone?: T;
   whatsapp?: T;
@@ -1803,6 +2219,7 @@ export interface TaskCreateCollectionExport {
       | 'product-categories'
       | 'products'
       | 'journeys'
+      | 'events'
       | 'venues'
       | 'facilitators'
       | 'inquiries'

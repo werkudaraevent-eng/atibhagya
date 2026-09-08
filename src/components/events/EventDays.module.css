@@ -1,0 +1,246 @@
+/* Navy in both themes: the chapter is night. Gold steps up to its
+   on-dark shade, and the ornament with it. */
+.section {
+  position: relative;
+  padding: clamp(72px, 14vh, 150px) clamp(24px, 5vw, 64px);
+  background: #10222f;
+  color: #f6f3e7;
+  overflow: hidden;
+  --emas-deep: #e3bd72;
+  --ink-label: rgba(246, 243, 231, 0.55);
+}
+
+/* A slow pool of gold light in the corner, breathing on the mist's beat. */
+.glow {
+  position: absolute;
+  right: -6vw;
+  top: 8vh;
+  width: 38vw;
+  height: 38vw;
+  max-width: 520px;
+  max-height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(227, 189, 114, 0.16), rgba(227, 189, 114, 0) 65%);
+  animation: flame 9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes flame {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.06);
+  }
+}
+
+.inner {
+  position: relative;
+}
+
+.head {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  align-items: end;
+}
+
+.headline {
+  margin: 0;
+  font: 400 clamp(24px, 2.6vw, 36px) / 1.4 var(--font-marcellus), serif;
+  text-wrap: balance;
+}
+
+.columns {
+  margin-top: clamp(48px, 8vh, 72px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: clamp(48px, 7vw, 120px);
+}
+
+.column {
+  min-width: 0;
+}
+
+.kickerRow {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(227, 189, 114, 0.35);
+}
+
+.kicker {
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--emas-hover);
+}
+
+.meta {
+  font: 300 calc(12.5px * var(--type-scale))/1.4 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.5);
+}
+
+.title {
+  margin: 28px 0 0;
+  font: 400 clamp(26px, 2.8vw, 38px) / 1.2 var(--font-marcellus), serif;
+  text-wrap: balance;
+}
+
+.body {
+  margin: 20px 0 0;
+  max-width: 480px;
+  font: 300 calc(14.5px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.7);
+}
+
+.listLabel {
+  margin-top: 40px;
+  font: 400 calc(10px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 231, 0.5);
+}
+
+/* --- Thread: steps along a line that fills as you read ------------------ */
+
+.thread {
+  position: relative;
+  margin: 22px 0 0;
+  padding: 0 0 0 32px;
+  list-style: none;
+}
+
+.track,
+.fill {
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  width: 1px;
+}
+
+.track {
+  bottom: 8px;
+  background: rgba(246, 243, 231, 0.12);
+}
+
+/* Height is driven by the motion system (data-procline) from scroll. */
+.fill {
+  height: 0;
+  background: linear-gradient(180deg, #e3bd72, #a97b2a);
+}
+
+.step {
+  position: relative;
+  padding: 0 0 22px;
+}
+
+.dot {
+  position: absolute;
+  left: -32px;
+  top: 7px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid var(--emas-hover);
+  background: #10222f;
+}
+
+.stepHead {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+}
+
+.stepN {
+  font: 400 calc(11px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
+  letter-spacing: 0.2em;
+  color: rgba(227, 189, 114, 0.7);
+}
+
+.stepTitle {
+  font: 400 calc(18px * var(--type-scale))/1.3 var(--font-marcellus), serif;
+}
+
+.stepBody {
+  margin: 6px 0 0 34px;
+  max-width: 380px;
+  font: 300 calc(13px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.6);
+}
+
+/* --- Rows: numbered rows under hairlines -------------------------------- */
+
+.rows {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 14px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(246, 243, 231, 0.1);
+}
+
+.row .stepBody {
+  margin-left: 0;
+}
+
+/* --- Notes and the closing line ----------------------------------------- */
+
+.notes {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  max-width: 480px;
+}
+
+.note {
+  border-top: 1px solid rgba(227, 189, 114, 0.25);
+  padding-top: 16px;
+}
+
+.noteTitle {
+  font: 400 calc(16px * var(--type-scale))/1.4 var(--font-marcellus), serif;
+  color: var(--emas-hover);
+}
+
+.noteBody {
+  margin: 8px 0 0;
+  font: 300 calc(13px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.65);
+}
+
+.quote {
+  margin: 36px 0 0;
+  max-width: 480px;
+}
+
+.quoteEyebrow {
+  font: 400 calc(10px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--emas-hover);
+}
+
+.quoteText {
+  margin: 14px 0 0;
+  font: 400 calc(19px * var(--type-scale))/1.5 var(--font-marcellus), serif;
+  color: rgba(246, 243, 231, 0.9);
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    animation: none;
+  }
+}

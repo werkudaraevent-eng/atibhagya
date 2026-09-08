@@ -18,8 +18,31 @@ export type NavLink = {
   href: string
 }
 
+/** The words on the main menu — header, mobile curtain, footer, path marks. */
+export type NavLabels = {
+  products: string
+  journeys: string
+  about: string
+  inquiry: string
+  /** The events page, when no event is live to link to directly. */
+  events: string
+}
+
+/**
+ * The menu's fourth destination, when there is one: a live event's own
+ * page, or the events archive. `href` is locale-free; the menu adds `/id`.
+ */
+export type EventLink = {
+  label: string
+  href: string
+  /** True while it points at an event still to come — the menu marks it. */
+  live: boolean
+}
+
 /** Chrome shared by every page. */
 export type SiteContent = {
+  nav: NavLabels
+  eventLink?: EventLink
   email: string
   phone?: string
   whatsapp: string
@@ -112,12 +135,18 @@ export type JourneyItem = {
   time?: string
   title: string
   productSlug?: string
+  /** The product's one-line subtitle, for an event page's day detail. */
+  productLine?: string
   venueName?: string
   facilitatorNames: string[]
 }
 
 export type JourneyDay = {
   title: string
+  /** A few words under the title on an event page. */
+  kicker?: string
+  /** The day of the event itself. */
+  highlight?: boolean
   note?: string
   items: JourneyItem[]
 }
@@ -130,6 +159,8 @@ export type Journey = {
   description?: string
   summary?: string
   durationText?: string
+  /** e.g. 4D3N, on an event page's journey chips. */
+  durationShort?: string
   facilities: string[]
   inclusions: string[]
   exclusions: string[]
@@ -169,6 +200,13 @@ export type HomeContent = {
     eyebrow: string
     headline: string
   }
+  event: {
+    /** The chapter's name, e.g. "A season at Prambanan". */
+    label: string
+    ctaLabel: string
+    /** The chosen event's id; empty means the nearest one still to come. */
+    featuredId?: string
+  }
   cta: {
     headline: string
     body: string
@@ -176,6 +214,79 @@ export type HomeContent = {
     image: Img
   }
 }
+
+export type EventDate = {
+  label: string
+  /** ISO date, day precision. */
+  date: string
+  time?: string
+  venue?: string
+}
+
+export type EventStep = { title: string; body?: string }
+
+/** One column of the dark chapter: a day of the event. */
+export type EventDay = {
+  kicker?: string
+  meta?: string
+  title: string
+  body?: string
+  listLabel?: string
+  listStyle: 'thread' | 'rows'
+  list: EventStep[]
+  notes: EventStep[]
+  quoteEyebrow?: string
+  quote?: string
+}
+
+export type EventContent = {
+  id: string
+  slug: string
+  title: string
+  eyebrow?: string
+  headline: string
+  statement?: string
+  heroImage: Img
+  /** 0–1: how far the opening photograph is toned down behind the type. */
+  heroDarken: number
+  dates: EventDate[]
+  /** Worked out from the dates: still to come (or on), or already past. */
+  live: boolean
+  intro: { label?: string; headline?: string; body?: string }
+  days: { label?: string; headline?: string; columns: EventDay[] }
+  place: {
+    label?: string
+    number?: string
+    caption?: string
+    headline?: string
+    body?: string
+    image: Img
+  }
+  journeys: { label?: string; headline?: string; list: Journey[]; defaultSlug?: string }
+  pdfUrl?: string
+  closing: {
+    eyebrow?: string
+    headline?: string
+    body?: string
+    ctaLabel?: string
+    /** Brochures and the like, as links beside the button. */
+    downloads: { label: string; href: string }[]
+    image: Img
+    contactName?: string
+    contactLine?: string
+    collaborationLine?: string
+  }
+  home: { headline: string; body?: string; image: Img }
+  navLabel: string
+  meta: { title: string; description?: string }
+  updatedAt?: string
+}
+
+/** What the events page and the home block need of an event. */
+export type EventCard = Pick<
+  EventContent,
+  'id' | 'slug' | 'title' | 'eyebrow' | 'dates' | 'live' | 'home' | 'navLabel'
+> & { journeys: Pick<Journey, 'slug' | 'title' | 'durationShort' | 'summary'>[] }
 
 export type AboutContent = {
   meta: { title: string; description: string }

@@ -6,12 +6,12 @@ import styles from './Why.module.css'
 
 export function Why({ why }: { why: HomeContent['why'] }) {
   return (
-    <section className={page.section}>
+    <section id="why" className={page.section} data-stage={why.eyebrow} data-chapter="01">
       <div className={page.container}>
         <div className={page.split}>
           <div>
             <SectionMark number="01" mark="sprout" label={why.eyebrow} align="start" />
-            <h2 className={page.headline} data-headline>
+            <h2 className={page.headline} data-words>
               <Lines text={why.headline} />
             </h2>
           </div>

@@ -86,7 +86,7 @@
 }
 
 .label {
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.32em;
   text-transform: uppercase;
   color: var(--ink-label);

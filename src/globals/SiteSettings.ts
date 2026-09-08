@@ -3,7 +3,7 @@ import type { FieldAccess, GlobalConfig } from 'payload'
 import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { plain, prefillGlobal, text } from '../lib/prefill'
-import { revalidateGlobal } from '../lib/revalidate'
+import { revalidateEverythingGlobal } from '../lib/revalidate'
 
 /** Internal addresses stay out of the public API response. */
 const staffOnly: FieldAccess = ({ req: { user } }) => Boolean(user)
@@ -31,10 +31,15 @@ export const SiteSettings: GlobalConfig = {
         footerLegal: text((l) => defaults(l).site.footerLegal),
         parentBrand: plain(() => defaults('en').site.parentBrand),
         responseTime: text((l) => defaults(l).site.responseTime),
+        navProducts: text((l) => defaults(l).site.nav.products),
+        navJourneys: text((l) => defaults(l).site.nav.journeys),
+        navAbout: text((l) => defaults(l).site.nav.about),
+        navInquiry: text((l) => defaults(l).site.nav.inquiry),
+        navEvents: text((l) => defaults(l).site.nav.events),
       }),
     ],
     beforeChange: [stampUpdatedByGlobal],
-    afterChange: [revalidateGlobal(['/', '/product', '/journey', '/about', '/inquiry'])],
+    afterChange: [revalidateEverythingGlobal],
   },
   versions: {
     // Save Draft / Publish, with history and revert. 50 versions per document
@@ -45,6 +50,55 @@ export const SiteSettings: GlobalConfig = {
 
   fields: [
     updatedBy,
+    {
+      type: 'collapsible',
+      label: 'Navigation',
+      admin: {
+        description:
+          'The words on the main menu, in the header and the mobile menu, the footer, and the small marks at the edges of the page. The addresses (/product, /journey, /about, /inquiry) do not change.',
+      },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'navProducts', type: 'text', localized: true, label: 'Products page' },
+            { name: 'navJourneys', type: 'text', localized: true, label: 'Journeys page' },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            { name: 'navAbout', type: 'text', localized: true, label: 'About page' },
+            { name: 'navInquiry', type: 'text', localized: true, label: 'Inquiry' },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'navEvents',
+              type: 'text',
+              localized: true,
+              label: 'Events page',
+              admin: {
+                description:
+                  'Shown when there are events but none still to come; the menu then leads to the events page (/events).',
+              },
+            },
+            {
+              name: 'navEventDirect',
+              type: 'checkbox',
+              defaultValue: true,
+              label: 'Menu leads straight to the live event',
+              admin: {
+                description:
+                  'While an event is published and still to come, the menu shows that event’s own word and opens its page. Off: the menu always says the word to the left and opens the events page.',
+              },
+            },
+          ],
+        },
+      ],
+    },
     { name: 'email', type: 'email' },
     { name: 'phone', type: 'text' },
     { name: 'whatsapp', type: 'text', admin: { description: 'Full wa.me link.' } },

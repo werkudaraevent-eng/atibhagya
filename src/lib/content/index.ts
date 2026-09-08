@@ -15,6 +15,10 @@ import {
 } from '../inquiry-fields'
 import type {
   AboutContent,
+  EventCard,
+  EventContent,
+  EventDay,
+  EventLink,
   Facilitator,
   HomeContent,
   Img,
@@ -48,6 +52,10 @@ const or = <T>(value: T | null | undefined, fallback: T): T => {
   if (Array.isArray(value) && value.length === 0) return fallback
   return value
 }
+
+/** A non-empty string, or nothing — for fields that have no approved copy. */
+const str = (value: unknown): string | undefined =>
+  typeof value === 'string' && value.trim() !== '' ? value : undefined
 
 const ownOrigin = process.env.NEXT_PUBLIC_SERVER_URL ?? ''
 
@@ -176,6 +184,7 @@ const toJourney = (doc: Any, fallback: Journey): Journey => ({
   description: or(doc.description, fallback.description),
   summary: or(doc.summary, fallback.summary),
   durationText: or(doc.durationText, fallback.durationText),
+  durationShort: str(doc.durationShort) ?? fallback.durationShort,
   facilities: or(labels(doc.facilities), fallback.facilities),
   inclusions: or(labels(doc.inclusions), fallback.inclusions),
   exclusions: or(labels(doc.exclusions), fallback.exclusions),
@@ -184,11 +193,17 @@ const toJourney = (doc: Any, fallback: Journey): Journey => ({
   days: Array.isArray(doc.days) && doc.days.length
     ? doc.days.map((d: Any) => ({
         title: d.title ?? '',
+        kicker: str(d.kicker),
+        highlight: d.highlight === true,
         note: d.note ?? undefined,
         items: (d.items ?? []).map((it: Any) => ({
           time: it.time ?? undefined,
           title: it.title ?? '',
           productSlug: typeof it.product === 'object' ? it.product?.slug : undefined,
+          productLine:
+            typeof it.product === 'object'
+              ? str(it.product?.subtitle) ?? str(it.product?.highlightText)
+              : undefined,
           venueName: typeof it.venue === 'object' ? it.venue?.name : undefined,
           facilitatorNames: (it.facilitators ?? [])
             .map((f: Any) => (typeof f === 'object' ? f?.name : null))
@@ -233,7 +248,16 @@ export async function getSite(locale: Locale, options: ReadOptions = {}): Promis
       fallbackLocale: 'en',
       draft: options.draft === true,
     })) as Any
+    const nav = {
+      products: or(site.navProducts, fallback.nav.products),
+      journeys: or(site.navJourneys, fallback.nav.journeys),
+      about: or(site.navAbout, fallback.nav.about),
+      inquiry: or(site.navInquiry, fallback.nav.inquiry),
+      events: or(site.navEvents, fallback.nav.events),
+    }
     return {
+      nav,
+      eventLink: await eventLink(locale, nav.events, site.navEventDirect !== false),
       email: or(site.email, fallback.email),
       phone: or(site.phone, fallback.phone),
       whatsapp: or(site.whatsapp, fallback.whatsapp),
@@ -301,6 +325,13 @@ export async function getHome(locale: Locale, options: ReadOptions = {}): Promis
       featured: {
         eyebrow: or(home.featuredEyebrow, fallback.featured.eyebrow),
         headline: or(home.featuredHeadline, fallback.featured.headline),
+      },
+      event: {
+        label: or(home.eventLabel, fallback.event.label),
+        ctaLabel: or(home.eventCtaLabel, fallback.event.ctaLabel),
+        featuredId: home.featuredEvent
+          ? String(typeof home.featuredEvent === 'object' ? home.featuredEvent.id : home.featuredEvent)
+          : undefined,
       },
       cta: {
         headline: or(home.ctaHeadline, fallback.cta.headline),
@@ -687,5 +718,257 @@ export async function getInquiryCopy(
     }
   } catch (err) {
     return recover(err, fallback)
+  }
+}
+
+/* --- Events --------------------------------------------------------------- */
+
+/**
+ * Today, as a date in Jakarta (UTC+7): the festival's own clock, whatever
+ * the server's. An event stays live through the whole of its last day.
+ */
+const todayInJakarta = () => new Date(Date.now() + 7 * 3600_000).toISOString().slice(0, 10)
+
+const toDates = (rows: unknown): EventContent['dates'] =>
+  (Array.isArray(rows) ? rows : [])
+    .filter((r: Any) => r?.date)
+    .map((r: Any) => ({
+      label: r.label ?? '',
+      date: String(r.date).slice(0, 10),
+      time: str(r.time),
+      venue: str(r.venue),
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+const isLive = (dates: EventContent['dates']) => {
+  const last = dates.at(-1)?.date
+  return Boolean(last && last >= todayInJakarta())
+}
+
+const steps = (rows: unknown) =>
+  (Array.isArray(rows) ? rows : [])
+    .filter((r: Any) => r?.title)
+    .map((r: Any) => ({ title: String(r.title), body: str(r.body) }))
+
+const toEventDay = (d: Any): EventDay => ({
+  kicker: str(d.kicker),
+  meta: str(d.meta),
+  title: d.title ?? '',
+  body: str(d.body),
+  listLabel: str(d.listLabel),
+  listStyle: d.listStyle === 'rows' ? 'rows' : 'thread',
+  list: steps(d.list),
+  notes: steps(d.notes),
+  quoteEyebrow: str(d.quoteEyebrow),
+  quote: str(d.quote),
+})
+
+/** No approved copy exists for a journey inside an event: blanks stay blank. */
+const bareJourney: Journey = {
+  id: '',
+  slug: '',
+  title: '',
+  facilities: [],
+  inclusions: [],
+  exclusions: [],
+  days: [],
+  heroImage: { alt: '' },
+  gallery: [],
+}
+
+const noImage: Img = { alt: '' }
+
+const toEvent = (doc: Any): EventContent => {
+  const dates = toDates(doc.dates)
+  const heroImage = toImg(doc.heroImage, { alt: doc.title ?? '' })
+  const journeys = (Array.isArray(doc.journeys) ? doc.journeys : [])
+    .filter((j: unknown) => j && typeof j === 'object' && (j as Any)._status !== 'draft')
+    .map((j: Any) => toJourney(j, bareJourney))
+  const defaultJourney =
+    doc.defaultJourney && typeof doc.defaultJourney === 'object' ? str(doc.defaultJourney.slug) : undefined
+  const pdf = doc.pdf && typeof doc.pdf === 'object' && doc.pdf.url ? localise(doc.pdf.url) : undefined
+  const headline = str(doc.headline) ?? doc.title ?? ''
+
+  return {
+    id: String(doc.id),
+    slug: doc.slug ?? '',
+    title: doc.title ?? '',
+    eyebrow: str(doc.eyebrow),
+    headline,
+    statement: str(doc.statement),
+    heroImage,
+    heroDarken:
+      typeof doc.heroDarken === 'number' ? Math.min(100, Math.max(0, doc.heroDarken)) / 100 : 0.35,
+    dates,
+    live: isLive(dates),
+    intro: { label: str(doc.introLabel), headline: str(doc.introHeadline), body: str(doc.introBody) },
+    days: {
+      label: str(doc.daysLabel),
+      headline: str(doc.daysHeadline),
+      columns: (Array.isArray(doc.days) ? doc.days : []).filter((d: Any) => d?.title).map(toEventDay),
+    },
+    place: {
+      label: str(doc.placeLabel),
+      number: str(doc.placeNumber),
+      caption: str(doc.placeCaption),
+      headline: str(doc.placeHeadline),
+      body: str(doc.placeBody),
+      image: toImg(doc.placeImage, noImage),
+    },
+    journeys: {
+      label: str(doc.journeysLabel),
+      headline: str(doc.journeysHeadline),
+      list: journeys,
+      defaultSlug: defaultJourney,
+    },
+    pdfUrl: pdf,
+    closing: {
+      eyebrow: str(doc.closingEyebrow),
+      headline: str(doc.closingHeadline),
+      body: str(doc.closingBody),
+      ctaLabel: str(doc.closingCtaLabel),
+      downloads: (Array.isArray(doc.downloads) ? doc.downloads : [])
+        .filter((d: Any) => d?.label && d?.file && typeof d.file === 'object' && d.file.url)
+        .map((d: Any) => ({ label: String(d.label), href: localise(String(d.file.url)) })),
+      image: toImg(doc.closingImage, heroImage),
+      contactName: str(doc.contactName),
+      contactLine: str(doc.contactLine),
+      collaborationLine: str(doc.collaborationLine),
+    },
+    home: {
+      headline: str(doc.homeHeadline) ?? headline,
+      body: str(doc.homeBody) ?? str(doc.statement),
+      image: toImg(doc.homeImage, heroImage),
+    },
+    navLabel: str(doc.navLabel) ?? doc.title ?? '',
+    meta: {
+      title: str(doc.metaTitle) ?? `${doc.title ?? ''} · Atibhagya`,
+      description: str(doc.metaDescription) ?? str(doc.statement),
+    },
+    updatedAt: typeof doc.updatedAt === 'string' ? doc.updatedAt : undefined,
+  }
+}
+
+const toEventCard = (event: EventContent): EventCard => ({
+  id: event.id,
+  slug: event.slug,
+  title: event.title,
+  eyebrow: event.eyebrow,
+  dates: event.dates,
+  live: event.live,
+  home: event.home,
+  navLabel: event.navLabel,
+  journeys: event.journeys.list.map((j) => ({
+    slug: j.slug,
+    title: j.title,
+    durationShort: j.durationShort,
+    summary: j.summary,
+  })),
+})
+
+/** The first date of an event, for ordering. */
+const startOf = (e: EventContent) => e.dates[0]?.date ?? ''
+
+/**
+ * Every published event, upcoming first (soonest at the top), then past
+ * ones (most recent at the top). There is no built-in content for events:
+ * without a CMS there are none.
+ */
+export async function getEvents(locale: Locale): Promise<EventContent[]> {
+  const payload = await getPayloadSafe()
+  if (!payload) return []
+
+  try {
+    const found = await payload.find({
+      collection: 'events',
+      locale,
+      depth: 2,
+      limit: 100,
+      fallbackLocale: 'en',
+      where: publishedOnly,
+    })
+    const events = found.docs.map((d: Any) => toEvent(d))
+    const upcoming = events.filter((e) => e.live).sort((a, b) => startOf(a).localeCompare(startOf(b)))
+    const past = events.filter((e) => !e.live).sort((a, b) => startOf(b).localeCompare(startOf(a)))
+    return [...upcoming, ...past]
+  } catch (err) {
+    return recover(err, [])
+  }
+}
+
+export async function getEvent(
+  locale: Locale,
+  slug: string,
+  { draft = false }: ReadOptions = {},
+): Promise<EventContent | null> {
+  const payload = await getPayloadSafe()
+  if (!payload) return null
+
+  try {
+    const found = await payload.find({
+      collection: 'events',
+      locale,
+      depth: 2,
+      limit: 1,
+      draft,
+      fallbackLocale: 'en',
+      where: draft ? { slug: { equals: slug } } : { and: [{ slug: { equals: slug } }, publishedOnly] },
+    })
+    const doc = found.docs[0] as Any | undefined
+    return doc ? toEvent(doc) : null
+  } catch (err) {
+    return recover(err, null)
+  }
+}
+
+/**
+ * The event the home page features: the one chosen in Home settings if it
+ * is still to come, else the nearest one still to come; nothing once every
+ * event has passed.
+ */
+export async function getHomeEvent(locale: Locale, featuredId?: string): Promise<EventCard | null> {
+  const events = await getEvents(locale)
+  const live = events.filter((e) => e.live)
+  const chosen = featuredId ? live.find((e) => e.id === featuredId) : undefined
+  const event = chosen ?? live[0]
+  return event ? toEventCard(event) : null
+}
+
+/**
+ * Where the menu's event entry points. A live event, by its own word, while
+ * there is one and the team wants it that way; the events page while there
+ * are only past events; nothing when there are none at all.
+ */
+async function eventLink(
+  locale: Locale,
+  eventsWord: string,
+  direct: boolean,
+): Promise<EventLink | undefined> {
+  const payload = await getPayloadSafe()
+  if (!payload) return undefined
+
+  try {
+    const found = await payload.find({
+      collection: 'events',
+      locale,
+      depth: 0,
+      limit: 100,
+      fallbackLocale: 'en',
+      where: publishedOnly,
+      select: { slug: true, title: true, navLabel: true, dates: true },
+    })
+    const events = found.docs.map((d: Any) => ({
+      slug: String(d.slug ?? ''),
+      label: str(d.navLabel) ?? str(d.title) ?? '',
+      dates: toDates(d.dates),
+    }))
+    const live = events
+      .filter((e) => isLive(e.dates))
+      .sort((a, b) => (a.dates[0]?.date ?? '').localeCompare(b.dates[0]?.date ?? ''))
+    if (live[0] && direct) return { label: live[0].label, href: `/events/${live[0].slug}`, live: true }
+    if (events.length) return { label: eventsWord, href: '/events', live: live.length > 0 }
+    return undefined
+  } catch (err) {
+    return recover(err, undefined)
   }
 }

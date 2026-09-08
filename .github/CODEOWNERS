@@ -1,0 +1,15 @@
+# Files whose change needs the owner's review before merging.
+# (Enforced only when the ruleset has "Require review from Code Owners".)
+
+# Schema, migrations and the CMS configuration: a wrong change here reaches
+# the production database.
+/src/migrations/          @werkudaraevent-eng
+/src/collections/         @werkudaraevent-eng
+/src/globals/             @werkudaraevent-eng
+/src/payload.config.ts    @werkudaraevent-eng
+
+# Security headers, CSP, build and deploy.
+/next.config.mjs          @werkudaraevent-eng
+/scripts/                 @werkudaraevent-eng
+/.github/                 @werkudaraevent-eng
+/package.json             @werkudaraevent-eng

@@ -27,7 +27,8 @@ export function Footer({ site, dict, locale }: Props) {
   const prefix = locale === 'id' ? '/id' : ''
 
   return (
-    <footer className={styles.footer}>
+    // The last stop on every page's path, and a dark surface for the marks.
+    <footer id="foot" className={styles.footer} data-stage={dict.footer.enquiries} data-dark>
       <div className={styles.inner}>
         <Ornament mark="wave" className={styles.rule} />
 
@@ -58,6 +59,14 @@ export function Footer({ site, dict, locale }: Props) {
               <Link className={styles.link} href={`${prefix}/about`}>
                 {dict.nav.about}
               </Link>
+              {dict.eventLink ? (
+                <Link
+                  className={dict.eventLink.live ? `${styles.link} ${styles.linkLive}` : styles.link}
+                  href={`${prefix}${dict.eventLink.href}`}
+                >
+                  {dict.eventLink.label}
+                </Link>
+              ) : null}
               <Link className={styles.link} href={`${prefix}/inquiry`}>
                 {dict.nav.inquiry}
               </Link>

@@ -1,0 +1,10 @@
+/* A past event keeps its page; one quiet line says so, under the hero. */
+.ended {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: clamp(28px, 4vh, 40px) clamp(24px, 5vw, 64px) 0;
+  font: 400 calc(11px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--emas-deep);
+}

@@ -1,0 +1,235 @@
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  background: var(--biru-footer);
+}
+
+/* The same grade as the home hero, on the event's own Darken slider. */
+.zoom {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transform-origin: 50% 45%;
+  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.35))
+    saturate(calc(1 - var(--hero-darken, 0.35) * 0.45)) contrast(1.02);
+}
+
+/* Darker at the foot than the home hero: the words sit there, not centred. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
+    linear-gradient(
+      180deg,
+      rgba(13, 28, 39, calc(var(--hero-darken, 0.35) * 0.6)) 0%,
+      rgba(13, 28, 39, calc(var(--hero-darken, 0.35) * 0.3)) 40%,
+      rgba(13, 28, 39, calc(0.55 + var(--hero-darken, 0.35) * 0.6)) 100%
+    );
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--ivory);
+  opacity: 0;
+}
+
+/* Spans the whole hero and pushes its words to the foot, rather than
+   sitting at the foot: the scroll fade (data-heroword) starts when this
+   box's top meets the viewport's, so the box has to start where the hero
+   does — or the words would still be solid as they slid under the header. */
+.word {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 110px clamp(24px, 5vw, 64px) clamp(40px, 9vh, 96px);
+  color: #f6f3e7;
+  transform: translateY(var(--hero-shift, 0px));
+  will-change: transform, opacity;
+}
+
+.grid {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 40px;
+  align-items: end;
+}
+
+.text {
+  max-width: 760px;
+}
+
+/* Gold over candlelight needs the same firmness as the ivory lines: a
+   medium weight, a step larger, the lighter gold, and an edge under it. */
+.eyebrow {
+  font: 500 calc(12px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #efcf8c;
+  text-shadow:
+    0 1px 2px rgba(16, 34, 47, 0.7),
+    0 2px 18px rgba(16, 34, 47, 0.6);
+}
+
+.headline {
+  margin: 26px 0 0;
+  font: 400 clamp(34px, 4.6vw, 66px) / 1.12 var(--font-marcellus), serif;
+  color: #f6f3e7;
+  text-shadow:
+    0 2px 10px rgba(16, 34, 47, 0.35),
+    0 6px 60px rgba(16, 34, 47, 0.6);
+  text-wrap: balance;
+}
+
+.statement {
+  margin: 26px 0 0;
+  max-width: 52ch;
+  font: 400 calc(16px * var(--type-scale))/1.8 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.9);
+  text-shadow: 0 2px 24px rgba(16, 34, 47, 0.55);
+}
+
+.actions {
+  margin-top: 36px;
+  display: flex;
+  gap: 16px 28px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* The second invitation is a word with a rule, not a second box. */
+.textLink {
+  padding: 6px 0;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 231, 0.92);
+  text-shadow: 0 1px 12px rgba(16, 34, 47, 0.6);
+  border-bottom: 1px solid rgba(246, 243, 231, 0.45);
+  transition:
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+.textLink:hover {
+  color: var(--emas-hover);
+  border-color: var(--emas-hover);
+}
+
+.dates {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  text-align: right;
+  border-right: 1px solid rgba(227, 189, 114, 0.4);
+  padding-right: 24px;
+}
+
+.date {
+  margin: 0;
+}
+
+.dateLabel {
+  font: 500 calc(10px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(246, 243, 231, 0.78);
+  text-shadow: 0 1px 12px rgba(16, 34, 47, 0.6);
+}
+
+.dateValue {
+  margin: 8px 0 0;
+  font: 400 calc(22px * var(--type-scale))/1.2 var(--font-marcellus), serif;
+  color: #f6f3e7;
+  text-shadow: 0 2px 16px rgba(16, 34, 47, 0.55);
+}
+
+.cue {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: cue 2.6s ease-in-out infinite;
+}
+
+.cueLine {
+  display: block;
+  width: 1px;
+  height: 36px;
+  background: rgba(246, 243, 231, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cue {
+    animation: none;
+  }
+}
+
+/* A short viewport — a laptop at 125% with the taskbar — gets the same
+   words at a smaller size and tighter spacing, so the whole opening still
+   fits one screen. */
+@media (max-height: 720px) {
+  .word {
+    padding-top: 96px;
+  }
+
+  .eyebrow {
+    font-size: calc(11px * var(--type-scale));
+  }
+
+  .headline {
+    margin-top: 18px;
+    font-size: clamp(30px, 3.8vw, 52px);
+  }
+
+  .statement {
+    margin-top: 18px;
+    max-width: 56ch;
+    font-size: calc(15px * var(--type-scale));
+    line-height: 1.7;
+  }
+
+  .actions {
+    margin-top: 26px;
+  }
+
+  .dates {
+    gap: 16px;
+  }
+
+  .dateValue {
+    font-size: calc(19px * var(--type-scale));
+  }
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .dates {
+    flex-direction: row;
+    gap: 28px;
+    text-align: left;
+    border-right: 0;
+    border-left: 1px solid rgba(227, 189, 114, 0.4);
+    padding: 0 0 0 18px;
+  }
+
+  .cue {
+    display: none;
+  }
+}

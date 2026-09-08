@@ -1,15 +1,19 @@
-import type { Locale } from '../content/types'
+import type { EventLink, Locale, SiteContent } from '../content/types'
 import type { Element } from '../elements'
 import { defaultFields, type FormField, type LabelKey } from '../inquiry-fields'
 
 export type Dict = {
-  nav: { products: string; journeys: string; about: string; inquiry: string }
+  nav: { products: string; journeys: string; about: string; inquiry: string; events: string }
+  /** Where the menu's event entry leads, when there is one. See `withSite`. */
+  eventLink?: EventLink
   menu: string
   close: string
   languageLabel: string
   skipToContent: string
   /** Accessible name of the breadcrumb landmark. */
   youAreHere: string
+  /** Accessible name of the path indicator. */
+  yourPath: string
   /** The light/dark switch: what pressing it will do. */
   theme: { toDark: string; toLight: string }
   readMore: string
@@ -36,6 +40,8 @@ export type Dict = {
     reset: string
     related: string
     detailEyebrow: string
+    /** The detail page's main chapter, on the path indicator and chapter mark. */
+    experience: string
     whatToExpect: string
     duration: string
     venue: string
@@ -51,6 +57,8 @@ export type Dict = {
     headline: string
     intro: string
     detailEyebrow: string
+    /** The detail page's main chapter, on the path indicator and chapter mark. */
+    itinerary: string
     day: string
     overview: string
     duration: string
@@ -61,6 +69,28 @@ export type Dict = {
     location: string
     inquire: string
     empty: string
+  }
+  events: {
+    eyebrow: string
+    headline: string
+    intro: string
+    detailEyebrow: string
+    upcoming: string
+    past: string
+    ended: string
+    empty: string
+    /** The hero's two invitations: down to the journeys, down to the days. */
+    toJourneys: string
+    toDays: string
+    chooseJourney: string
+    day: string
+    enquire: string
+    programme: string
+    pdf: string
+    contact: string
+    viewJourney: string
+    /** Between the day list and its detail on small screens. */
+    dayOf: string
   }
   inquiry: {
     metaTitle: string
@@ -132,12 +162,13 @@ const inquiryFields = (labels: Record<LabelKey, string>) => ({
 })
 
 const en: Dict = {
-  nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry' },
+  nav: { products: 'Product', journeys: 'Journey', about: 'About', inquiry: 'Inquiry', events: 'Events' },
   menu: 'Menu',
   close: 'Close',
   languageLabel: 'Language',
   skipToContent: 'Skip to content',
   youAreHere: 'You are here',
+  yourPath: 'Where you are on the page',
   theme: { toDark: 'Switch to dark mode', toLight: 'Switch to light mode' },
   readMore: 'Read more',
   footer: { enquiries: 'Enquiries', explore: 'Explore', social: 'Social' },
@@ -161,6 +192,7 @@ const en: Dict = {
     reset: 'Clear filters',
     related: 'Related experiences',
     detailEyebrow: 'Product',
+    experience: 'The experience',
     whatToExpect: 'What to expect',
     duration: 'Duration',
     venue: 'Venue',
@@ -182,6 +214,7 @@ const en: Dict = {
     headline: 'Wellness as a\njourney, not a menu.',
     intro: 'Curated multi-day or multi-stop experiences.',
     detailEyebrow: 'Journey',
+    itinerary: 'Itinerary',
     day: 'Day',
     overview: 'Journey overview',
     duration: 'Duration',
@@ -192,6 +225,26 @@ const en: Dict = {
     location: 'Location preference',
     inquire: 'Inquire this journey',
     empty: 'Journeys are being prepared.',
+  },
+  events: {
+    eyebrow: 'Events',
+    headline: 'Seasons we walk\ntowards together.',
+    intro: 'Festivals and gatherings, with the journeys that lead to them.',
+    detailEyebrow: 'Event',
+    upcoming: 'Coming up',
+    past: 'Past events',
+    ended: 'This event has passed. Its journeys can still be shaped for you.',
+    empty: 'No events are announced yet.',
+    toJourneys: 'Choose your journey',
+    toDays: 'The days',
+    chooseJourney: 'Choose your journey',
+    day: 'Day',
+    enquire: 'Enquire',
+    programme: 'Full programme (PDF)',
+    pdf: 'Programme (PDF)',
+    contact: 'Contact',
+    viewJourney: 'See the full journey',
+    dayOf: 'of',
   },
   inquiry: {
     metaTitle: 'Inquiry · Atibhagya',
@@ -251,12 +304,13 @@ const en: Dict = {
 }
 
 const id: Dict = {
-  nav: { products: 'Pengalaman', journeys: 'Perjalanan', about: 'Tentang', inquiry: 'Kontak' },
+  nav: { products: 'Pengalaman', journeys: 'Perjalanan', about: 'Tentang', inquiry: 'Kontak', events: 'Acara' },
   menu: 'Menu',
   close: 'Tutup',
   languageLabel: 'Bahasa',
   skipToContent: 'Lompat ke konten',
   youAreHere: 'Posisi Anda',
+  yourPath: 'Posisi Anda di halaman',
   theme: { toDark: 'Ganti ke mode gelap', toLight: 'Ganti ke mode terang' },
   readMore: 'Selengkapnya',
   footer: { enquiries: 'Pertanyaan', explore: 'Jelajahi', social: 'Media sosial' },
@@ -280,6 +334,7 @@ const id: Dict = {
     reset: 'Hapus filter',
     related: 'Pengalaman terkait',
     detailEyebrow: 'Pengalaman',
+    experience: 'Pengalamannya',
     whatToExpect: 'Yang akan Anda alami',
     duration: 'Durasi',
     venue: 'Lokasi',
@@ -301,6 +356,7 @@ const id: Dict = {
     headline: 'Wellness sebagai\nperjalanan, bukan daftar menu.',
     intro: 'Pengalaman terkurasi lintas hari dan lintas tempat.',
     detailEyebrow: 'Perjalanan',
+    itinerary: 'Rangkaian perjalanan',
     day: 'Hari',
     overview: 'Ringkasan perjalanan',
     duration: 'Durasi',
@@ -311,6 +367,26 @@ const id: Dict = {
     location: 'Preferensi lokasi',
     inquire: 'Tanyakan perjalanan ini',
     empty: 'Perjalanan sedang disiapkan.',
+  },
+  events: {
+    eyebrow: 'Acara',
+    headline: 'Musim yang kita\ntempuh bersama.',
+    intro: 'Festival dan perayaan, beserta perjalanan yang menuju ke sana.',
+    detailEyebrow: 'Acara',
+    upcoming: 'Akan datang',
+    past: 'Telah berlalu',
+    ended: 'Acara ini telah berlalu. Perjalanannya tetap bisa kami rangkai untuk Anda.',
+    empty: 'Belum ada acara yang diumumkan.',
+    toJourneys: 'Pilih perjalanan Anda',
+    toDays: 'Hari-harinya',
+    chooseJourney: 'Pilih perjalanan Anda',
+    day: 'Hari',
+    enquire: 'Tanyakan',
+    programme: 'Program lengkap (PDF)',
+    pdf: 'Program (PDF)',
+    contact: 'Narahubung',
+    viewJourney: 'Lihat perjalanan lengkap',
+    dayOf: 'dari',
   },
   inquiry: {
     metaTitle: 'Kontak · Atibhagya',
@@ -370,3 +446,15 @@ const id: Dict = {
 }
 
 export const dict = (locale: Locale): Dict => (locale === 'id' ? id : en)
+
+/**
+ * The dictionary with the menu words the team set in Site settings laid
+ * over the approved ones. Every page that has fetched the site uses this,
+ * so the header, the mobile menu, the footer and the page marks all say
+ * the same thing.
+ */
+export const withSite = (t: Dict, site: SiteContent): Dict => ({
+  ...t,
+  nav: { ...t.nav, ...site.nav },
+  eventLink: site.eventLink,
+})

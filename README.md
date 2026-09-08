@@ -79,6 +79,8 @@ Seven templates, exactly as the wireframe lists them.
 | `/product/[slug]` | Product detail — editorial intro, facts on the page, gallery, facilitator when present |
 | `/journey` | Journey discovery — full-width immersive opening, cards on a route line |
 | `/journey/[slug]` | Journey detail — day timeline as the main surface, overview secondary |
+| `/events` | Events — the ones still to come, then the archive |
+| `/events/[slug]` | Event — full-bleed opening, the days, the place, the journeys as one stage, the invitation |
 | `/about` | About — centred, one continuous story |
 | `/inquiry` | The single inquiry form every CTA leads to |
 
@@ -98,6 +100,7 @@ data; home and about are singletons that only choose and describe.
 | `venues` | Reusable — one venue serves many products and journey items |
 | `facilitators` | Optional; the section only renders when data exists |
 | `journeys` | Itinerary with nested days and activities; an activity may reference a product, venue and facilitators, or stay custom |
+| `events` | A dated occasion with its own page — a festival, a season — and the journeys that lead to it (see [Events](#events)) |
 | `inquiries` | Contact, occasion, and the products/journeys/custom activities chosen |
 | `media` | Uploads with localized alt text and credit fields |
 | `home`, `about`, `site` | Page singletons and shared chrome |
@@ -177,6 +180,44 @@ live site.
 Note for local work: SQLite allows one writer, so running an import while the
 dev server is writing can throw. Re-run it; Postgres in production has no such
 limit.
+
+### Events
+
+An event is one entry in **Experiences → Events**: the Prambanan Shiva
+Festival 2027 is the first, not a special page. Every word, date, photograph
+and chapter on `/events/<slug>` comes from that entry; a chapter left empty
+is simply not rendered and the others renumber.
+
+Where an event sits in time is worked out from its **dates**, never from a
+status field:
+
+- **Published and still to come** — it is *live*. The main menu shows its
+  own word ("Festival 2027", from *Home & menu → Menu label*) in gold with a
+  breathing point, leading straight to its page; the home page gains a
+  chapter between the selected experiences and the closing; the footer's
+  Explore column lists it.
+- **Published and past** — it moves to the archive on `/events` by itself
+  and its page stays reachable with one line saying the event has passed.
+  The menu now says the word set in *Site settings → Navigation → Events
+  page* and opens `/events`. Nothing needs switching on the morning after.
+- **Unpublished** — hidden everywhere.
+
+Site settings → Navigation also holds *Menu leads straight to the live
+event*: off, the menu always says "Events" and opens the list.
+
+The journeys on an event page are ordinary **Journeys** documents, chosen on
+the event's *Journeys* tab, so each keeps its own page under `/journey/…` and
+appears in the journey list too. Two small fields on a journey exist for the
+event stage: each day's *kicker* (a few words under the title) and the *Event
+day* mark, which turns the day's panel dark; *Duration, short* ("4D3N") is the
+code on the chips.
+
+The first event and its three journeys can be written in by script — English
+only, photographs and the programme PDF left for the media library:
+
+```bash
+npm run seed:event:staging
+```
 
 ### The admin
 
@@ -505,6 +546,11 @@ sample catalogue cached as if it were real.
   top of the file, and a lifecycle rule on that bucket. Try a restore on a
   Neon branch once, before it matters.
 
+**Menu words.** Site settings → Navigation holds the four words on the main
+menu (Products, Journeys, About, Inquiry), in both languages. One source for
+the header, the mobile menu, the footer, the path indicator and the chapter
+marks; the addresses themselves never change. Boxes show the words in use.
+
 **Who changed what.** Every save stamps *Last edited by* on the document
 (sidebar, list columns) and on the version it creates, and the Versions tab
 lists it beside the date. Comparing two versions of the inquiry form names
@@ -525,6 +571,28 @@ Three environments, and content does not travel between them.
 | Staging | `staging` | Neon `staging` | `atibhagya-media-staging` | `staging.atibhagya.com`, password-protected |
 | Production | `main` | Neon `main` | `atibhagya-media` | `atibhagya.com` |
 
+### Working together
+
+```
+feature/<task>  ──PR + CI──▶  staging  ──PR + CI──▶  main
+   (one per task)          (test on the staging alias)  (production)
+```
+
+- Nobody commits straight to `staging` or `main`. Branch from `staging`
+  (`feature/journal-page`, `fix/footer-spacing`), open a pull request into
+  `staging`. CI runs; Vercel posts a preview URL on the PR.
+- Merging into `staging` updates the staging alias — that is where the CMS,
+  the form and the pages get a real test.
+- A release is a pull request `staging` → `main`, merged by the owner once
+  staging is clean. Production builds from `main` and applies migrations.
+- The PR template carries the checklist (migration file, import map, no
+  secrets). A bot comment appears when schema files change without a
+  migration. `CODEOWNERS` asks for the owner's review on migrations, the
+  CMS config, security headers and the workflows.
+- Collaborators get the **Write** role, no production secrets, and work
+  locally on SQLite from `.env.example`. Only the staging connection string
+  is shared, and only with whoever creates migrations.
+
 Code moves branch → `staging` → `main`. **Content does not**: products,
 photographs and form wording live in each environment's own database. The
 team edits content in the **production** CMS — drafts, preview and versions
@@ -539,7 +607,11 @@ out loud before anyone types twenty products into staging.
   first, then the build. Migrations run only for production and the `staging`
   branch; a preview build of any other branch skips them, so a migration file
   still being worked on cannot reshape the staging database from a side branch.
-- **Neon** Postgres, one project, branches `main` and `staging`.
+- **Neon** Postgres, one project, branches `production` and `staging`.
+  When creating a branch, set **Auto-delete** to **Never** — the dialog
+  defaults to "After 1 day", and a branch that expires takes its role and
+  endpoint with it (the admin then fails with "password authentication
+  failed" while the public site quietly serves the built-in content).
 - **Cloudflare R2**, two buckets. Uploads go straight from the browser to
   the bucket, so each bucket needs a CORS rule allowing `PUT` from its
   site's origin:
@@ -718,6 +790,7 @@ no-code animation builder.
 | `npm run build` / `start` | Production build and server |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run seed` | Writes the approved copy into Payload (EN + ID) |
+| `npm run seed:event` / `seed:event:staging` | Writes the first event (Prambanan Shiva Festival 2027) and its three journeys, if they are not there yet |
 | `npm run generate:types` | Regenerates `src/payload-types.ts` after a schema change |
 | `npm run generate:importmap` | Regenerates the admin import map |
 

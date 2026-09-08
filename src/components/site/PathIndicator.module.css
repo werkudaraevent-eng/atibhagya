@@ -1,0 +1,211 @@
+/*
+ * The path indicator. Every timing and colour is the design handoff's:
+ * thread fill 0.25s ease-out, knot colour 0.5s / scale 0.6s on the site
+ * ease, breathe 4s, wave flow 2.8s linear. Light and dark variants follow
+ * the page's tokens; over a `[data-dark]` section the ivory set takes over.
+ */
+.path {
+  position: fixed;
+  right: clamp(20px, 2.8vw, 40px);
+  bottom: 40px;
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+/* From the start on a page that opens on the page colour; over a hero, only
+   once the header has turned solid (Motion sets the flag either way). */
+:global(html[data-marks]) .path {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.track {
+  position: relative;
+  width: 24px;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.threadBg {
+  stroke: rgba(var(--ink-rgb), 0.09);
+  stroke-width: 1;
+  transition: stroke 0.8s ease;
+}
+
+.thread {
+  stroke: color-mix(in srgb, var(--emas-deep) 70%, transparent);
+  stroke-width: 1;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition:
+    stroke-dashoffset 0.25s ease-out,
+    stroke 0.8s ease;
+}
+
+/* A knot: 16px, centred on the thread. Scale carries its state. */
+.knot {
+  position: absolute;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(var(--ink-rgb), 0.22);
+  transform: scale(0.5);
+  transition:
+    color 0.5s ease,
+    transform 0.6s var(--ease-out);
+}
+
+.knot[data-state='passed'] {
+  color: color-mix(in srgb, var(--emas-deep) 45%, transparent);
+  transform: scale(0.6);
+}
+
+.knot[data-state='active'] {
+  color: var(--emas-deep);
+  transform: scale(1);
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.knot:hover {
+  color: var(--emas-deep);
+}
+
+/* Each spiral draws itself in as the thread reaches it. */
+.curl {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+/* The stage's name, to the left of the current knot. */
+.label {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  margin-right: 12px;
+  transform: translate(6px, -50%);
+  opacity: 0;
+  white-space: nowrap;
+  font: 400 calc(10px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--emas-deep);
+  pointer-events: none;
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s var(--ease-out),
+    color 0.8s ease;
+}
+
+.knot[data-state='active'] .label,
+.knot:hover .label {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+/* The wave under the thread: still until the last stage, then flowing. */
+.wave {
+  display: block;
+  width: 14px;
+  height: 9px;
+  margin-top: 6px;
+  overflow: hidden;
+  color: rgba(var(--ink-rgb), 0.2);
+  transition: color 0.8s ease;
+}
+
+.waveGlyph {
+  display: block;
+}
+
+.path[data-last] .wave {
+  color: var(--emas-deep);
+}
+
+.path[data-last] .waveGlyph {
+  animation: flow 2.8s linear infinite;
+}
+
+/* --- Over a dark section: the ivory set ---------------------------------- */
+
+.path[data-on-dark] .threadBg {
+  stroke: rgba(246, 243, 231, 0.14);
+}
+
+.path[data-on-dark] .thread {
+  stroke: rgba(227, 189, 114, 0.8);
+}
+
+.path[data-on-dark] .knot {
+  color: rgba(246, 243, 231, 0.35);
+}
+
+.path[data-on-dark] .knot[data-state='passed'] {
+  color: rgba(227, 189, 114, 0.5);
+}
+
+.path[data-on-dark] .knot[data-state='active'],
+.path[data-on-dark] .knot:hover,
+.path[data-on-dark] .label {
+  color: #e3bd72;
+}
+
+.path[data-on-dark] .wave {
+  color: rgba(246, 243, 231, 0.3);
+}
+
+.path[data-on-dark][data-last] .wave {
+  color: #e3bd72;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+@keyframes flow {
+  to {
+    transform: translateX(-14px);
+  }
+}
+
+@media (max-width: 899px) {
+  .path {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .knot[data-state='active'] {
+    animation: none;
+  }
+
+  .path[data-last] .waveGlyph {
+    animation: none;
+  }
+
+  .thread,
+  .curl,
+  .knot,
+  .label {
+    transition: none;
+  }
+}

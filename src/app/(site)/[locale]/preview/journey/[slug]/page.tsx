@@ -6,11 +6,12 @@ import { Motion } from '@/components/Motion'
 import { Itinerary } from '@/components/journeys/Itinerary'
 import { Breadcrumb } from '@/components/site/Breadcrumb'
 import { Footer } from '@/components/site/Footer'
+import { PageMarks } from '@/components/site/PageMarks'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCatalogueCopy, getJourney, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 import { isStaffRequest } from '@/lib/preview'
 import styles from '../../../journey/[slug]/journey-detail.module.css'
 
@@ -28,7 +29,6 @@ export default async function JourneyPreviewPage({
 
   const { locale: raw, slug } = await params
   const locale = raw as Locale
-  const t = dict(locale)
   const prefix = locale === 'id' ? '/id' : ''
 
   const [journey, site, copy] = await Promise.all([
@@ -36,6 +36,7 @@ export default async function JourneyPreviewPage({
     getSite(locale),
     getCatalogueCopy(locale),
   ])
+  const t = withSite(dict(locale), site)
   if (!journey) notFound()
 
   const inquiryHref = `${prefix}/inquiry?journey=${encodeURIComponent(journey.slug)}`
@@ -44,9 +45,17 @@ export default async function JourneyPreviewPage({
     <>
       <Motion />
       <Nav locale={locale} dict={t} tone="light" />
+      <PageMarks
+        stages={[
+          { id: 'top', label: copy.journeys.detailEyebrow },
+          { id: 'itinerary', label: t.journeys.itinerary },
+          { id: 'foot', label: t.footer.enquiries },
+        ]}
+        label={t.yourPath}
+      />
 
       <main id="main">
-        <header className={page.opening}>
+        <header id="top" className={page.opening} data-stage={copy.journeys.detailEyebrow} data-chapter="01">
           <div className={page.openingText}>
             <Breadcrumb
               label={t.youAreHere}
@@ -75,7 +84,7 @@ export default async function JourneyPreviewPage({
           </div>
         </header>
 
-        <section className={page.section}>
+        <section id="itinerary" className={page.section} data-stage={t.journeys.itinerary} data-chapter="02">
           <div className={page.container}>
             {journey.description ? (
               <p className={styles.description} data-fade>

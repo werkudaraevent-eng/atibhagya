@@ -4,11 +4,12 @@ import { CreditImage } from '@/components/CreditImage'
 import { Motion } from '@/components/Motion'
 import { JourneyCards } from '@/components/journeys/JourneyCards'
 import { Footer } from '@/components/site/Footer'
+import { PageMarks } from '@/components/site/PageMarks'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCatalogueCopy, getJourneys, getSite } from '@/lib/content'
 import type { Locale } from '@/lib/content/types'
-import { dict } from '@/lib/i18n/ui'
+import { dict, withSite } from '@/lib/i18n/ui'
 import { Lines } from '@/lib/text'
 import styles from './journey-list.module.css'
 
@@ -39,23 +40,31 @@ export default async function JourneyListPage({
 }) {
   const { locale: raw } = await params
   const locale = raw as Locale
-  const t = dict(locale)
 
   const [journeys, site, copy] = await Promise.all([
     getJourneys(locale),
     getSite(locale),
     getCatalogueCopy(locale),
   ])
+  const t = withSite(dict(locale), site)
   const opening = journeys[0]?.heroImage
 
   return (
     <>
       <Motion />
       <Nav locale={locale} dict={t} />
+      <PageMarks
+        stages={[
+          { id: 'top', label: copy.journeys.eyebrow },
+          { id: 'journeys', label: t.nav.journeys },
+          { id: 'foot', label: t.footer.enquiries },
+        ]}
+        label={t.yourPath}
+      />
 
       <main id="main">
         {/* Journey is the most experiential content type, so it opens full width. */}
-        <div className={styles.opening}>
+        <div id="top" className={styles.opening} data-stage={copy.journeys.eyebrow}>
           {opening ? (
             <div className={styles.openingImage} data-zoom>
               <CreditImage image={opening} sizes="100vw" priority />
@@ -71,7 +80,7 @@ export default async function JourneyListPage({
           </div>
         </div>
 
-        <section className={page.section}>
+        <section id="journeys" className={page.section} data-stage={t.nav.journeys} data-chapter="01">
           <div className={page.container}>
             {journeys.length === 0 ? (
               <p className={page.lede}>{t.journeys.empty}</p>

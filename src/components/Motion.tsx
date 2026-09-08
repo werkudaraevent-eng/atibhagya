@@ -44,17 +44,28 @@ function fresh(scope: ParentNode, selector: string): HTMLElement[] {
  * about the markup has to know GSAP exists:
  *
  *   data-headline    split into real rendered lines, each rising from a mask
+ *   data-words       split into words, each settling from a blur — the new
+ *                    design's text effect, for heroes and section openings
  *   data-fade        fade and rise on entry
+ *   data-delay       seconds to wait before a data-fade / data-words plays,
+ *                    for choreographing an opening (eyebrow, then headline…)
  *   data-reveal      marks entry without moving, for blocks whose parts animate
  *   data-rule        a hairline that draws itself across
  *   data-draw        an SVG stroke (the ornaments) that draws itself in
  *   data-open        an image that opens from its top edge
  *   data-rowtext     catalogue text drifting slower than its photograph
+ *   data-drift       a strip image: lerped lag, a stretch at speed, and a
+ *                    sideways drift by its place in the row (-1 | 0 | 1)
+ *   data-heroveil    the ivory veil the page pulls over the hero
  *   data-zoom        the slow hero zoom
  *   data-heroword    hero text parallax and fade
  *   data-para        image parallax inside a clipping parent
  *   data-clip        clip-path reveal tied to scroll position
+ *   data-procline    a vertical thread whose fill follows the scroll
  *   data-row-index   feeds the running N° in the margin
+ *   data-stage       a section (with an id) that is a stop on the path
+ *                    indicator; with data-chapter="01", also a chapter
+ *   data-dark        a dark section: the fixed marks switch to ivory over it
  *
  * The stylesheet holds every opted-in element at its start state, so nothing
  * flashes in before JavaScript runs — which also means an element that arrives
@@ -76,6 +87,9 @@ export function Motion() {
 
   useLayoutEffect(() => {
     let observer: MutationObserver | undefined
+    let chapterTimer = 0
+    /** Torn down with the effect — for listeners GSAP does not own. */
+    let stopDrift: (() => void) | undefined
 
     // Switching language re-renders the same page with other words. Playing
     // every entrance again — headlines rising, images opening — would make
@@ -104,12 +118,138 @@ export function Motion() {
           // trigger starting at 82vh would report itself inactive once the
           // scroll reached `max`, and the nav would fall back to transparent
           // at the very bottom of the page.
+          // The path indicator and the chapter mark, fed by the page's
+          // stages. The thread fills between one stage's top and the next,
+          // measured at 45% of the viewport; the knot and chapter are those
+          // of the last stage whose top has passed that line. Constants are
+          // the design's own.
+          const stages = gsap.utils.toArray<HTMLElement>('[data-stage]').filter((el) => el.id)
+          const path = document.querySelector<HTMLElement>('[data-role="path"]')
+          const thread = path?.querySelector<SVGPathElement>('[data-role="thread"]') ?? null
+          const knots = path ? gsap.utils.toArray<HTMLElement>('[data-knot]', path) : []
+          const chapter = document.querySelector<HTMLElement>('[data-role="chapter"]')
+          const darks = gsap.utils.toArray<HTMLElement>('[data-dark]')
+          const unit = gsap.utils.clamp(0, 1)
+          let tops: number[] = []
+          let active = -1
+
+          const measure = () => {
+            const y = window.scrollY
+            tops = stages.map((s) => s.getBoundingClientRect().top + y)
+          }
+
+          const overDark = (viewportY: number) =>
+            darks.some((d) => {
+              const r = d.getBoundingClientRect()
+              return viewportY >= r.top && viewportY <= r.bottom
+            })
+
+          /** The vertical middle of a fixed mark, in viewport pixels. */
+          const middleOf = (el: HTMLElement | null, fallback: number) => {
+            if (!el) return fallback
+            const r = el.getBoundingClientRect()
+            return r.height ? r.top + r.height / 2 : fallback
+          }
+
+          const flag = (el: HTMLElement | null, name: string, on: boolean) => {
+            if (!el) return
+            if (on) el.setAttribute(name, '')
+            else el.removeAttribute(name)
+          }
+
+          const followStages = (y: number, atEnd: boolean) => {
+            if (!stages.length || !tops.length) return
+            const vh = window.innerHeight
+            const line = y + vh * 0.45
+            const last = tops.length - 1
+
+            let prog = 0
+            for (let i = 0; i < last; i++) {
+              const a = tops[i]!
+              const b = tops[i + 1]!
+              if (line >= b) prog = i + 1
+              else if (line > a) {
+                prog = i + unit((line - a) / Math.max(1, b - a))
+                break
+              } else break
+            }
+            // A short last stage — the footer on a short page — may never
+            // climb to the 45% line. The bottom of the page is the end of
+            // the path regardless.
+            if (atEnd) prog = last
+            if (thread) {
+              thread.style.strokeDashoffset = (100 - (100 * prog) / Math.max(1, tops.length - 1)).toFixed(2)
+            }
+            knots.forEach((knot, i) => {
+              const drawn = i === 0 ? 1 : unit(prog - (i - 1))
+              const curl = knot.querySelector<SVGPathElement>('[data-role="curl"]')
+              if (curl) curl.style.strokeDashoffset = (100 - 100 * drawn).toFixed(1)
+            })
+
+            let now = 0
+            tops.forEach((t, i) => {
+              if (t <= line) now = i
+            })
+            if (atEnd) now = last
+            if (now !== active) {
+              active = now
+              knots.forEach((knot, i) => {
+                knot.dataset.state = i === now ? 'active' : i < now ? 'passed' : 'idle'
+              })
+              flag(path, 'data-last', now === stages.length - 1)
+
+              if (chapter) {
+                const stage = stages[now]!
+                const number = stage.dataset.chapter
+                chapter.removeAttribute('data-on')
+                window.clearTimeout(chapterTimer)
+                if (number) {
+                  // Out for 450ms, new words, back in — the design's own beat.
+                  chapterTimer = window.setTimeout(() => {
+                    const n = chapter.querySelector('[data-role="chapterN"]')
+                    const t = chapter.querySelector('[data-role="chapterT"]')
+                    if (n) n.textContent = number
+                    if (t) t.textContent = stage.dataset.stage ?? ''
+                    chapter.setAttribute('data-on', '')
+                  }, 450)
+                }
+              }
+            }
+
+            // Each mark switches to its ivory set when its own middle sits
+            // over a dark section — not a fixed point that may be in the
+            // footer while the mark is still over the page.
+            flag(path, 'data-on-dark', overDark(middleOf(path, vh - 100)))
+            flag(chapter, 'data-on-dark', overDark(middleOf(chapter, vh / 2)))
+          }
+
+          // A page that opens on the page colour has a solid header from the
+          // start, so its marks show from the start; over a hero they wait
+          // for the header to turn solid.
+          const opensLight = Boolean(document.querySelector('[data-role="nav"][data-tone="light"]'))
+
           const track = (self: ScrollTrigger) => {
             root.style.setProperty('--scroll-progress', `${(self.progress * 100).toFixed(2)}%`)
-            if (self.scroll() > window.innerHeight * 0.82) root.dataset.navSolid = '1'
+            const solid = self.scroll() > window.innerHeight * 0.82
+            if (solid) root.dataset.navSolid = '1'
             else delete root.dataset.navSolid
+            if (solid || opensLight) root.dataset.marks = '1'
+            else delete root.dataset.marks
+            followStages(self.scroll(), self.progress >= 0.995)
           }
-          ScrollTrigger.create({ start: 0, end: 'max', onUpdate: track, onRefresh: track })
+          const remeasure = (self: ScrollTrigger) => {
+            measure()
+            track(self)
+          }
+          const pageTrigger = ScrollTrigger.create({
+            start: 0,
+            end: 'max',
+            onUpdate: track,
+            onRefresh: remeasure,
+          })
+          // The first state now, not on the next refresh: a page that opens
+          // with its marks showing should not wait for one.
+          remeasure(pageTrigger)
 
           // 3. The catalogue's own N° travels down the margin, taking the
           // number of whichever experience is passing the middle of the screen.
@@ -175,6 +315,7 @@ export function Motion() {
            */
           const enhance = (scope: ParentNode, animate = full) => {
             const headlines = fresh(scope, '[data-headline]')
+            const words = fresh(scope, '[data-words]')
             const fades = fresh(scope, '[data-fade]')
             const rules = fresh(scope, '[data-rule]')
             const opens = fresh(scope, '[data-open]')
@@ -188,6 +329,7 @@ export function Motion() {
                 if (targets.length) gsap.set(targets, vars)
               }
               settle(headlines, { visibility: 'visible' })
+              settle(words, { visibility: 'visible' })
               settle([...fades, ...fresh(scope, '[data-reveal]')], { opacity: 1, y: 0 })
               settle(rules, { scaleX: 1 })
               settle(opens, { clipPath: 'inset(0% 0% 0% 0%)' })
@@ -218,6 +360,35 @@ export function Motion() {
               gsap.set(el, { visibility: 'visible' })
             })
 
+            // Word settle — the new design's text effect. Each word arrives
+            // from a slight blur and settles sharp, 70ms apart, on the same
+            // 1.3s breath as the reference. For the few opening lines, not
+            // for body copy.
+            words.forEach((el) => {
+              SplitText.create(el, {
+                type: 'words',
+                wordsClass: 'settleWord',
+                autoSplit: true,
+                onSplit(self) {
+                  return gsap.fromTo(
+                    self.words,
+                    { opacity: 0, y: 8, filter: 'blur(8px)' },
+                    {
+                      opacity: 1,
+                      y: 0,
+                      filter: 'blur(0px)',
+                      duration: 1.3,
+                      ease: EASE,
+                      stagger: 0.07,
+                      delay: Number(el.dataset.delay ?? 0) || 0,
+                      scrollTrigger: { trigger: el, start: ENTER, once: true },
+                    },
+                  )
+                },
+              })
+              gsap.set(el, { visibility: 'visible' })
+            })
+
             // Fade and rise.
             //
             // `fromTo`, not `from`: the stylesheet already holds these
@@ -233,6 +404,7 @@ export function Motion() {
                   y: 0,
                   duration: 1,
                   ease: EASE,
+                  delay: Number(el.dataset.delay ?? 0) || 0,
                   scrollTrigger: { trigger: el, start: ENTER, once: true },
                 },
               )
@@ -326,6 +498,66 @@ export function Motion() {
 
           // Scroll-driven effects belong to every visit, translation included.
           if (full) {
+            // The hero veil: the page colour drawn over the photograph
+            // between a quarter and 0.85 of the first viewport.
+            gsap.utils.toArray<HTMLElement>('[data-heroveil]').forEach((el) => {
+              gsap.fromTo(
+                el,
+                { opacity: 0 },
+                {
+                  opacity: 1,
+                  ease: 'none',
+                  scrollTrigger: { start: () => window.innerHeight * 0.25, end: () => window.innerHeight * 0.85, scrub: true },
+                },
+              )
+            })
+
+            // Strip images: the design's lerped lag and pull. A smoothed
+            // copy of the scroll (lerp 0.09) trails the real one; the gap
+            // shifts the image, the smoothed velocity (lerp 0.12) stretches
+            // it a touch at speed; each card also drifts sideways by its
+            // place in the row. The reference's own constants throughout.
+            const drifts = gsap.utils.toArray<HTMLElement>('[data-drift]')
+            if (drifts.length) {
+              const sm = { y: window.scrollY, v: 0, last: window.scrollY }
+              let raf = 0
+              const paint = () => {
+                const vh = window.innerHeight
+                const lag = sm.y - window.scrollY
+                const pull = Math.min(1, Math.abs(sm.v) / 60)
+                drifts.forEach((el) => {
+                  const r = el.getBoundingClientRect()
+                  if (r.bottom < -80 || r.top > vh + 80) return
+                  const c = (r.top + r.height / 2 - vh / 2) / vh
+                  const place = parseInt(el.dataset.drift ?? '0', 10) || 0
+                  el.style.transform =
+                    `translate(${(place * c * -16).toFixed(1)}px, ${(c * -18 - lag * 0.12).toFixed(1)}px)` +
+                    ` scale(${(1 + pull * 0.03).toFixed(4)})`
+                })
+              }
+              const step = () => {
+                const y = window.scrollY
+                sm.v += (y - sm.last - sm.v) * 0.12
+                sm.last = y
+                sm.y += (y - sm.y) * 0.09
+                paint()
+                if (Math.abs(y - sm.y) > 0.3 || Math.abs(sm.v) > 0.05) raf = requestAnimationFrame(step)
+                else {
+                  raf = 0
+                  sm.v = 0
+                  paint()
+                }
+              }
+              const wake = () => {
+                if (!raf) raf = requestAnimationFrame(step)
+              }
+              window.addEventListener('scroll', wake, { passive: true })
+              paint()
+              stopDrift = () => {
+                window.removeEventListener('scroll', wake)
+                cancelAnimationFrame(raf)
+              }
+            }
             // The slow hero zoom, and the hero text drifting up as you leave it.
             gsap.utils.toArray<HTMLElement>('[data-zoom]').forEach((el) => {
               gsap.fromTo(
@@ -366,6 +598,22 @@ export function Motion() {
               )
             })
 
+            // A thread that fills as it is read: its height follows the
+            // scroll from the moment its top passes three quarters of the
+            // viewport until its bottom does. The design's own mapping.
+            gsap.utils.toArray<HTMLElement>('[data-procline]').forEach((el) => {
+              const track = el.parentElement ?? el
+              gsap.fromTo(
+                el,
+                { height: '0%' },
+                {
+                  height: '100%',
+                  ease: 'none',
+                  scrollTrigger: { trigger: track, start: 'top 75%', end: 'bottom 75%', scrub: 0.4 },
+                },
+              )
+            })
+
             // Clip-path reveals tied to scroll position.
             gsap.utils.toArray<HTMLElement>('[data-clip]').forEach((el) => {
               gsap.fromTo(
@@ -394,8 +642,8 @@ export function Motion() {
                 Array.from(r.addedNodes).some(
                   (n) =>
                     n instanceof HTMLElement &&
-                    (n.matches('[data-headline],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]') ||
-                      n.querySelector('[data-headline],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]')),
+                    (n.matches('[data-headline],[data-words],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]') ||
+                      n.querySelector('[data-headline],[data-words],[data-fade],[data-rule],[data-open],[data-draw],[data-rowtext],[data-row-index]')),
                 ),
               )
               if (!touched) return
@@ -431,6 +679,8 @@ export function Motion() {
 
     return () => {
       window.clearTimeout(refresh)
+      window.clearTimeout(chapterTimer)
+      stopDrift?.()
       observer?.disconnect()
       context.revert()
       // Anything that survives the route change is back at its stylesheet

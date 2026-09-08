@@ -1,0 +1,6 @@
+/* The first chapter follows the page head directly: the head already
+   carries its own breathing room below the lede, so the section's usual
+   top padding would double it into a hole. */
+.first {
+  padding-top: clamp(16px, 3vh, 32px);
+}

@@ -23,7 +23,55 @@
   inset: 0;
   will-change: transform;
   transform-origin: 50% 45%;
-  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.42)) saturate(0.9) contrast(1.04);
+  /* The grade, part one: quieter colour — but only as much as the Darken
+     slider asks. At 0 the photograph is untouched; at the default 35 it
+     loses a sixth of its saturation, at 60 a quarter. A photograph the
+     client shot for the brand needs little of this; a stock noon needs more. */
+  filter: brightness(calc(1 - var(--hero-darken, 0.35) * 0.35))
+    saturate(calc(1 - var(--hero-darken, 0.35) * 0.45)) contrast(1.02);
+}
+
+/* The grade, part two: the brand's own light, laid over any photograph.
+   Shadows are pulled toward the navy the whole site is inked in; the upper
+   light is warmed a step toward ivory. `soft-light` shifts hue without
+   flattening the image, and both layers breathe with the Darken slider —
+   at 0 the grade nearly disappears with everything else. */
+.grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      205deg,
+      rgba(246, 236, 214, calc(0.1 + var(--hero-darken, 0.35) * 0.3)) 0%,
+      rgba(246, 236, 214, 0) 44%
+    ),
+    linear-gradient(
+      12deg,
+      rgba(16, 34, 47, calc(0.2 + var(--hero-darken, 0.35) * 0.5)) 0%,
+      rgba(16, 34, 47, 0) 62%
+    );
+  mix-blend-mode: soft-light;
+}
+
+/* A whisper of navy over everything, plainly composited — soft-light alone
+   cannot pull a cyan sky toward the brand. Kept faint: a cast, not a wash. */
+.cast {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #10222f;
+  opacity: calc(var(--hero-darken, 0.35) * 0.2);
+  mix-blend-mode: color;
+}
+
+/* At rest the photograph drifts: a 26-second breath from 1.00 to 1.06 and
+   back, with a fingertip of sideways travel so it reads as a slow pan and
+   not a pulse. Sits on the image's own wrapper, below `.zoom` — which the
+   scroll owns — so the two scales compose instead of fighting. */
+.still {
+  animation: kenburns 26s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .video {
@@ -55,10 +103,12 @@
     /* 3. the header's ceiling */
     linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
     /* 2. the vignette behind the words */
+    /* Slightly wider and deeper than before, so the words sit on a quiet
+       ground whatever photograph an editor chooses. */
     radial-gradient(
-      ellipse 58% 46% at 50% 47%,
-      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 0.95)) 0%,
-      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 0.55)) 45%,
+      ellipse 62% 50% at 50% 47%,
+      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 1.05)) 0%,
+      rgba(16, 34, 47, calc(var(--hero-darken, 0.35) * 0.62)) 45%,
       rgba(16, 34, 47, 0) 100%
     ),
     /* the base: a little at the top, more at the foot where the cue sits */
@@ -69,6 +119,46 @@
       rgba(16, 34, 47, 0.08) 60%,
       rgba(16, 34, 47, 0.5) 100%
     );
+}
+
+/* Breath in the picture: a soft pool of ivory light, swelling on a slow
+   nine-second cycle. Overlay only — the photograph itself holds still. */
+.mist {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 42% 34% at 50% 72%,
+    rgba(246, 243, 231, 0.16) 0%,
+    rgba(246, 243, 231, 0) 100%
+  );
+  animation: mist 9s ease-in-out infinite;
+}
+
+/* The page colour, pulled over the hero as it is scrolled past. Motion
+   drives the opacity from 0 at a quarter viewport to 1 at 0.85. */
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--ivory);
+  opacity: 0;
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.06) translate(-1.2%, 0.6%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mist,
+  .still {
+    animation: none;
+  }
 }
 
 /**
@@ -89,11 +179,15 @@
   will-change: transform, opacity;
 }
 
+/* Over a photograph the type has to win against texture, so every line
+   here is set a step firmer than it would be on plain ivory: full weight,
+   near-full opacity, and a soft shadow that gives each glyph an edge. */
 .eyebrow {
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: rgba(246, 243, 231, 0.8);
+  color: rgba(246, 243, 231, 0.92);
+  text-shadow: 0 1px 18px rgba(16, 34, 47, 0.45);
 }
 
 .headline {
@@ -103,15 +197,21 @@
   /* Over the photograph, always ivory — whatever the page theme. */
   color: #f6f3e7;
   letter-spacing: 0.012em;
-  text-shadow: 0 4px 44px rgba(16, 34, 47, 0.5);
+  /* Two shadows: a tight one for the edge, a wide one for the ground. */
+  text-shadow:
+    0 2px 10px rgba(16, 34, 47, 0.35),
+    0 6px 60px rgba(16, 34, 47, 0.6);
   text-wrap: balance;
 }
 
+/* Regular weight, not light: the light face reads as refined on paper and
+   as absent over a photograph. Still a step under the body's 500. */
 .statement {
   margin: 26px auto 0;
-  max-width: 46ch;
-  font: 300 15px/1.9 var(--font-karla), sans-serif;
-  color: rgba(246, 243, 231, 0.88);
+  max-width: 44ch;
+  font: 400 calc(18px * var(--type-scale))/1.8 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.96);
+  text-shadow: 0 2px 24px rgba(16, 34, 47, 0.55);
 }
 
 .actions {
@@ -142,7 +242,7 @@
 
 @media (max-width: 720px) {
   .eyebrow {
-    font-size: 9.5px;
+    font-size: calc(10.5px * var(--type-scale));
     letter-spacing: 0.24em;
   }
 

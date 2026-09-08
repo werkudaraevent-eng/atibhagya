@@ -45,8 +45,10 @@
 .body {
   margin: 20px auto 0;
   max-width: 52ch;
-  font: 300 14.5px/1.9 var(--font-karla), sans-serif;
-  color: rgba(246, 243, 231, 0.86);
+  /* Same rule as the hero: over a photograph, regular weight and an edge. */
+  font: 400 calc(15.5px * var(--type-scale))/1.9 var(--font-karla), sans-serif;
+  color: rgba(246, 243, 231, 0.96);
+  text-shadow: 0 2px 24px rgba(16, 34, 47, 0.55);
 }
 
 .actions {

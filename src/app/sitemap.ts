@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-import { getJourneys, getProducts } from '@/lib/content'
+import { getEvents, getJourneys, getProducts } from '@/lib/content'
 import { locales } from '@/lib/content/types'
 
 /**
@@ -16,7 +16,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SERVER_URL || 'https://atibhagya.com'
   const prefix = (locale: string) => (locale === 'id' ? '/id' : '')
 
-  const [products, journeys] = await Promise.all([getProducts('en'), getJourneys('en')])
+  const [products, journeys, events] = await Promise.all([
+    getProducts('en'),
+    getJourneys('en'),
+    getEvents('en'),
+  ])
 
   const stamp = (value?: string) => (value ? new Date(value) : undefined)
   const latest = (values: (string | undefined)[]) =>
@@ -27,8 +31,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/product', lastModified: stamp(latest(products.map((p) => p.updatedAt))), priority: 0.8 },
     { path: '/journey', lastModified: stamp(latest(journeys.map((j) => j.updatedAt))), priority: 0.8 },
     { path: '/about', priority: 0.8 },
+    ...(events.length
+      ? [{ path: '/events', lastModified: stamp(latest(events.map((e) => e.updatedAt))), priority: 0.8 }]
+      : []),
     ...products.map((p) => ({ path: `/product/${p.slug}`, lastModified: stamp(p.updatedAt), priority: 0.7 })),
     ...journeys.map((j) => ({ path: `/journey/${j.slug}`, lastModified: stamp(j.updatedAt), priority: 0.7 })),
+    // A live event outranks a product page; a past one is a record.
+    ...events.map((e) => ({
+      path: `/events/${e.slug}`,
+      lastModified: stamp(e.updatedAt),
+      priority: e.live ? 0.9 : 0.5,
+    })),
   ]
 
   return pages.flatMap((page) =>

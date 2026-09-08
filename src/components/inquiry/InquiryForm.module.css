@@ -55,7 +55,7 @@
 }
 
 .label {
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink-label);
@@ -65,13 +65,19 @@
 .required {
   color: var(--emas-deep);
   margin-left: 5px;
-  font-size: 12px;
+  font-size: calc(12.5px * var(--type-scale));
   letter-spacing: 0;
 }
 
+/* The page's opening, above the form. The divider under the lede is the
+   pause; the head's own bottom padding would only double it. */
+.head {
+  padding-bottom: 0;
+}
+
 .requiredNote {
-  margin: clamp(28px, 4vh, 40px) 0 0;
-  font: 300 12.5px/1.7 var(--font-karla), sans-serif;
+  margin: clamp(12px, 2vh, 20px) 0 0;
+  font: 300 calc(13px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
   color: var(--ink-caption);
 }
 
@@ -85,7 +91,7 @@
   border: none;
   border-bottom: 1px solid var(--hairline-strong);
   padding: 10px 0;
-  font-size: 15px;
+  font-size: calc(15.5px * var(--type-scale));
   border-radius: 0;
 }
 
@@ -120,14 +126,14 @@
 .textarea {
   border: 1px solid var(--hairline);
   padding: 14px;
-  font-size: 15px;
+  font-size: calc(15.5px * var(--type-scale));
   line-height: 1.75;
   resize: vertical;
   border-radius: var(--radius);
 }
 
 .error {
-  font: 300 12.5px/1.6 var(--font-karla), sans-serif;
+  font: 300 calc(13px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
   color: #8a3a2c;
 }
 
@@ -138,7 +144,7 @@
 /* --- Picks and own ideas ------------------------------------------------ */
 
 .hint {
-  font: 300 12.5px/1.7 var(--font-karla), sans-serif;
+  font: 300 calc(13px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
   color: var(--ink-caption);
 }
 
@@ -182,7 +188,7 @@
   border: 1px solid var(--hairline-strong);
   color: var(--biru);
   border-radius: var(--radius);
-  font: 400 13px/1.2 var(--font-karla), sans-serif;
+  font: 400 calc(13.5px * var(--type-scale))/1.2 var(--font-karla), sans-serif;
   white-space: nowrap;
 }
 
@@ -191,7 +197,7 @@
   background: none;
   color: inherit;
   cursor: pointer;
-  font-size: 15px;
+  font-size: calc(15.5px * var(--type-scale));
   line-height: 1;
   padding: 0;
   opacity: 0.55;
@@ -208,7 +214,7 @@
   background: transparent;
   color: var(--biru);
   padding: 9px 14px;
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   border-radius: var(--radius);
@@ -243,7 +249,7 @@
 .privacy {
   margin: 22px 0 0;
   max-width: 52ch;
-  font: 300 12.5px/1.75 var(--font-karla), sans-serif;
+  font: 300 calc(13px * var(--type-scale))/1.75 var(--font-karla), sans-serif;
   color: var(--ink-caption);
 }
 
@@ -260,7 +266,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--emas-deep);
@@ -282,7 +288,7 @@
 
 .doneBody {
   margin: 20px 0 0;
-  font: 300 15.5px/1.85 var(--font-karla), sans-serif;
+  font: 300 calc(16px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
@@ -301,12 +307,12 @@
   display: grid;
   grid-template-columns: 112px 1fr;
   gap: 16px;
-  font: 300 13.5px/1.7 var(--font-karla), sans-serif;
+  font: 300 calc(14px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
 .doneRecapKey {
-  font: 400 10px/1.9 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1.9 var(--font-karla), sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-label);
@@ -315,7 +321,7 @@
 
 .doneContact {
   margin: 26px 0 0;
-  font: 300 14px/1.9 var(--font-karla), sans-serif;
+  font: 300 calc(14.5px * var(--type-scale))/1.9 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
@@ -337,7 +343,7 @@
   border: none;
   background: none;
   cursor: pointer;
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--emas-deep);
@@ -354,7 +360,7 @@
 }
 
 .hint {
-  font: 300 12px/1.6 var(--font-karla), sans-serif;
+  font: 300 calc(12.5px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
   color: var(--ink-caption);
 }
 
@@ -363,7 +369,7 @@
   align-items: center;
   gap: 10px;
   padding: 8px 0;
-  font: 300 14px/1.5 var(--font-karla), sans-serif;
+  font: 300 calc(14.5px * var(--type-scale))/1.5 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 

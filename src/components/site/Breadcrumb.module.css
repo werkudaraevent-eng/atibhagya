@@ -1,5 +1,5 @@
 .nav {
-  font: 400 11px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }

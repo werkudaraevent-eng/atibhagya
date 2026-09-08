@@ -32,6 +32,8 @@ export const HomePage: GlobalConfig = {
         pillars: rows((l) => defaults(l).home.why.pillars),
         featuredEyebrow: text((l) => defaults(l).home.featured.eyebrow),
         featuredHeadline: text((l) => defaults(l).home.featured.headline),
+        eventLabel: text((l) => defaults(l).home.event.label),
+        eventCtaLabel: text((l) => defaults(l).home.event.ctaLabel),
         ctaHeadline: text((l) => defaults(l).home.cta.headline),
         ctaBody: text((l) => defaults(l).home.cta.body),
         ctaLabel: text((l) => defaults(l).home.cta.label),
@@ -128,6 +130,34 @@ export const HomePage: GlobalConfig = {
               hasMany: true,
               maxRows: 6,
               admin: { description: 'Leave empty to fall back to products marked "featured".' },
+            },
+          ],
+        },
+        {
+          label: 'Event',
+          description:
+            'A chapter between the selected experiences and the closing, shown only while an event is published and still to come.',
+          fields: [
+            {
+              name: 'eventLabel',
+              type: 'text',
+              localized: true,
+              admin: { description: 'The chapter’s name, e.g. "A season at Prambanan".' },
+            },
+            {
+              name: 'eventCtaLabel',
+              type: 'text',
+              localized: true,
+              admin: { description: 'On the button, e.g. "Discover the festival".' },
+            },
+            {
+              name: 'featuredEvent',
+              type: 'relationship',
+              relationTo: 'events',
+              admin: {
+                description:
+                  'Which event to show. Leave empty for the nearest one still to come; nothing renders once it has passed.',
+              },
             },
           ],
         },

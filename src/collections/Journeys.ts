@@ -80,6 +80,28 @@ export const Journeys: CollectionConfig = {
               },
               fields: [
                 { name: 'title', type: 'text', required: true, localized: true },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'kicker',
+                      type: 'text',
+                      localized: true,
+                      admin: {
+                        description: 'A few words under the title on an event page, e.g. "Arrive & settle".',
+                      },
+                    },
+                    {
+                      name: 'highlight',
+                      type: 'checkbox',
+                      label: 'Event day',
+                      admin: {
+                        description:
+                          'The day of the event itself. On an event page it is marked in gold and its panel turns dark.',
+                      },
+                    },
+                  ],
+                },
                 { name: 'note', type: 'textarea', localized: true },
                 {
                   name: 'items',
@@ -111,7 +133,18 @@ export const Journeys: CollectionConfig = {
         {
           label: 'Overview',
           fields: [
-            { name: 'durationText', type: 'text', localized: true },
+            {
+              type: 'row',
+              fields: [
+                { name: 'durationText', type: 'text', localized: true },
+                {
+                  name: 'durationShort',
+                  type: 'text',
+                  label: 'Duration, short',
+                  admin: { description: 'The code on an event page’s journey chips, e.g. 4D3N.' },
+                },
+              ],
+            },
             {
               name: 'facilities',
               type: 'array',

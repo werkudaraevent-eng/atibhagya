@@ -6,7 +6,7 @@
 }
 
 .label {
-  font: 400 10.5px/1 var(--font-karla), sans-serif;
+  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink-label);
@@ -15,7 +15,7 @@
 .required {
   color: var(--emas-deep);
   margin-left: 5px;
-  font-size: 12px;
+  font-size: calc(12.5px * var(--type-scale));
   letter-spacing: 0;
 }
 
@@ -51,7 +51,7 @@
   border: 1px solid var(--hairline-strong);
   border-radius: var(--radius);
   color: var(--biru);
-  font: 400 12.5px/1.2 var(--font-karla), sans-serif;
+  font: 400 calc(13px * var(--type-scale))/1.2 var(--font-karla), sans-serif;
   transition: border-color 0.3s ease;
 }
 
@@ -72,7 +72,7 @@
   background: none;
   color: inherit;
   cursor: pointer;
-  font-size: 14px;
+  font-size: calc(14.5px * var(--type-scale));
   line-height: 1;
   padding: 0;
   opacity: 0.55;
@@ -89,7 +89,7 @@
   background: none;
   padding: 5px 4px;
   color: var(--emas-deep);
-  font: 400 12px/1.2 var(--font-karla), sans-serif;
+  font: 400 calc(12.5px * var(--type-scale))/1.2 var(--font-karla), sans-serif;
   letter-spacing: 0.04em;
   cursor: pointer;
 }
@@ -107,7 +107,7 @@
   border: none;
   background: transparent;
   padding: 7px 0;
-  font-size: 15px;
+  font-size: calc(15.5px * var(--type-scale));
   color: var(--biru);
 }
 
@@ -137,7 +137,7 @@
   border-bottom: 1px solid var(--hairline-strong);
   background: transparent;
   color: var(--biru);
-  font-size: 15px;
+  font-size: calc(15.5px * var(--type-scale));
   text-align: left;
   cursor: pointer;
   transition: border-color 0.3s ease;
@@ -228,7 +228,7 @@
 .item,
 .empty {
   padding: 11px 14px;
-  font: 300 14.5px/1.4 var(--font-karla), sans-serif;
+  font: 300 calc(15px * var(--type-scale))/1.4 var(--font-karla), sans-serif;
   color: var(--biru);
 }
 
