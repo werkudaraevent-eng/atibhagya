@@ -4,109 +4,114 @@ import type { CollectionAfterChangeHook, GlobalAfterChangeHook } from 'payload'
  * Tells Next to rebuild the pages a change touches, so a publish is live in
  * seconds rather than waiting out the 300-second ISR window.
  *
- * `revalidatePath` only exists inside the Next runtime. Payload also runs from
- * the seed and import scripts, where it would throw — hence the guard.
+ * Two kinds of address are given for every change, because they clear
+ * different things:
+ *
+ *   - the route pattern, as Next names it (`/[locale]/product/[slug]`), with
+ *     type `page`: this is what actually drops the prerendered copies on
+ *     Vercel. A pattern covers every page of that route, which is fine —
+ *     they come back one by one, on their next visit;
+ *   - the concrete path in each language (`/en/product/agni-hotra`), for
+ *     the on-demand entries and any proxy in front.
+ *
+ * Asking only for the `/[locale]` layout, or only for `/`, looked right and
+ * cleared nothing; a changed footer took five minutes to show.
+ *
+ * `revalidatePath` only exists inside the Next runtime. Payload also runs
+ * from the seed and import scripts, where it would throw — hence the guard.
  */
-async function revalidate(paths: string[]) {
+async function revalidate(paths: string[], patterns: string[]) {
   try {
     const { revalidatePath } = await import('next/cache')
-    for (const path of paths) revalidatePath(path)
+    for (const pattern of new Set(patterns)) revalidatePath(pattern, 'page')
+    for (const path of new Set(paths)) revalidatePath(path)
   } catch {
     // Outside Next (scripts, tests): nothing to revalidate.
   }
 }
 
-/**
- * The route for a path in each language.
- *
- * Every page lives under `/[locale]`, so the cache entry for the English
- * home page is `/en`, not `/` — `/` is only a rewrite onto it. Revalidating
- * `/` cleared nothing, and a publish took up to five minutes to show.
- * The bare English path is included too, in case a proxy cached it.
- */
+/** The concrete path in each language; `/` is a rewrite onto `/en`. */
 const both = (path: string) => {
   const tail = path === '/' ? '' : path
   return [`/en${tail}`, `/id${tail}`, path]
 }
 
-/** Product and journey documents: their own page, the listing, and home. */
+/**
+ * The route patterns a section's pages live at: its list and its detail.
+ * The home page is a section of its own, with no detail.
+ */
+const SECTIONS = ['product', 'journey', 'events'] as const
+type Section = (typeof SECTIONS)[number]
+
+const patternsFor = (path: string): string[] => {
+  if (path === '/') return ['/[locale]']
+  const section = path.replace(/^\//, '')
+  if ((SECTIONS as readonly string[]).includes(section)) {
+    return [`/[locale]/${section}`, `/[locale]/${section}/[slug]`]
+  }
+  return [`/[locale]${path}`]
+}
+
+/** Every route the site has. */
+const EVERY_PATTERN = [
+  '/[locale]',
+  ...SECTIONS.flatMap((s) => patternsFor(`/${s}`)),
+  '/[locale]/about',
+  '/[locale]/inquiry',
+]
+
+const EVERY_PATH = ['/', '/product', '/journey', '/events', '/about', '/inquiry'].flatMap(both)
+
+/**
+ * A product, journey or event document. Its own page and its list, the
+ * home page (featured products, the season's chapter), and the pages that
+ * quote it: a product is named inside journey days and event itineraries,
+ * a journey inside event pages, so those come back too.
+ */
 export const revalidateCatalogue =
-  (section: 'product' | 'journey'): CollectionAfterChangeHook =>
+  (section: Section): CollectionAfterChangeHook =>
   async ({ doc, previousDoc }) => {
     const slugs = new Set<string>()
     if (doc?.slug) slugs.add(doc.slug)
     if (previousDoc?.slug && previousDoc.slug !== doc?.slug) slugs.add(previousDoc.slug)
 
-    await revalidate([
-      ...both('/'),
-      ...both(`/${section}`),
-      ...[...slugs].flatMap((slug) => both(`/${section}/${slug}`)),
-    ])
-    // A journey also appears on any event that offers it. Which events
-    // cannot be told from here, so every event page is rebuilt.
-    if (section === 'journey') {
-      try {
-        const { revalidatePath } = await import('next/cache')
-        revalidatePath('/[locale]/events/[slug]', 'page')
-        revalidatePath('/[locale]/events', 'page')
-      } catch {
-        // Outside Next: nothing to revalidate.
-      }
-    }
+    const quotedBy: Section[] =
+      section === 'product' ? ['journey', 'events'] : section === 'journey' ? ['events'] : []
+
+    await revalidate(
+      [...both('/'), ...both(`/${section}`), ...[...slugs].flatMap((slug) => both(`/${section}/${slug}`))],
+      ['/[locale]', ...patternsFor(`/${section}`), ...quotedBy.flatMap((s) => patternsFor(`/${s}`))],
+    )
     return doc
   }
 
 /**
- * Every route the site has, as the patterns Next knows them by. Naming each
- * with type `page` is what actually clears them on Vercel: asking for the
- * `/[locale]` layout looked right but left the prerendered pages in place,
- * and a change to the footer took the full ISR window to show.
- */
-const EVERY_ROUTE = [
-  '/[locale]',
-  '/[locale]/product',
-  '/[locale]/product/[slug]',
-  '/[locale]/journey',
-  '/[locale]/journey/[slug]',
-  '/[locale]/events',
-  '/[locale]/events/[slug]',
-  '/[locale]/about',
-  '/[locale]/inquiry',
-]
-
-async function revalidateAll() {
-  try {
-    const { revalidatePath } = await import('next/cache')
-    for (const route of EVERY_ROUTE) revalidatePath(route, 'page')
-    revalidatePath('/[locale]', 'layout')
-  } catch {
-    // Outside Next (scripts, tests): nothing to revalidate.
-  }
-}
-
-/**
- * Master data — a venue, a facilitator, a photograph, an event in the menu —
- * appears on pages that cannot be enumerated from here, so every page is
- * rebuilt on next request rather than a guessed subset.
+ * Master data — a venue, a facilitator, a photograph, a category, an event
+ * in the menu — appears on pages that cannot be enumerated from here, so
+ * every page is rebuilt on its next visit.
  */
 export const revalidateEverything: CollectionAfterChangeHook = async ({ doc }) => {
-  await revalidateAll()
+  await revalidate(EVERY_PATH, EVERY_PATTERN)
   return doc
 }
 
 /**
  * Site settings sit in the header and footer of every page — the menu
- * words, the contact details, the event link — so every page is rebuilt.
+ * words, the contact details, the social links, the event link.
  */
 export const revalidateEverythingGlobal: GlobalAfterChangeHook = async ({ doc }) => {
-  await revalidateAll()
+  await revalidate(EVERY_PATH, EVERY_PATTERN)
   return doc
 }
 
-/** A global maps to a handful of known routes. */
+/**
+ * A page global maps to its own routes. A catalogue heading also sits on
+ * every detail page (the breadcrumb, the eyebrow), so a section's pattern
+ * always includes its detail route.
+ */
 export const revalidateGlobal =
   (paths: string[]): GlobalAfterChangeHook =>
   async ({ doc }) => {
-    await revalidate(paths.flatMap(both))
+    await revalidate(paths.flatMap(both), paths.flatMap(patternsFor))
     return doc
   }
