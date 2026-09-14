@@ -22,7 +22,7 @@ export function EventDays({ days, id, number, stage }: Props) {
       <div className={styles.glow} aria-hidden="true" />
       <div className={`${page.container} ${styles.inner}`}>
         <div className={styles.head}>
-          <SectionMark number={number} mark="macron" label={stage} align="start" />
+          <SectionMark number={number} mark="macron" label={stage} align="center" />
           {days.headline ? (
             <h2 className={styles.headline} data-words>
               <Lines text={days.headline} />

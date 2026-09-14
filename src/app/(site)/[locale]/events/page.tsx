@@ -4,7 +4,7 @@ import { Motion } from '@/components/Motion'
 import { EventList } from '@/components/events/EventList'
 import { Footer } from '@/components/site/Footer'
 import { Nav } from '@/components/site/Nav'
-import { SectionMark } from '@/components/site/Ornament'
+import { Divider, SectionMark } from '@/components/site/Ornament'
 import { PageMarks } from '@/components/site/PageMarks'
 import page from '@/components/site/Page.module.css'
 import { getEvents, getSite } from '@/lib/content'
@@ -62,22 +62,23 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
 
       <main id="main">
         <header id="top" className={page.pageHead} data-stage={t.events.eyebrow}>
-          <div className={page.container}>
+          <div className={`${page.container} ${page.headerCenter}`}>
             <div className={page.eyebrow} data-fade>
               {t.events.eyebrow}
             </div>
-            <h1 className={page.headline} data-headline>
+            <h1 className={page.headlineCenter} data-headline>
               <Lines text={t.events.headline} />
             </h1>
             <p className={page.lede} data-fade>
               {t.events.intro}
             </p>
+            <Divider mark="wave" />
           </div>
         </header>
 
         {events.length === 0 ? (
           <section className={page.section}>
-            <div className={page.container}>
+            <div className={`${page.container} ${page.headerCenter}`}>
               <p className={page.lede}>{t.events.empty}</p>
             </div>
           </section>
@@ -91,7 +92,7 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
             data-chapter="01"
           >
             <div className={page.container}>
-              <SectionMark number="01" mark="wave" label={t.events.upcoming} align="start" />
+              <SectionMark number="01" mark="wave" label={t.events.upcoming} align="center" />
               <EventList events={upcoming} locale={locale} dict={t} lead />
             </div>
           </section>
@@ -111,7 +112,7 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
                 number={upcoming.length ? '02' : '01'}
                 mark="macron"
                 label={t.events.past}
-                align="start"
+                align="center"
               />
               <EventList events={past} locale={locale} dict={t} />
             </div>

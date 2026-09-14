@@ -1,17 +1,23 @@
 .opening {
   position: relative;
-  height: clamp(460px, 78vh, 760px);
+  width: 100%;
+  min-height: clamp(520px, 72vh, 760px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  background: var(--biru-footer);
+  will-change: clip-path;
+  padding: clamp(120px, 16vh, 160px) clamp(24px, 5vw, 64px) clamp(60px, 8vh, 90px);
 }
 
-/* The same three layers as the home hero (see Hero.module.css), at the
-   default strength: the photograph here is whichever journey comes first. */
 .openingImage {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  top: -8%;
+  height: 116%;
   will-change: transform;
-  transform-origin: 50% 45%;
-  filter: brightness(0.88) saturate(0.84) contrast(1.02);
 }
 
 .openingScrim {
@@ -19,69 +25,52 @@
   inset: 0;
   pointer-events: none;
   background:
-    /* The brand grade at default strength — see Hero.module.css. */
-    linear-gradient(
-      205deg,
-      rgba(246, 236, 214, 0.13) 0%,
-      rgba(246, 236, 214, 0) 44%
-    ),
-    linear-gradient(180deg, rgba(16, 34, 47, 0.45) 0, rgba(16, 34, 47, 0) 160px),
-    radial-gradient(
-      ellipse 58% 46% at 50% 47%,
-      rgba(16, 34, 47, 0.33) 0%,
-      rgba(16, 34, 47, 0.19) 45%,
-      rgba(16, 34, 47, 0) 100%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(16, 34, 47, 0.28) 0%,
-      rgba(16, 34, 47, 0.12) 30%,
-      rgba(16, 34, 47, 0.08) 60%,
-      rgba(16, 34, 47, 0.5) 100%
-    );
+    linear-gradient(180deg, rgba(16, 34, 47, 0.6) 0%, rgba(16, 34, 47, 0.25) 35%, rgba(16, 34, 47, 0.7) 100%),
+    radial-gradient(ellipse at center, rgba(16, 34, 47, 0.1) 0%, rgba(16, 34, 47, 0.5) 100%);
+  z-index: 1;
 }
 
-/* Spans the whole opening and pushes its words to the foot, so the scroll
-   fade (data-heroword, which starts when this box's top meets the
-   viewport's) begins with the first scroll — not once the words are already
-   sliding under the header. */
 .openingContent {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 120px clamp(24px, 5vw, 64px) clamp(48px, 10vh, 96px);
-  max-width: 1160px;
-  margin: 0 auto;
+  align-items: center;
+  text-align: center;
+  color: #f6f3e7;
   transform: translateY(var(--hero-shift, 0px));
   will-change: transform, opacity;
 }
 
 .openingEyebrow {
-  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  font: 500 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(246, 243, 231, 0.92);
-  text-shadow: 0 1px 18px rgba(16, 34, 47, 0.45);
+  color: #efcf8c;
+  text-shadow: 0 1px 12px rgba(16, 34, 47, 0.8);
+  text-align: center;
 }
 
 .openingHeadline {
-  margin: 24px 0 0;
-  max-width: 14em;
-  font: 400 clamp(34px, 5vw, 72px) / 1.16 var(--font-marcellus), serif;
-  /* Over the photograph, always ivory — whatever the page theme. */
+  margin: 22px 0 0;
+  font: 400 clamp(38px, 5.2vw, 70px) / 1.12 var(--font-marcellus), serif;
   color: #f6f3e7;
   text-shadow:
-    0 2px 10px rgba(16, 34, 47, 0.35),
-    0 6px 60px rgba(16, 34, 47, 0.6);
+    0 2px 14px rgba(16, 34, 47, 0.45),
+    0 6px 40px rgba(16, 34, 47, 0.65);
+  text-align: center;
   text-wrap: balance;
 }
 
 .openingLede {
-  margin: 20px 0 0;
-  max-width: 46ch;
-  font: 400 calc(18px * var(--type-scale))/1.8 var(--font-karla), sans-serif;
-  color: rgba(246, 243, 231, 0.96);
-  text-shadow: 0 2px 24px rgba(16, 34, 47, 0.55);
+  margin: 14px 0 0;
+  font: 500 clamp(16px, 2vw, 24px) / 1.4 var(--font-marcellus), serif;
+  color: #efcf8c;
+  text-shadow:
+    0 1px 10px rgba(16, 34, 47, 0.6),
+    0 4px 20px rgba(16, 34, 47, 0.4);
+  text-align: center;
+  max-width: 50ch;
 }

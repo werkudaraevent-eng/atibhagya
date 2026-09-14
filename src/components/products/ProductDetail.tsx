@@ -52,117 +52,119 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
 
   return (
     <>
-      {/* Opens on the page colour, so the opening is chapter 01 and the
-          marks show from the first pixel. */}
-      <header id="top" className={page.opening} data-stage={t.detailEyebrow} data-chapter="01">
-        <div className={page.openingText}>
-          {/* The eyebrow, made into a way back out: listing, then category
-              (filtered), then this page. */}
-          <Breadcrumb
-            label={dict.youAreHere}
-            trail={[
-              { label: t.detailEyebrow, href: `${prefix}/product` },
-              ...(product.category
-                ? [
-                    {
-                      label: product.category.name,
-                      href: `${prefix}/product?category=${encodeURIComponent(product.category.slug)}`,
-                    },
-                  ]
-                : []),
-              { label: product.title },
-            ]}
-          />
-          <h1 className={styles.title} data-headline>{product.title}</h1>
-          {product.subtitle ? <p className={styles.subtitle}>{product.subtitle}</p> : null}
-
-          {/* The element's mark, as the pause between the title block and
-              the description: a short hairline drawing out from it. */}
-          <div className={styles.elementDivider}>
-            <span className={styles.elementLine} data-rule aria-hidden="true" />
-            <ElementMark
-              element={product.element}
-              size="medium"
-              label={`${t.element}: ${t.elements[product.element]}`}
-            />
-            <span className={`${styles.elementLine} ${styles.elementLineFade}`} data-rule aria-hidden="true" />
-          </div>
-
-          <p className={styles.description}>{product.description}</p>
-          <div className={styles.actions}>
-            <Link href={inquiryHref} className={page.buttonPrimary}>
-              {t.inquire}
-            </Link>
-          </div>
-        </div>
-
-        <div className={page.openingMedia} data-open>
+      {/* Hero Header: Full-width hero image with Breadcrumb, Title, Subtitle, and Element Mark inside */}
+      <header id="top" className={styles.heroHeader} data-stage={t.detailEyebrow} data-chapter="01">
+        <div className={styles.heroMedia} data-open>
           <div className={styles.para} data-para>
             <CreditImage
               image={product.heroImage}
-              sizes="(max-width: 860px) 100vw, 58vw"
+              sizes="100vw"
               priority
             />
+          </div>
+          <div className={styles.heroOverlay} />
+
+          {/* Centered content inside hero photo */}
+          <div className={styles.heroContent} data-heroword>
+            <Breadcrumb
+              label={dict.youAreHere}
+              trail={[
+                { label: t.detailEyebrow, href: `${prefix}/product` },
+                ...(product.category
+                  ? [
+                      {
+                        label: product.category.name,
+                        href: `${prefix}/product?category=${encodeURIComponent(product.category.slug)}`,
+                      },
+                    ]
+                  : []),
+                { label: product.title },
+              ]}
+              className={styles.heroBreadcrumb}
+            />
+
+            <h1 className={styles.heroTitle} data-headline>{product.title}</h1>
+            {product.subtitle ? <p className={styles.heroSubtitle}>{product.subtitle}</p> : null}
+
+            {/* Symmetrical element mark divider */}
+            <div className={styles.elementDivider}>
+              <span className={`${styles.elementLine} ${styles.elementLineLeft}`} data-rule aria-hidden="true" />
+              <ElementMark
+                element={product.element}
+                size="medium"
+                className={styles.elementMarkHero}
+                label={`${t.element}: ${t.elements[product.element]}`}
+              />
+              <span className={`${styles.elementLine} ${styles.elementLineRight}`} data-rule aria-hidden="true" />
+            </div>
+          </div>
+        </div>
+
+        {/* Description and Inquire action below hero */}
+        <div className={styles.intro}>
+          <div className={styles.introInner}>
+            <p className={styles.description} data-fade>{product.description}</p>
+            <div className={styles.actions} data-fade>
+              <Link href={inquiryHref} prefetch={true} className={page.buttonPrimary}>
+                {t.inquire}
+              </Link>
+            </div>
           </div>
         </div>
       </header>
 
       <section id="experience" className={page.section} data-stage={t.experience} data-chapter="02">
         <div className={page.container}>
-          {/* Narrative on the left, facts in one slim column on the right —
-              the brochure's arrangement. A single stack means a single
-              construction, so every rule and label lines up by definition. */}
-          <div className={styles.body}>
-            <div className={styles.narrative}>
-              {product.highlightText ? (
-                <figure className={styles.highlight} data-fade>
-                  <span className={styles.highlightMark} aria-hidden="true">
-                    &ldquo;
-                  </span>
-                  <blockquote className={styles.highlightText}>{product.highlightText}</blockquote>
-                </figure>
-              ) : null}
+          {/* Narrative: Highlight quote on top, then What to expect below it */}
+          <div className={styles.narrative}>
+            {product.highlightText ? (
+              <figure className={styles.highlight} data-fade>
+                <span className={styles.highlightLine} data-rule aria-hidden="true" />
+                <blockquote className={styles.highlightText}>{product.highlightText}</blockquote>
+                <span className={styles.highlightLine} data-rule aria-hidden="true" />
+              </figure>
+            ) : null}
 
-              {product.whatToExpect ? (
-                <div className={styles.expect} data-fade>
-                  <h2 className={styles.expectTitle}>{t.whatToExpect}</h2>
-                  <p className={styles.expectBody}>{product.whatToExpect}</p>
-                </div>
-              ) : null}
-            </div>
-
-            {programme.length || product.venues.length ? (
-              <aside className={styles.facts} aria-label={t.facilities}>
-                {product.venues.length ? (
-                  <div className={styles.fact} data-fade>
-                    <div className={styles.factKey}>{t.venue}</div>
-                    <ul className={styles.factList}>
-                      {product.venues.map((venue) => (
-                        <li key={venue.id}>
-                          {venue.name}
-                          {venue.location ? ` · ${venue.location}` : ''}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {programme.map((fact) => (
-                  <div key={fact.key} className={styles.fact} data-fade>
-                    <div className={styles.factKey}>{fact.key}</div>
-                    {fact.value ? <div className={styles.factValue}>{fact.value}</div> : null}
-                    {fact.list ? (
-                      <ul className={styles.factList}>
-                        {fact.list.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </div>
-                ))}
-              </aside>
+            {product.whatToExpect ? (
+              <div className={styles.expect} data-fade>
+                <h2 className={styles.expectTitle}>{t.whatToExpect}</h2>
+                <p className={styles.expectBody}>{product.whatToExpect}</p>
+              </div>
             ) : null}
           </div>
+
+          {/* Facts arranged horizontally side-by-side (berjajar) at the bottom */}
+          {programme.length || product.venues.length ? (
+            <aside className={styles.factsRow} aria-label={t.facilities}>
+              {product.venues.length ? (
+                <div className={styles.fact} data-fade>
+                  <div className={styles.factKey}>{t.venue}</div>
+                  <ul className={styles.factList}>
+                    {product.venues.map((venue) => (
+                      <li key={venue.id}>
+                        {venue.name}
+                        {venue.location ? ` · ${venue.location}` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {programme.map((fact) => (
+                <div key={fact.key} className={styles.fact} data-fade>
+                  <div className={styles.factKey}>{fact.key}</div>
+                  {fact.value ? <div className={styles.factValue}>{fact.value}</div> : null}
+                  {fact.list ? (
+                    <ul className={styles.factList}>
+                      {fact.list.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              ))}
+            </aside>
+          ) : null}
 
           {product.gallery.length ? (
             <div className={styles.gallery}>
@@ -207,8 +209,8 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
           data-stage={t.related}
           data-chapter="03"
         >
-          <div className={page.container}>
-            <h2 className={page.headlineSmall} data-fade style={{ marginBottom: 'clamp(32px, 5vh, 56px)' }}>
+          <div className={page.wideContainer}>
+            <h2 className={page.headlineSmall} data-fade style={{ marginBottom: 'clamp(32px, 5vh, 56px)', textAlign: 'center' }}>
               {t.related}
             </h2>
             <ProductGrid products={related} locale={locale} />

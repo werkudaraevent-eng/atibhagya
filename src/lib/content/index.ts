@@ -515,7 +515,7 @@ export async function getFeaturedProducts(locale: Locale): Promise<Product[]> {
       if (chosen.length > 0) {
         const ids = chosen.map((c) => String(typeof c === 'object' ? (c as Any).id : c))
         const picked = ids.map((id) => all.find((p) => p.id === id)).filter(Boolean) as Product[]
-        if (picked.length) return picked
+        if (picked.length) return picked.slice(0, 5)
       }
     } catch {
       // fall through to the featured flag
@@ -523,7 +523,7 @@ export async function getFeaturedProducts(locale: Locale): Promise<Product[]> {
   }
 
   const featured = all.filter((p) => p.featured)
-  return featured.length ? featured.slice(0, 3) : all.slice(0, 3)
+  return featured.length ? featured.slice(0, 5) : all.slice(0, 5)
 }
 
 type CatalogueCopy = {

@@ -21,8 +21,8 @@ type Props = {
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
-/** Longest transition in InquiryModal.module.css, plus a little headroom. */
-const EXIT_MS = 520
+/** Transition time for modal exit in InquiryModal.module.css */
+const EXIT_MS = 220
 
 /**
  * The inquiry as an intercepted dialog: `/inquiry` still has its own URL and
@@ -30,13 +30,12 @@ const EXIT_MS = 520
  * or journey lifts it over the page instead of replacing it — which is also
  * how the prefill keeps its context.
  */
-export function InquiryModal({ homeHref, ...formProps }: Props) {
+export function InquiryModal({ homeHref: _homeHref, ...formProps }: Props) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [closing, setClosing] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
   const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const strandedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const restoreFocusTo = useRef<HTMLElement | null>(null)
   // Guards the exit outside React state: a state updater can be invoked more
   // than once for a single update, and scheduling history navigation from
@@ -50,10 +49,8 @@ export function InquiryModal({ homeHref, ...formProps }: Props) {
 
     exitTimer.current = setTimeout(() => {
       router.back()
-      // If history had nowhere to go, we are still mounted a moment later.
-      strandedTimer.current = setTimeout(() => router.replace(homeHref), 500)
     }, EXIT_MS)
-  }, [router, homeHref])
+  }, [router])
 
   useEffect(() => {
     restoreFocusTo.current = document.activeElement as HTMLElement | null
@@ -64,7 +61,6 @@ export function InquiryModal({ homeHref, ...formProps }: Props) {
   useEffect(
     () => () => {
       if (exitTimer.current) clearTimeout(exitTimer.current)
-      if (strandedTimer.current) clearTimeout(strandedTimer.current)
     },
     [],
   )
@@ -83,7 +79,7 @@ export function InquiryModal({ homeHref, ...formProps }: Props) {
     return () => {
       root.style.overflow = previousOverflow
       root.style.paddingRight = previousPadding
-      restoreFocusTo.current?.focus?.()
+      restoreFocusTo.current?.focus?.({ preventScroll: true })
     }
   }, [])
 

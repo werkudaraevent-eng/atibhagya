@@ -45,13 +45,13 @@ export default async function ProductPreviewPage({
   const others = all.filter((p) => p.slug !== product.slug)
   const sameCategory = others.filter((p) => p.category?.slug === product.category?.slug)
   const related = [...sameCategory, ...others.filter((p) => !sameCategory.includes(p))]
-    .slice(0, 3)
+    .slice(0, 5)
     .map(toCard)
 
   return (
     <>
       <Motion />
-      <Nav locale={locale} dict={t} tone="light" />
+      <Nav locale={locale} dict={t} />
       <PageMarks stages={productStages(t, related.length > 0)} label={t.yourPath} />
       <main id="main">
         <ProductDetail

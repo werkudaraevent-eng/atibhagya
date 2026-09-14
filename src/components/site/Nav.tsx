@@ -146,7 +146,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
             {open ? dict.close : dict.menu}
           </button>
 
-          <Link href={inquiryHref} className={styles.cta}>
+          <Link href={inquiryHref} prefetch={true} className={styles.cta}>
             {dict.nav.inquiry}
           </Link>
         </div>
@@ -193,7 +193,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
             toLight={dict.theme.toLight}
             className={styles.theme}
           />
-          <Link href={inquiryHref} className={styles.cta} onClick={() => setOpen(false)}>
+          <Link href={inquiryHref} prefetch={true} className={styles.cta} onClick={() => setOpen(false)}>
             {dict.nav.inquiry}
           </Link>
         </div>

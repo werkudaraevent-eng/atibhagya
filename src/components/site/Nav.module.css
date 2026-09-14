@@ -65,15 +65,16 @@
 .links {
   display: flex;
   align-items: center;
-  gap: clamp(20px, 2.8vw, 42px);
-  font: 400 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.15em;
+  gap: clamp(28px, 3.8vw, 56px);
+  font: 500 calc(12px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 .link {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
   text-shadow: 0 1px 14px rgba(16, 34, 47, 0.45);
   transition:
     color 0.4s ease,
@@ -127,71 +128,47 @@
   }
 }
 
-/**
- * The call to action is a word with a gold rule, not a box.
- *
- * A boxed button here sat directly above the boxed button in the hero — two
- * identical outlines on one screen, so neither led. The hero keeps the box;
- * the nav keeps a rule that lengthens on hover.
- */
 .cta {
   position: relative;
-  display: inline-block;
-  padding: 6px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: var(--radius);
   color: #fff;
-  font: 500 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  font: 600 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  text-shadow: 0 1px 14px rgba(16, 34, 47, 0.45);
+  text-shadow: 0 1px 10px rgba(16, 34, 47, 0.35);
   transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
     color 0.4s ease,
     text-shadow 0.4s ease;
 }
 
-.cta::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 26px;
-  height: 1px;
-  background: var(--emas);
-  transition:
-    width 0.55s var(--ease-out),
-    background 0.4s ease;
-}
-
 .cta:hover {
-  color: var(--emas-hover);
+  background: var(--emas-deep);
+  border-color: var(--emas-deep);
+  color: #fff;
+  text-shadow: none;
 }
 
-.cta:hover::after {
-  width: 100%;
-}
-
-/**
- * A utility, not a page.
- *
- * Given the nav links' size, letterspacing and colour, the pair read as two
- * more menu items. Setting them smaller and tighter, behind a hairline, makes
- * the group read as one small control instead.
- */
 .lang {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   white-space: nowrap;
-  padding-left: clamp(14px, 1.8vw, 26px);
-  margin-left: clamp(2px, 0.6vw, 8px);
-  border-left: 1px solid rgba(255, 255, 255, 0.22);
+  padding-left: clamp(20px, 2.5vw, 36px);
+  margin-left: clamp(6px, 1vw, 14px);
+  border-left: 1px solid rgba(255, 255, 255, 0.28);
 }
 
-/* Small, but not faint: 0.72 white over the darkened hero clears the 4.5:1
-   contrast that text this size needs; 0.5 did not. */
 .langLink {
-  color: rgba(255, 255, 255, 0.72);
-  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.82);
+  font: 500 calc(11.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  letter-spacing: 0.12em;
   transition: color 0.4s ease;
 }
 
@@ -200,7 +177,8 @@
 }
 
 .langCurrent {
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
 }
 
 .langSep {
@@ -255,17 +233,22 @@
 }
 
 .nav[data-tone='light'] .link:hover,
-.nav[data-tone='light'] .linkActive,
-.nav[data-tone='light'] .cta:hover,
-:global(html[data-nav-solid]) .link:hover,
-:global(html[data-nav-solid]) .linkActive,
-:global(html[data-nav-solid]) .cta:hover {
+.nav[data-tone='light'] .linkActive {
   color: var(--emas-deep);
 }
 
-.nav[data-tone='light'] .cta::after,
-:global(html[data-nav-solid]) .cta::after {
+.nav[data-tone='light'] .cta,
+:global(html[data-nav-solid]) .cta {
+  border-color: var(--emas-deep);
+  color: var(--biru);
+  text-shadow: none;
+}
+
+.nav[data-tone='light'] .cta:hover,
+:global(html[data-nav-solid]) .cta:hover {
   background: var(--emas-deep);
+  border-color: var(--emas-deep);
+  color: var(--ivory);
 }
 
 .nav[data-tone='light'] .langLink,
@@ -446,12 +429,16 @@
 
 .nav .panelFoot .cta {
   margin-left: auto;
+  padding: 8px 18px;
+  border: 1px solid var(--emas);
+  border-radius: var(--radius);
   color: var(--ivory-on-dark);
   text-shadow: none;
 }
 
-.nav .panelFoot .cta::after {
+.nav .panelFoot .cta:hover {
   background: var(--emas);
+  color: var(--biru);
 }
 
 /* While the curtain is up, the header sits on navy: white type, gold mark,
@@ -473,10 +460,6 @@
 
 .nav[data-menu-open] .theme {
   color: rgba(255, 255, 255, 0.7);
-}
-
-.nav[data-menu-open] .cta::after {
-  background: var(--emas);
 }
 
 @media (max-width: 880px) {

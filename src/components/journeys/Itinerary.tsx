@@ -29,54 +29,56 @@ export function Itinerary({ journey, locale, dict }: Props) {
   ].filter(Boolean) as { key: string; value?: string; list?: string[] }[]
 
   return (
-    <>
-      <div className={styles.days}>
-        {journey.days.map((day, index) => (
-          <div key={`${day.title}-${index}`} className={styles.day} data-fade id={`day-${index + 1}`}>
-            <span className={styles.dayNumber}>{String(index + 1).padStart(2, '0')}</span>
-            <div>
-              <div className={styles.dayHeader}>
-                <div className={styles.dayLabel}>
-                  {t.day} {String(index + 1).padStart(2, '0')}
+    <div className={styles.itineraryLayout}>
+      <div className={styles.daysWrapper}>
+        <div className={styles.days}>
+          {journey.days.map((day, index) => (
+            <div key={`${day.title}-${index}`} className={styles.day} data-fade id={`day-${index + 1}`}>
+              <span className={styles.dayNumber}>{String(index + 1).padStart(2, '0')}</span>
+              <div className={styles.dayContent}>
+                <div className={styles.dayHeader}>
+                  <div className={styles.dayLabel}>
+                    {t.day} {String(index + 1).padStart(2, '0')}
+                  </div>
+                  <h3 className={styles.dayTitle}>{day.title}</h3>
+                  {day.note ? <p className={styles.dayNote}>{day.note}</p> : null}
                 </div>
-                <h3 className={styles.dayTitle}>{day.title}</h3>
-                {day.note ? <p className={styles.dayNote}>{day.note}</p> : null}
-              </div>
 
-              <ul className={styles.items}>
-                {day.items.map((item, i) => {
-                  const meta = [item.venueName, ...item.facilitatorNames].filter(Boolean)
-                  return (
-                    <li key={`${item.title}-${i}`} className={styles.item}>
-                      <span className={styles.time}>{item.time ?? ''}</span>
-                      <span>
-                        <span className={styles.itemTitle}>
-                          {item.productSlug ? (
-                            <Link
-                              href={`${prefix}/product/${item.productSlug}`}
-                              className={styles.itemLink}
-                            >
-                              {item.title}
-                            </Link>
-                          ) : (
-                            item.title
-                          )}
-                        </span>
-                        {meta.length ? (
-                          <span className={styles.itemMeta}>{meta.join(' · ')}</span>
-                        ) : null}
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
+                <ul className={styles.items}>
+                  {day.items.map((item, i) => {
+                    const meta = [item.venueName, ...item.facilitatorNames].filter(Boolean)
+                    return (
+                      <li key={`${item.title}-${i}`} className={styles.item}>
+                        <span className={styles.time}>{item.time ?? ''}</span>
+                        <div className={styles.itemBody}>
+                          <span className={styles.itemTitle}>
+                            {item.productSlug ? (
+                              <Link
+                                href={`${prefix}/product/${item.productSlug}`}
+                                className={styles.itemLink}
+                              >
+                                {item.title}
+                              </Link>
+                            ) : (
+                              item.title
+                            )}
+                          </span>
+                          {meta.length ? (
+                            <span className={styles.itemMeta}>{meta.join(' · ')}</span>
+                          ) : null}
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {facts.length ? (
-        <div className={styles.overview}>
+        <aside className={styles.overview} aria-label={t.facilities}>
           {facts.map((fact) => (
             <div key={fact.key} className={styles.fact} data-fade>
               <div className={styles.factKey}>{fact.key}</div>
@@ -90,8 +92,8 @@ export function Itinerary({ journey, locale, dict }: Props) {
               ) : null}
             </div>
           ))}
-        </div>
+        </aside>
       ) : null}
-    </>
+    </div>
   )
 }

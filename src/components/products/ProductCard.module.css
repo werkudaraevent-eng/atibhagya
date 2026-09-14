@@ -1,25 +1,49 @@
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: clamp(24px, 3vw, 40px) clamp(20px, 2.4vw, 32px);
+.sliderWrapper {
+  --slider-gap: clamp(24px, 2.5vw, 40px);
+  --card-width: calc((100% - 3 * var(--slider-gap)) / 4);
+  position: relative;
+  width: 100%;
+  padding: 0 clamp(44px, 4.5vw, 68px);
+}
+
+.sliderTrack {
+  display: flex;
+  gap: var(--slider-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 12px 4px 32px;
+}
+
+.sliderTrack::-webkit-scrollbar {
+  display: none;
 }
 
 .card {
+  flex: 0 0 var(--card-width);
+  min-width: 220px;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   color: var(--biru);
+  transition:
+    transform 0.4s var(--ease-out),
+    opacity 0.4s ease;
 }
 
-/**
- * One ratio for every card. The wireframe allows cards to vary in height but
- * requires titles and metadata to share a baseline — varying the image breaks
- * the second rule, and at catalogue scale a ragged grid reads as unfinished
- * rather than editorial.
- */
+.card:hover {
+  transform: translateY(-4px);
+}
+
 .image {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 5 / 4;
   overflow: hidden;
   background: #e4ded0;
+  border-radius: var(--radius);
+  position: relative;
 }
 
 .image :global(img) {
@@ -33,27 +57,21 @@
 .body {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   padding-top: 18px;
 }
 
 .category {
-  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  font: 600 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--emas-deep);
   min-height: 10px;
 }
 
-/* Two lines reserved, so a long title never pushes the metadata below it. */
 .title {
   margin: 0;
-  font: 400 21px/1.32 var(--font-marcellus), serif;
-  min-height: calc(2 * 1.32em);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font: 400 clamp(20px, 1.8vw, 24px) / 1.28 var(--font-marcellus), serif;
   transition: color 0.4s ease;
 }
 
@@ -61,48 +79,99 @@
   color: var(--emas-deep);
 }
 
-.subtitle {
-  font: 300 calc(13px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
-  color: var(--ink-body);
-  min-height: 1.6em;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* One line, revealed on hover — the height is reserved either way, so nothing
-   reflows when the pointer moves across the grid. */
 .highlight {
-  font: 300 calc(12.5px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
-  color: var(--ink-caption);
-  min-height: 1.7em;
+  margin: 4px 0 0;
+  font: 400 calc(13.5px * var(--type-scale))/1.75 var(--font-karla), sans-serif;
+  color: var(--ink-body);
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  opacity: 0;
-  transition: opacity 0.45s ease;
+  opacity: 1;
 }
 
-.card:hover .highlight,
-.card:focus-visible .highlight {
-  opacity: 1;
+/* Navigation Arrow Buttons - Centered to the photo box (5:4 aspect ratio) */
+.navBtn {
+  position: absolute;
+  top: clamp(120px, 11vw, 155px);
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--ink-rgb), 0.18);
+  background: rgba(var(--paper-rgb), 0.94);
+  backdrop-filter: blur(10px);
+  color: var(--biru);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease,
+    transform 0.35s var(--ease-out),
+    opacity 0.35s ease;
+}
+
+.prevBtn {
+  left: 0;
+}
+
+.nextBtn {
+  right: 0;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: var(--emas-deep);
+  border-color: var(--emas-deep);
+  color: var(--ivory);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.navBtn:disabled {
+  opacity: 0;
+  pointer-events: none;
+  cursor: default;
+}
+
+@media (max-width: 1280px) {
+  .sliderWrapper {
+    --slider-gap: clamp(20px, 2.4vw, 32px);
+    --card-width: calc((100% - 2 * var(--slider-gap)) / 3);
+    padding: 0 clamp(40px, 4vw, 60px);
+  }
+}
+
+@media (max-width: 860px) {
+  .sliderWrapper {
+    --slider-gap: clamp(16px, 2.5vw, 24px);
+    --card-width: calc((100% - var(--slider-gap)) / 2);
+    padding: 0 clamp(36px, 3.5vw, 48px);
+  }
+}
+
+@media (max-width: 580px) {
+  .sliderWrapper {
+    --slider-gap: 16px;
+    --card-width: 80vw;
+    padding: 0;
+  }
+  .prevBtn {
+    left: 8px;
+  }
+  .nextBtn {
+    right: 8px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .card:hover .image :global(img) {
     transform: none;
   }
-
-  .highlight {
-    opacity: 1;
-  }
-}
-
-@media (hover: none) {
-  /* No pointer, no hover reveal — show it and keep the grid honest. */
-  .highlight {
-    opacity: 1;
+  .card:hover {
+    transform: none;
   }
 }

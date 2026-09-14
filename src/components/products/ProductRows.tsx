@@ -30,7 +30,6 @@ export function ProductRows({ products, locale, dict, startIndex = 0 }: Props) {
     <div className={styles.rows}>
       {products.map((product, i) => {
         const index = startIndex + i
-        const number = `N° ${String(index + 1).padStart(2, '0')}`
 
         return (
           <Link
@@ -38,7 +37,6 @@ export function ProductRows({ products, locale, dict, startIndex = 0 }: Props) {
             href={`${prefix}/product/${product.slug}`}
             className={index % 2 === 1 ? `${styles.row} ${styles.rowAlt}` : styles.row}
             data-reveal
-            data-row-index={number}
           >
             <figure className={`${styles.figure} ${styles.media}`}>
               <div className={styles.image} data-open>
@@ -56,7 +54,6 @@ export function ProductRows({ products, locale, dict, startIndex = 0 }: Props) {
 
             <div className={styles.text} data-rowtext>
               <div className={styles.index}>
-                <span className={styles.number}>{number}</span>
                 {product.categoryName ? (
                   <span className={styles.category}>{product.categoryName}</span>
                 ) : null}
@@ -76,10 +73,24 @@ export function ProductRows({ products, locale, dict, startIndex = 0 }: Props) {
                 <p className={styles.highlight}>{product.highlightText}</p>
               ) : null}
 
-              <span className={styles.cue}>
-                <span className={styles.cueRule} data-rule aria-hidden="true" />
-                {dict.readMore}
-              </span>
+              <div className={styles.cueWrapper}>
+                <span className={styles.cue}>
+                  <span className={styles.cueText}>{dict.readMore}</span>
+                  <svg
+                    className={styles.cueArrow}
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <line x1="3" y1="10" x2="16" y2="10" />
+                    <polyline points="11 5 16 10 11 15" />
+                  </svg>
+                </span>
+              </div>
             </div>
           </Link>
         )

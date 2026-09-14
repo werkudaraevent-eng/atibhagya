@@ -1,10 +1,8 @@
 import { Motion } from '@/components/Motion'
-import { CatalogueIndex } from '@/components/products/CatalogueIndex'
 import { ProductBrowser } from '@/components/products/ProductBrowser'
 import { Footer } from '@/components/site/Footer'
 import { PageMarks } from '@/components/site/PageMarks'
 import { Divider } from '@/components/site/Ornament'
-import ornament from '@/components/site/Ornament.module.css'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
 import { getCatalogueCopy, getCategories, getProducts, getSite } from '@/lib/content'
@@ -37,8 +35,6 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
       <Motion />
       <Nav locale={locale} dict={t} tone="light" />
 
-      <CatalogueIndex />
-      {/* No chapters here: the running N° in the margin is this page's mark. */}
       <PageMarks
         stages={[
           { id: 'top', label: copy.products.eyebrow },
@@ -50,13 +46,13 @@ export async function ProductListScreen({ locale, draft = false }: Props) {
 
       <main id="main">
         <header id="top" className={page.pageHead} data-stage={copy.products.eyebrow}>
-          <div className={page.container}>
+          <div className={`${page.container} ${page.headerCenter}`}>
             <div className={page.eyebrow}>{copy.products.eyebrow}</div>
-            <h1 className={page.headline} data-headline>
+            <h1 className={page.headlineCenter} data-headline>
               <Lines text={copy.products.headline} />
             </h1>
             <p className={page.lede}>{copy.products.intro}</p>
-            <Divider mark="wave" className={ornament.dividerStart} />
+            <Divider mark="wave" />
           </div>
         </header>
 

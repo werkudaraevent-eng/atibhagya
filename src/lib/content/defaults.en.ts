@@ -185,7 +185,8 @@ export const productsEn: Product[] = [
     subtitle: 'Ancient spa tradition',
     description:
       'An authentic Javanese ritual spa sequence, drawn from court traditions and delivered with the care of a practice rather than a treatment menu.',
-    highlightText: 'Care as a tradition, not a service.',
+    highlightText:
+      'An authentic Javanese court ritual sequence, delivered with the care and depth of a living tradition.',
     facilities: ['Herbal preparations', 'Traditional cloth'],
     suitableFor: ['solo', 'couple', 'group'],
     element: 'water',
@@ -203,7 +204,8 @@ export const productsEn: Product[] = [
     subtitle: 'Guided stillness',
     description:
       'A guided meditation practice held in the Javanese tradition, making room to listen inward and return to a more balanced state.',
-    highlightText: 'Room to listen inward.',
+    highlightText:
+      'A guided meditation practice held in the Javanese tradition, making room to listen inward and return to balance.',
     facilities: ['Guided session'],
     suitableFor: ['solo', 'group', 'corporate'],
     element: 'ether',
@@ -221,7 +223,8 @@ export const productsEn: Product[] = [
     subtitle: 'Water and intention',
     description:
       'A cleansing rite held as it has been held for generations, with its cultural context explained rather than decorated.',
-    highlightText: 'Held, not performed.',
+    highlightText:
+      'A sacred cleansing rite held across generations, connecting water, intention, and authentic cultural context.',
     facilities: ['Offering ritual', 'Traditional cloth'],
     suitableFor: ['solo', 'group'],
     element: 'water',
@@ -230,7 +233,7 @@ export const productsEn: Product[] = [
     facilitators: [],
     heroImage: { alt: 'Photography to come' },
     gallery: [],
-    featured: false,
+    featured: true,
   },
   {
     id: 'jemparingan',
@@ -239,7 +242,8 @@ export const productsEn: Product[] = [
     subtitle: 'Mindful traditional archery',
     description:
       'Javanese traditional archery practised seated and drawn at the heart — a study in composure, breath, and attention rather than marksmanship.',
-    highlightText: 'Aim with the heart, not the eye.',
+    highlightText:
+      'Javanese traditional archery practised seated and drawn at the heart — a study in composure, breath, and mindful focus.',
     facilities: ['Equipment provided', 'Traditional cloth'],
     suitableFor: ['group', 'corporate', 'community'],
     element: 'air',
@@ -248,7 +252,7 @@ export const productsEn: Product[] = [
     facilitators: [],
     heroImage: { alt: 'Photography to come' },
     gallery: [],
-    featured: false,
+    featured: true,
   },
   {
     id: 'mindful-meetings',

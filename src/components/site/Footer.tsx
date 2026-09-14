@@ -67,7 +67,7 @@ export function Footer({ site, dict, locale }: Props) {
                   {dict.eventLink.label}
                 </Link>
               ) : null}
-              <Link className={styles.link} href={`${prefix}/inquiry`}>
+              <Link className={styles.link} href={`${prefix}/inquiry`} prefetch={true}>
                 {dict.nav.inquiry}
               </Link>
             </nav>

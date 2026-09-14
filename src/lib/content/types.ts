@@ -110,6 +110,7 @@ export type ProductCard = {
   slug: string
   title: string
   subtitle?: string
+  description?: string
   highlightText?: string
   categoryName?: string
   categorySlug?: string
@@ -123,6 +124,7 @@ export const toCard = (product: Product): ProductCard => ({
   slug: product.slug,
   title: product.title,
   subtitle: product.subtitle,
+  description: product.description,
   highlightText: product.highlightText,
   categoryName: product.category?.name,
   categorySlug: product.category?.slug,

@@ -35,25 +35,29 @@
 }
 
 .head {
-  display: grid;
-  grid-template-columns: var(--stage-cols);
-  gap: 24px var(--stage-gap);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
 }
 
 .headline {
-  margin: 0;
+  margin: 16px auto 0;
   max-width: 620px;
   font: 400 clamp(20px, 2.2vw, 30px) / 1.4 var(--font-marcellus), serif;
   text-wrap: balance;
+  text-align: center;
 }
 
 /* --- The chips ---------------------------------------------------------- */
 
 .chips {
-  margin-top: clamp(26px, 4.5vh, 52px);
+  margin-top: clamp(24px, 4vh, 44px);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -158,24 +162,34 @@
   grid-template-columns: 44px minmax(0, 1fr);
   gap: 14px;
   align-items: center;
-  padding: 4px 0;
+  padding: 8px 14px 8px 10px;
+  margin: 2px 0;
   border: 0;
   border-top: 1px solid rgba(var(--ink-rgb), 0.08);
+  border-radius: var(--radius);
   background: transparent;
   color: var(--biru);
   text-align: left;
   cursor: pointer;
   opacity: 0.55;
   transition:
-    opacity 0.4s ease,
+    opacity 0.35s ease,
+    background 0.35s ease,
+    box-shadow 0.35s ease,
     transform 0.3s ease;
   animation: rowIn 0.9s var(--ease-out) both;
   animation-delay: calc(var(--i, 0) * 55ms);
 }
 
-.row:hover,
+.row:hover {
+  opacity: 0.85;
+  background: rgba(169, 123, 42, 0.04);
+}
+
 .row[data-on] {
   opacity: 1;
+  background: rgba(169, 123, 42, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(169, 123, 42, 0.18), 0 2px 10px rgba(169, 123, 42, 0.06);
 }
 
 .list[data-leaving] .row {
@@ -331,20 +345,6 @@
     padding 1.2s ease;
 }
 
-.detailWrap[data-night] {
-  padding: clamp(20px, 3vh, 32px) clamp(20px, 2.4vw, 36px);
-  --p-bg: #10222f;
-  --p-ink: #f6f3e7;
-  --p-body: rgba(246, 243, 231, 0.74);
-  --p-body2: rgba(246, 243, 231, 0.64);
-  --p-muted: rgba(246, 243, 231, 0.5);
-  --p-gold: #e3bd72;
-  --p-rule: rgba(246, 243, 231, 0.14);
-  --p-cta: rgba(246, 243, 231, 0.8);
-  --p-ghost: rgba(227, 189, 114, 0.08);
-  --p-glow: 1;
-}
-
 .glow {
   position: absolute;
   right: -18%;
@@ -371,18 +371,6 @@
   }
 }
 
-.ghost {
-  position: absolute;
-  right: -2%;
-  bottom: -6%;
-  font: 400 clamp(160px, 22vh, 260px) / 0.8 var(--font-marcellus), serif;
-  color: var(--p-ghost);
-  pointer-events: none;
-  user-select: none;
-  will-change: transform;
-  transition: color 1.2s ease;
-}
-
 .detail {
   position: relative;
   flex: 1;
@@ -399,44 +387,14 @@
 
 .dayLine {
   display: flex;
-  gap: 18px;
-  align-items: baseline;
-}
-
-.odometer {
-  display: inline-flex;
-  font: 400 clamp(40px, 4.6vw, 64px) / 1 var(--font-marcellus), serif;
-  color: var(--p-gold);
-  transition: color 1.2s ease;
-}
-
-.digitWindow {
-  display: inline-block;
-  height: 1em;
-  overflow: hidden;
-}
-
-.digitStack {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-  transition: transform 0.7s var(--ease-out);
-}
-
-.digitLate {
-  transition-delay: 0.08s;
-}
-
-.digit {
-  display: block;
-  height: 1em;
+  align-items: center;
 }
 
 .dayKicker {
-  font: 400 calc(10px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
+  font: 600 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--p-muted);
+  color: var(--p-gold);
   transition: color 0.8s ease;
 }
 

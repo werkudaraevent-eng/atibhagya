@@ -60,52 +60,11 @@ export function JourneyStage({
   const timer = useRef(0)
   const listRef = useRef<HTMLDivElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
-  const ghostRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const lastWheelTime = useRef(0)
+  const wheelDelta = useRef(0)
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
-
-  // The ghost numeral drifts against the pointer — a fingertip of depth
-  // behind the words. Pointer devices only, and never under reduced motion.
-  useEffect(() => {
-    const wrap = wrapRef.current
-    const ghost = ghostRef.current
-    if (!wrap || !ghost) return
-    if (!window.matchMedia('(pointer: fine)').matches) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    const cur = { x: 0, y: 0, tx: 0, ty: 0 }
-    let raf = 0
-    const step = () => {
-      cur.x += (cur.tx - cur.x) * 0.06
-      cur.y += (cur.ty - cur.y) * 0.06
-      ghost.style.transform = `translate(${cur.x.toFixed(1)}px, ${cur.y.toFixed(1)}px)`
-      if (Math.abs(cur.tx - cur.x) > 0.1 || Math.abs(cur.ty - cur.y) > 0.1) raf = requestAnimationFrame(step)
-      else raf = 0
-    }
-    const wake = () => {
-      if (!raf) raf = requestAnimationFrame(step)
-    }
-    const onMove = (e: PointerEvent) => {
-      const r = wrap.getBoundingClientRect()
-      const nx = (e.clientX - (r.left + r.width / 2)) / r.width
-      const ny = (e.clientY - (r.top + r.height / 2)) / r.height
-      cur.tx = nx * -22
-      cur.ty = ny * -16
-      wake()
-    }
-    const onLeave = () => {
-      cur.tx = 0
-      cur.ty = 0
-      wake()
-    }
-    wrap.addEventListener('pointermove', onMove, { passive: true })
-    wrap.addEventListener('pointerleave', onLeave)
-    return () => {
-      wrap.removeEventListener('pointermove', onMove)
-      wrap.removeEventListener('pointerleave', onLeave)
-      cancelAnimationFrame(raf)
-    }
-  }, [])
 
   if (!journeys.length) return null
 
@@ -114,7 +73,6 @@ export function JourneyStage({
   const n = days.length
   const di = Math.min(day, Math.max(0, n - 1))
   const current = days[di]
-  const night = Boolean(current?.highlight)
   const nn = String(di + 1).padStart(2, '0')
   const dense = n > 6
 
@@ -142,6 +100,63 @@ export function JourneyStage({
     }, JOURNEY_SWAP)
   }
 
+  const stateRef = useRef({ di, n, pickDay })
+  stateRef.current = { di, n, pickDay }
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+
+    const handleWheel = (e: WheelEvent) => {
+      const { di: curDi, n: totalN, pickDay: curPickDay } = stateRef.current
+
+      // Mentok atas (Day 01) dan scroll ke atas -> biarkan scroll halaman
+      if (e.deltaY < 0 && curDi <= 0) {
+        return
+      }
+
+      // Mentok bawah (Hari Terakhir) dan scroll ke bawah -> biarkan scroll halaman
+      if (e.deltaY > 0 && curDi >= totalN - 1) {
+        return
+      }
+
+      // Masih di dalam rentang itinerary: cegah scroll halaman dan ganti hari
+      e.preventDefault()
+      e.stopPropagation()
+
+      const now = Date.now()
+      wheelDelta.current += e.deltaY
+
+      const threshold = 20
+      const cooldown = 180
+
+      if (now - lastWheelTime.current > cooldown && Math.abs(wheelDelta.current) >= threshold) {
+        if (wheelDelta.current > 0 && curDi < totalN - 1) {
+          curPickDay(curDi + 1)
+          lastWheelTime.current = now
+        } else if (wheelDelta.current < 0 && curDi > 0) {
+          curPickDay(curDi - 1)
+          lastWheelTime.current = now
+        }
+        wheelDelta.current = 0
+      }
+    }
+
+    el.addEventListener('wheel', handleWheel, { passive: false })
+    return () => {
+      el.removeEventListener('wheel', handleWheel)
+    }
+  }, [])
+
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    const activeBtn = list.querySelectorAll<HTMLButtonElement>('button')[di]
+    if (activeBtn) {
+      activeBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }
+  }, [di, pk])
+
   const onListKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
     e.preventDefault()
@@ -156,6 +171,7 @@ export function JourneyStage({
 
   return (
     <section
+      ref={sectionRef}
       id={id}
       className={styles.section}
       data-stage={stage}
@@ -164,7 +180,7 @@ export function JourneyStage({
     >
       <div className={styles.inner}>
         <div className={styles.head}>
-          <SectionMark number={number} mark="wave" label={stage} align="start" />
+          <SectionMark number={number} mark="wave" label={stage} align="center" />
           {headline ? (
             <h2 className={styles.headline} data-fade>
               <Lines text={headline} />
@@ -225,20 +241,13 @@ export function JourneyStage({
             <span className={styles.rowEnd} aria-hidden="true" />
           </div>
 
-          <div ref={wrapRef} className={styles.detailWrap} data-night={night || undefined}>
+          <div ref={wrapRef} className={styles.detailWrap}>
             <div className={styles.glow} aria-hidden="true" />
-            <div ref={ghostRef} className={styles.ghost} aria-hidden="true">
-              {nn}
-            </div>
 
             <div className={styles.detail} data-hidden={detailHidden || undefined} aria-live="polite">
               {current ? (
                 <>
                   <div className={styles.dayLine}>
-                    <span className={styles.odometer} aria-label={`${t.day} ${nn}`}>
-                      <Odometer digit={nn[0]!} />
-                      <Odometer digit={nn[1]!} late />
-                    </span>
                     <span className={styles.dayKicker}>
                       {t.day} {nn}
                       {current.kicker ? ` · ${current.kicker}` : ''}
@@ -276,7 +285,7 @@ export function JourneyStage({
                 {[journey.durationText, journey.summary].filter(Boolean).join(' · ')}
               </span>
               <div className={styles.footActions}>
-                <Link href={enquireHref} className={styles.ghostButton}>
+                <Link href={enquireHref} prefetch={true} className={styles.ghostButton}>
                   {t.enquire}
                 </Link>
                 <Link href={journeyHref} className={styles.footLink}>
@@ -293,25 +302,6 @@ export function JourneyStage({
         </div>
       </div>
     </section>
-  )
-}
-
-/** One rolling digit: a column of ten, translated to the one in view. */
-function Odometer({ digit, late }: { digit: string; late?: boolean }) {
-  const d = Number(digit) || 0
-  return (
-    <span className={styles.digitWindow}>
-      <span
-        className={late ? `${styles.digitStack} ${styles.digitLate}` : styles.digitStack}
-        style={{ transform: `translateY(-${d}em)` }}
-      >
-        {DIGITS.map((g) => (
-          <span key={g} className={styles.digit}>
-            {g}
-          </span>
-        ))}
-      </span>
-    </span>
   )
 }
 

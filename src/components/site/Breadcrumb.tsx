@@ -9,6 +9,7 @@ type Props = {
   trail: Crumb[]
   /** Accessible name for the landmark, e.g. "You are here". */
   label: string
+  className?: string
 }
 
 /**
@@ -26,7 +27,7 @@ type Props = {
  * Also emits BreadcrumbList structured data, which is what lets a search
  * result show "Atibhagya › Product › Rituals & Ceremony" under the title.
  */
-export function Breadcrumb({ trail, label }: Props) {
+export function Breadcrumb({ trail, label, className }: Props) {
   const base = serverURL
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -40,7 +41,7 @@ export function Breadcrumb({ trail, label }: Props) {
   }
 
   return (
-    <nav className={styles.nav} aria-label={label}>
+    <nav className={[styles.nav, className].filter(Boolean).join(' ')} aria-label={label}>
       <ol className={styles.list}>
         {trail.map((crumb, i) => {
           const last = i === trail.length - 1
