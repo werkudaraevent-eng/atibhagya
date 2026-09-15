@@ -66,10 +66,8 @@ export function JourneyStage({
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
-  if (!journeys.length) return null
-
-  const journey = journeys[Math.min(pk, journeys.length - 1)]!
-  const days = journey.days
+  const journey = journeys.length > 0 ? journeys[Math.min(pk, journeys.length - 1)]! : null
+  const days = journey?.days ?? []
   const n = days.length
   const di = Math.min(day, Math.max(0, n - 1))
   const current = days[di]
@@ -101,7 +99,9 @@ export function JourneyStage({
   }
 
   const stateRef = useRef({ di, n, pickDay })
-  stateRef.current = { di, n, pickDay }
+  useEffect(() => {
+    stateRef.current = { di, n, pickDay }
+  })
 
   useEffect(() => {
     const el = sectionRef.current
@@ -164,6 +164,8 @@ export function JourneyStage({
     pickDay(next)
     listRef.current?.querySelectorAll<HTMLButtonElement>('button')[next]?.focus()
   }
+
+  if (!journeys.length || !journey || !current) return null
 
   const enquireHref = `${prefix}/inquiry?journey=${encodeURIComponent(journey.slug)}`
   const journeyHref = `${prefix}/journey/${journey.slug}`
