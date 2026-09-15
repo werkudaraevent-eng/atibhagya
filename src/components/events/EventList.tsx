@@ -62,7 +62,12 @@ export function EventList({ events, locale, dict, lead = false }: Props) {
                 ) : null}
               </>
             ) : null}
-            <span className={styles.more}>{dict.readMore}</span>
+            <span className={styles.more}>
+              <span>{dict.readMore}</span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.moreArrow}>
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </span>
           </div>
         </Link>
       ))}

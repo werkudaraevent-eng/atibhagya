@@ -32,7 +32,13 @@ import { serverURL } from './lib/server-url'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const databaseURI = process.env.DATABASE_URI || ''
+// pg-connection-string emits a SECURITY WARNING when sslmode=require is used.
+// Next.js dev overlay flags this server warning as a red error overlay.
+// sslmode=verify-full retains the exact current behavior and eliminates the warning.
+const databaseURI = (process.env.DATABASE_URI || '').replace(
+  'sslmode=require',
+  'sslmode=verify-full',
+)
 
 /**
  * Production runs on Postgres (Payload Cloud or any managed instance). A

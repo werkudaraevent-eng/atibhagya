@@ -66,7 +66,7 @@ export default async function JourneyListPage({
         {/* Journey is the most experiential content type, so it opens full width. */}
         <div id="top" className={styles.opening} data-stage={copy.journeys.eyebrow}>
           {opening ? (
-            <div className={styles.openingImage} data-zoom>
+            <div className={styles.openingImage} data-para>
               <CreditImage image={opening} sizes="100vw" priority />
             </div>
           ) : null}

@@ -58,17 +58,6 @@ export function CreditImage({
         priority={priority}
         className={styles.img}
       />
-      {image.credit && !hideCredit ? (
-        <span className={styles.credit}>
-          {image.creditUrl && !insideLink ? (
-            <a href={image.creditUrl} target="_blank" rel="noopener noreferrer">
-              {image.credit}
-            </a>
-          ) : (
-            image.credit
-          )}
-        </span>
-      ) : null}
     </div>
   )
 }

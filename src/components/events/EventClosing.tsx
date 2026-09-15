@@ -38,7 +38,7 @@ export function EventClosing({ closing, id, stage, inquiryHref, dict, programmeU
       <div className={styles.scrim} />
 
       <div className={styles.content}>
-        <div>
+        <div className={styles.mainCol}>
           {closing.eyebrow ? (
             <div className={styles.eyebrow} data-fade>
               {closing.eyebrow}
@@ -55,14 +55,20 @@ export function EventClosing({ closing, id, stage, inquiryHref, dict, programmeU
             </p>
           ) : null}
           <div className={styles.actions} data-fade>
-            <Link href={inquiryHref} className={page.buttonGhost}>
-              {closing.ctaLabel ?? dict.inquiry.eyebrow}
-            </Link>
-            {downloads.map((d) => (
-              <a key={d.href} href={d.href} className={styles.download} target="_blank" rel="noopener noreferrer">
-                {d.label}
-              </a>
-            ))}
+            <div className={styles.primaryAction}>
+              <Link href={inquiryHref} prefetch={true} className={page.buttonGhost}>
+                {closing.ctaLabel ?? dict.inquiry.eyebrow}
+              </Link>
+            </div>
+            {downloads.length ? (
+              <div className={styles.downloads}>
+                {downloads.map((d) => (
+                  <a key={d.href} href={d.href} className={styles.download} target="_blank" rel="noopener noreferrer">
+                    {d.label}
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
 

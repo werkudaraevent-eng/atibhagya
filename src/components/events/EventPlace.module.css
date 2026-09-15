@@ -1,3 +1,11 @@
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: clamp(36px, 6vh, 60px);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -8,7 +16,7 @@
 .frame {
   position: relative;
   aspect-ratio: 4 / 5;
-  background: #e4ded0;
+  background: var(--ivory-2);
   overflow: hidden;
 }
 
@@ -34,7 +42,7 @@
 }
 
 .caption {
-  font: 400 calc(10.5px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
+  font: 600 calc(10.5px * var(--type-scale))/1.7 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--ink-label);
@@ -49,6 +57,6 @@
 .body {
   margin: 26px 0 0;
   max-width: 520px;
-  font: 300 calc(15px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
+  font: 400 calc(15px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }

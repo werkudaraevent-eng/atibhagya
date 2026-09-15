@@ -1,38 +1,45 @@
-/**
- * One row, three shapes.
- *
- * Two stacked rows of identical text buttons read as the same control twice.
- * Category stays the spine as text links; audience becomes a select, and
- * search an underlined field — different affordances, different silhouettes.
- */
 .controls {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: clamp(18px, 3vw, 44px);
-  padding: 22px 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 44px);
+  padding: 18px 0;
   border-top: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
-  margin-bottom: clamp(8px, 2vh, 20px);
+  margin-bottom: clamp(28px, 4vh, 48px);
 }
 
 .categories {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: clamp(16px, 2.2vw, 32px);
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: clamp(18px, 2.2vw, 32px);
+  overflow-x: auto;
+  white-space: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 0 8px;
+}
+
+.categories::-webkit-scrollbar {
+  display: none;
 }
 
 .filter {
+  flex-shrink: 0;
   border: none;
   background: none;
   padding: 0;
   cursor: pointer;
-  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  font: 600 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--ink-label);
   transition: color 0.35s ease;
+  white-space: nowrap;
 }
 
 .filter:hover {
@@ -54,52 +61,13 @@
   background: var(--emas-deep);
 }
 
-.aside {
-  margin-left: auto;
-  display: flex;
-  align-items: baseline;
-  gap: clamp(18px, 2.4vw, 34px);
-}
-
-.audience {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.audienceLabel {
-  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-caption);
-}
-
-.select {
-  appearance: none;
-  border: none;
-  background: transparent;
-  padding: 0 18px 2px 0;
-  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--biru);
-  cursor: pointer;
-  background-image: linear-gradient(45deg, transparent 50%, var(--emas-deep) 50%),
-    linear-gradient(135deg, var(--emas-deep) 50%, transparent 50%);
-  background-position:
-    calc(100% - 5px) 60%,
-    calc(100% - 1px) 60%;
-  background-size:
-    4px 4px,
-    4px 4px;
-  background-repeat: no-repeat;
-}
-
 .search {
+  flex-shrink: 0;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
-  min-width: 180px;
+  width: clamp(140px, 18vw, 220px);
+  margin-left: auto;
 }
 
 .searchInput {
@@ -130,14 +98,6 @@
 
 .clear:hover {
   color: var(--emas-deep);
-}
-
-.count {
-  padding: 14px 0 clamp(20px, 4vh, 40px);
-  font: 300 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--ink-caption);
 }
 
 .empty {
@@ -192,22 +152,11 @@
   color: var(--ink-caption);
 }
 
-@media (max-width: 900px) {
-  .aside {
-    margin-left: 0;
-    width: 100%;
-    justify-content: space-between;
-  }
-}
-
-@media (max-width: 560px) {
-  .aside {
-    flex-direction: column;
-    align-items: flex-start;
+@media (max-width: 640px) {
+  .controls {
     gap: 16px;
   }
-
   .search {
-    width: 100%;
+    width: 120px;
   }
 }

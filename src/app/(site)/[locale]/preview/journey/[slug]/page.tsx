@@ -44,7 +44,7 @@ export default async function JourneyPreviewPage({
   return (
     <>
       <Motion />
-      <Nav locale={locale} dict={t} tone="light" />
+      <Nav locale={locale} dict={t} />
       <PageMarks
         stages={[
           { id: 'top', label: copy.journeys.detailEyebrow },
@@ -55,37 +55,39 @@ export default async function JourneyPreviewPage({
       />
 
       <main id="main">
-        <header id="top" className={page.opening} data-stage={copy.journeys.detailEyebrow} data-chapter="01">
-          <div className={page.openingText}>
-            <Breadcrumb
-              label={t.youAreHere}
-              trail={[
-                { label: copy.journeys.detailEyebrow, href: `${prefix}/journey` },
-                { label: journey.title },
-              ]}
-            />
-            <h1 className={styles.title} data-headline>{journey.title}</h1>
-            {journey.positioning ? <p className={styles.positioning}>{journey.positioning}</p> : null}
-            <div className={styles.actions}>
-              <Link href={inquiryHref} className={page.buttonPrimary}>
-                {t.journeys.inquire}
-              </Link>
-            </div>
-          </div>
-
-          <div className={page.openingMedia} data-open>
+        <header id="top" className={styles.heroHeader} data-stage={copy.journeys.detailEyebrow} data-chapter="01">
+          <div className={styles.heroMedia} data-open>
             <div className={styles.para} data-para>
               <CreditImage
                 image={journey.heroImage}
-                sizes="(max-width: 860px) 100vw, 58vw"
+                sizes="100vw"
                 priority
               />
+            </div>
+            <div className={styles.heroOverlay} />
+
+            <div className={styles.heroContent} data-heroword>
+              <Breadcrumb
+                label={t.youAreHere}
+                trail={[
+                  { label: copy.journeys.detailEyebrow, href: `${prefix}/journey` },
+                  { label: journey.title },
+                ]}
+                className={styles.heroBreadcrumb}
+              />
+              <h1 className={styles.title} data-headline>{journey.title}</h1>
+              {journey.positioning ? <p className={styles.positioning}>{journey.positioning}</p> : null}
+              <div className={styles.actions} data-fade>
+                <Link href={inquiryHref} className={styles.inquireBtn}>
+                  {t.journeys.inquire}
+                </Link>
+              </div>
             </div>
           </div>
         </header>
 
         <section id="itinerary" className={page.section} data-stage={t.journeys.itinerary} data-chapter="02">
-          <div className={page.container}>
+          <div className={page.wideContainer}>
             {journey.description ? (
               <p className={styles.description} data-fade>
                 {journey.description}

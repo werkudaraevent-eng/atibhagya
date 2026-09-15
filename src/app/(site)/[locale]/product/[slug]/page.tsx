@@ -64,13 +64,13 @@ export default async function ProductPage({
   const others = all.filter((p) => p.slug !== product.slug)
   const sameCategory = others.filter((p) => p.category?.slug === product.category?.slug)
   const related = [...sameCategory, ...others.filter((p) => !sameCategory.includes(p))]
-    .slice(0, 3)
+    .slice(0, 5)
     .map(toCard)
 
   return (
     <>
       <Motion />
-      <Nav locale={locale} dict={t} tone="light" />
+      <Nav locale={locale} dict={t} />
       {/* Outside <main>: its entrance transform would pin these overlays. */}
       <PageMarks stages={productStages(t, related.length > 0)} label={t.yourPath} />
 

@@ -136,20 +136,22 @@ export const productsId: Product[] = [
   {
     ...productsEn[1],
     title: 'Spa Ritual Jawa',
-    subtitle: 'Tradisi spa kuno',
+    subtitle: 'Tradisi spa leluhur',
     description:
-      'Rangkaian spa ritual Jawa yang otentik, bersumber dari tradisi keraton dan dijalankan sebagai sebuah laku, bukan daftar perawatan.',
-    highlightText: 'Perawatan sebagai tradisi, bukan layanan.',
+      'Rangkaian spa ritual Jawa yang autentik, berakar dari tradisi keraton dan dihadirkan dengan ketulusan sebuah praktik, bukan sekadar menu perawatan.',
+    highlightText:
+      'Rangkaian spa ritual Jawa yang autentik, berakar dari tradisi keraton dan dihadirkan dengan ketulusan sebuah praktik.',
     facilities: ['Ramuan herbal', 'Kain tradisional'],
     category: catId('spa-retreats'),
   },
   {
     ...productsEn[2],
     title: 'Meditasi Jawa',
-    subtitle: 'Keheningan yang dipandu',
+    subtitle: 'Keheningan terpandu',
     description:
-      'Praktik meditasi yang dipandu dalam tradisi Jawa, membuka ruang untuk mendengarkan ke dalam dan kembali pada keseimbangan.',
-    highlightText: 'Ruang untuk mendengarkan ke dalam.',
+      'Praktik meditasi terpandu dalam tradisi Jawa, memberi ruang untuk mendengarkan ke dalam dan kembali pada keadaan yang lebih seimbang.',
+    highlightText:
+      'Praktik meditasi terpandu dalam tradisi Jawa, memberi ruang untuk mendengarkan ke dalam dan kembali seimbang.',
     facilities: ['Sesi terpandu'],
     category: catId('rituals-ceremony'),
   },
@@ -159,7 +161,8 @@ export const productsId: Product[] = [
     subtitle: 'Air dan niat',
     description:
       'Ritus penyucian yang dijalankan sebagaimana ia dijalankan turun-temurun, dengan konteks budaya yang dijelaskan, bukan dijadikan hiasan.',
-    highlightText: 'Dijaga, bukan dipertunjukkan.',
+    highlightText:
+      'Ritus penyucian sakral yang dijalankan turun-temurun, menghubungkan elemen air, niat murni, dan konteks budaya.',
     facilities: ['Ritual persembahan', 'Kain tradisional'],
     category: catId('rituals-ceremony'),
   },
@@ -168,7 +171,8 @@ export const productsId: Product[] = [
     subtitle: 'Panahan tradisional yang mindful',
     description:
       'Panahan tradisional Jawa yang dilakukan sambil duduk dan ditarik dari hati — sebuah latihan ketenangan, napas, dan perhatian; bukan soal ketepatan bidikan.',
-    highlightText: 'Membidik dengan rasa, bukan dengan mata.',
+    highlightText:
+      'Panahan tradisional Jawa yang dilakukan sambil duduk dan ditarik dari hati — melatih ketenangan, napas, dan kesadaran.',
     facilities: ['Peralatan disediakan', 'Kain tradisional'],
     category: catId('spa-retreats'),
   },

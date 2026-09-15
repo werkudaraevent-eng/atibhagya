@@ -96,7 +96,7 @@ export async function AboutScreen({ locale, draft = false }: Props) {
 
           <div className={styles.cta} data-fade>
             <h2 className={page.headlineSmall}>{about.ctaHeadline}</h2>
-            <Link href={`${prefix}/inquiry`} className={page.buttonPrimary}>
+            <Link href={`${prefix}/inquiry`} prefetch={true} className={page.buttonPrimary}>
               {about.ctaLabel}
             </Link>
           </div>

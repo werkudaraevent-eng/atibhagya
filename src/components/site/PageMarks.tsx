@@ -7,10 +7,9 @@ import { PathIndicator, type Stage } from './PathIndicator'
  * stages here, in the same order as its `[data-stage]` sections, ending in
  * the footer's "Enquiries" — the same last stop on every page.
  */
-export function PageMarks({ stages, label }: { stages: Stage[]; label: string }) {
+export function PageMarks({ stages: _stages, label: _label }: { stages: Stage[]; label: string }) {
   return (
     <>
-      <PathIndicator stages={stages} label={label} />
       <ChapterMark />
     </>
   )

@@ -1,5 +1,3 @@
-import styles from './ChapterMark.module.css'
-
 /**
  * The chapter mark: the current chapter's number and name, set vertically
  * at the left edge of the screen.
@@ -12,11 +10,5 @@ import styles from './ChapterMark.module.css'
  * sections carry their own headings).
  */
 export function ChapterMark() {
-  return (
-    <div className={styles.mark} data-role="chapter" aria-hidden="true">
-      <span className={styles.number} data-role="chapterN" />
-      <span className={styles.rule} />
-      <span className={styles.title} data-role="chapterT" />
-    </div>
-  )
+  return null
 }

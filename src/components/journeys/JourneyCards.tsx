@@ -23,7 +23,9 @@ export function JourneyCards({ journeys, locale, dict }: Props) {
           className={styles.row}
           data-fade
         >
-          <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
+          <div className={styles.numberCol}>
+            <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
+          </div>
           <div className={styles.image}>
             <CreditImage
               image={journey.heroImage}
@@ -37,7 +39,12 @@ export function JourneyCards({ journeys, locale, dict }: Props) {
             {journey.positioning ? (
               <p className={styles.positioning}>{journey.positioning}</p>
             ) : null}
-            <span className={styles.more}>{dict.readMore}</span>
+            <span className={styles.more}>
+              <span>{dict.readMore}</span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.moreArrow}>
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </span>
           </div>
         </Link>
       ))}

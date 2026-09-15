@@ -73,25 +73,16 @@ export function Divider({ mark = 'wave', className }: { mark?: Mark; className?:
  * as the N° that travels the catalogue's margin.
  */
 export function SectionMark({
-  number,
-  mark,
   label,
   align = 'center',
 }: {
   number?: string
-  mark: Mark
+  mark?: Mark
   label: string
   align?: 'center' | 'start'
 }) {
   return (
     <div className={align === 'start' ? `${styles.section} ${styles.sectionStart}` : styles.section}>
-      {number ? (
-        <div className={styles.number} data-fade>
-          <span className={styles.numberSign}>N°</span>
-          {number}
-        </div>
-      ) : null}
-      <Ornament mark={mark} />
       <div className={styles.label} data-fade>
         {label}
       </div>

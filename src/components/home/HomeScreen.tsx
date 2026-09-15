@@ -62,11 +62,13 @@ export async function HomeScreen({ locale, draft = false }: Props) {
           data-stage={home.featured.eyebrow}
           data-chapter="02"
         >
-          <div className={page.container}>
-            <SectionMark number="02" mark="wave" label={home.featured.eyebrow} align="start" />
-            <h2 className={page.headline} data-words style={{ marginBottom: 'clamp(40px, 6vh, 72px)' }}>
-              <Lines text={home.featured.headline} />
-            </h2>
+          <div className={page.wideContainer}>
+            <div className={page.headerCenter}>
+              <SectionMark label={home.featured.eyebrow} align="center" />
+              <h2 className={page.headlineCenter} data-words>
+                <Lines text={home.featured.headline} />
+              </h2>
+            </div>
             <ProductGrid products={featured.map(toCard)} locale={locale} />
           </div>
         </section>

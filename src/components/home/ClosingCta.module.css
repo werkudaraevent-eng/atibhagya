@@ -17,21 +17,19 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    var(--ivory) 0%,
-    rgba(16, 34, 47, 0) 20%,
-    rgba(16, 34, 47, 0.6) 100%
-  );
+  background: rgba(16, 34, 47, 0.58);
 }
 
 .content {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: clamp(48px, 10vh, 96px);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 0 clamp(24px, 5vw, 64px);
+  padding: clamp(32px, 6vh, 64px) clamp(24px, 5vw, 64px);
+  z-index: 2;
 }
 
 .headline {

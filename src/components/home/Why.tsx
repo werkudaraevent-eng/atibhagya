@@ -7,15 +7,13 @@ import styles from './Why.module.css'
 export function Why({ why }: { why: HomeContent['why'] }) {
   return (
     <section id="why" className={page.section} data-stage={why.eyebrow} data-chapter="01">
-      <div className={page.container}>
-        <div className={page.split}>
-          <div>
-            <SectionMark number="01" mark="sprout" label={why.eyebrow} align="start" />
-            <h2 className={page.headline} data-words>
-              <Lines text={why.headline} />
-            </h2>
-          </div>
-          <p className={page.lede} data-fade>
+      <div className={page.wideContainer}>
+        <div className={styles.header}>
+          <SectionMark label={why.eyebrow} align="center" />
+          <h2 className={styles.headline} data-words>
+            <Lines text={why.headline} />
+          </h2>
+          <p className={styles.lede} data-fade>
             {why.body}
           </p>
         </div>

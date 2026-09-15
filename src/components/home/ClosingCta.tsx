@@ -28,7 +28,7 @@ export function ClosingCta({ cta, href, stage }: Props) {
           {cta.body}
         </p>
         <div className={styles.actions} data-fade>
-          <Link href={href} className={page.buttonGhost}>
+          <Link href={href} prefetch={true} className={page.buttonGhost}>
             {cta.label}
           </Link>
         </div>

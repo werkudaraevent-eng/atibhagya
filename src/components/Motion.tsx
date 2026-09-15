@@ -5,7 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { SplitText } from 'gsap/SplitText'
 import { usePathname } from 'next/navigation'
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin)
 
@@ -79,13 +79,38 @@ function fresh(scope: ParentNode, selector: string): HTMLElement[] {
 /** `/id/product/x` and `/product/x` are the same page in two languages. */
 const sansLocale = (path: string) => path.replace(/^\/id(?=\/|$)/, '') || '/'
 
+const isModalInquiry = (path: string) => {
+  const bare = sansLocale(path)
+  return bare === '/inquiry' || bare.startsWith('/inquiry?')
+}
+
 /** The last route this component set up, across navigations. */
 let lastRoute: string | null = null
 
 export function Motion() {
   const pathname = usePathname()
+  const prevPathRef = useRef<string>(pathname)
+  const isModalRef = useRef(false)
 
   useLayoutEffect(() => {
+    const prev = prevPathRef.current
+    prevPathRef.current = pathname
+
+    // If transitioning to or from the modal inquiry overlay over an existing page:
+    // Do NOT tear down or re-run animations on the underlying page.
+    const toModal = !isModalInquiry(prev) && isModalInquiry(pathname)
+    const fromModal = isModalInquiry(prev) && !isModalInquiry(pathname)
+
+    if (toModal) {
+      isModalRef.current = true
+      return
+    }
+
+    if (fromModal && isModalRef.current) {
+      isModalRef.current = false
+      return
+    }
+
     let observer: MutationObserver | undefined
     let chapterTimer = 0
     /** Torn down with the effect — for listeners GSAP does not own. */
@@ -678,6 +703,13 @@ export function Motion() {
     const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 200)
 
     return () => {
+      // If we are just transitioning into or out of the inquiry modal over the current page,
+      // preserve the GSAP context and active animations intact.
+      const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
+      if (isModalInquiry(currentPath) || isModalRef.current) {
+        return
+      }
+
       window.clearTimeout(refresh)
       window.clearTimeout(chapterTimer)
       stopDrift?.()

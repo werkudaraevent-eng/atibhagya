@@ -11,8 +11,8 @@
 :root {
   color-scheme: light;
 
-  --biru: #10222f;
-  --biru-footer: #0d1c27;
+  --biru: #0c1b26;
+  --biru-footer: #08131c;
   --ivory: #f6f3e7;
   --ivory-2: #efece0;
   --ivory-on-dark: #e9e4d8;
@@ -20,14 +20,14 @@
   --emas-deep: #a97b2a;
   --emas-hover: #e3bd72;
 
-  --ink-rgb: 16, 34, 47;
+  --ink-rgb: 12, 27, 38;
   --paper-rgb: 246, 243, 231;
 
-  --ink-body: rgba(var(--ink-rgb), 0.65);
-  --ink-label: rgba(var(--ink-rgb), 0.55);
-  --ink-caption: rgba(var(--ink-rgb), 0.45);
-  --hairline: rgba(var(--ink-rgb), 0.2);
-  --hairline-strong: rgba(var(--ink-rgb), 0.25);
+  --ink-body: rgba(var(--ink-rgb), 0.86);
+  --ink-label: rgba(var(--ink-rgb), 0.70);
+  --ink-caption: rgba(var(--ink-rgb), 0.58);
+  --hairline: rgba(var(--ink-rgb), 0.22);
+  --hairline-strong: rgba(var(--ink-rgb), 0.30);
 
   --radius: 2px;
   --radius-pill: 20px;
@@ -66,22 +66,22 @@
 html[data-theme='dark'] {
   color-scheme: dark;
 
-  --biru: #ece7da;
-  --biru-footer: #0a1219;
-  --ivory: #0f1b25;
-  --ivory-2: #15242f;
+  --biru: #faf7ef;
+  --biru-footer: #060e14;
+  --ivory: #0b151e;
+  --ivory-2: #101e2b;
   --emas: #d4a95a;
   --emas-deep: #c9a052;
   --emas-hover: #e6c47c;
 
-  --ink-rgb: 236, 231, 218;
-  --paper-rgb: 15, 27, 37;
+  --ink-rgb: 250, 247, 239;
+  --paper-rgb: 11, 21, 30;
 
-  --ink-body: rgba(var(--ink-rgb), 0.72);
-  --ink-label: rgba(var(--ink-rgb), 0.55);
-  --ink-caption: rgba(var(--ink-rgb), 0.45);
-  --hairline: rgba(var(--ink-rgb), 0.18);
-  --hairline-strong: rgba(var(--ink-rgb), 0.24);
+  --ink-body: rgba(var(--ink-rgb), 0.92);
+  --ink-label: rgba(var(--ink-rgb), 0.78);
+  --ink-caption: rgba(var(--ink-rgb), 0.68);
+  --hairline: rgba(var(--ink-rgb), 0.22);
+  --hairline-strong: rgba(var(--ink-rgb), 0.32);
 }
 
 /* The swap itself is quiet: surfaces and type cross-fade, nothing snaps. */

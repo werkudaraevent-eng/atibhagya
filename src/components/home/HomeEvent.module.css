@@ -55,10 +55,10 @@
 }
 
 .dateLabel {
-  font: 400 calc(9.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  font: 600 calc(9.5px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(246, 243, 231, 0.6);
+  color: rgba(246, 243, 231, 0.85);
 }
 
 .dateValue {
@@ -74,7 +74,7 @@
 .body {
   margin: 22px 0 0;
   max-width: 480px;
-  font: 300 calc(15px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
+  font: 400 calc(15px * var(--type-scale))/1.85 var(--font-karla), sans-serif;
   color: var(--ink-body);
 }
 
@@ -101,7 +101,7 @@
 }
 
 .journeyLen {
-  font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
+  font: 600 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.22em;
   color: var(--emas-deep);
 }
@@ -111,7 +111,7 @@
 }
 
 .journeyKicker {
-  font: 400 calc(10px * var(--type-scale))/1.4 var(--font-karla), sans-serif;
+  font: 600 calc(10px * var(--type-scale))/1.4 var(--font-karla), sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-label);
@@ -141,7 +141,7 @@
 .button:hover {
   background: var(--emas-deep);
   border-color: var(--emas-deep);
-  color: #f6f3e7;
+  color: var(--ivory);
 }
 
 @media (max-width: 600px) {

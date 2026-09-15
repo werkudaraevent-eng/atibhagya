@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #e4ded0;
+  background: var(--ivory-2);
 }
 
 .img {
@@ -12,38 +12,14 @@
 
 /* Licence chip, matching the design prototype's image-slot overlay. */
 .credit {
-  position: absolute;
-  left: 6px;
-  bottom: 6px;
-  max-width: calc(100% - 12px);
-  padding: 3px 7px;
-  border-radius: 5px;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  font: calc(11px * var(--type-scale))/1.2 system-ui, -apple-system, sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  backdrop-filter: blur(6px);
-  z-index: 1;
-}
-
-.credit a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.credit a:hover,
-.credit a:focus-visible {
-  text-decoration: underline;
-  color: inherit;
+  display: none !important;
 }
 
 /* Awaiting photography. A plain tinted panel — the earlier hairline in the
    middle read as a loading bar, which sent editors waiting for something that
    was never going to arrive. */
 .empty {
-  background: linear-gradient(160deg, #e7e2d5 0%, #ddd7c8 100%);
+  background: rgba(var(--ink-rgb), 0.06);
 }
 
 .emptyMark {
