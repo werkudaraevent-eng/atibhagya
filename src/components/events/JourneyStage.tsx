@@ -66,10 +66,10 @@ export function JourneyStage({
 
   useEffect(() => () => window.clearTimeout(timer.current), [])
 
-  if (!journeys.length) return null
-
-  const journey = journeys[Math.min(pk, journeys.length - 1)]!
-  const days = journey.days
+  // Derived before any early return: every hook below must run on every
+  // render, in the same order, whether or not there are journeys.
+  const journey = journeys[Math.min(pk, Math.max(0, journeys.length - 1))]
+  const days = journey?.days ?? []
   const n = days.length
   const di = Math.min(day, Math.max(0, n - 1))
   const current = days[di]
@@ -101,7 +101,9 @@ export function JourneyStage({
   }
 
   const stateRef = useRef({ di, n, pickDay })
-  stateRef.current = { di, n, pickDay }
+  useEffect(() => {
+    stateRef.current = { di, n, pickDay }
+  })
 
   useEffect(() => {
     const el = sectionRef.current
@@ -156,6 +158,8 @@ export function JourneyStage({
       activeBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
     }
   }, [di, pk])
+
+  if (!journey) return null
 
   const onListKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
