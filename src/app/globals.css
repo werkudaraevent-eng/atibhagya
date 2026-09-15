@@ -184,6 +184,17 @@ textarea:focus {
   visibility: hidden;
 }
 
+.splitLine {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.settleWord {
+  display: inline-block;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
 [data-rule] {
   transform: scaleX(0);
   transform-origin: left center;
