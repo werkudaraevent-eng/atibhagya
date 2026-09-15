@@ -16,7 +16,7 @@
 .frame {
   position: relative;
   aspect-ratio: 4 / 5;
-  background: #e4ded0;
+  background: var(--ivory-2);
   overflow: hidden;
 }
 

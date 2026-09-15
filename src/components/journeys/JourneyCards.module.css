@@ -52,7 +52,7 @@
 .image {
   height: clamp(220px, 26vw, 330px);
   overflow: hidden;
-  background: #e4ded0;
+  background: var(--ivory-2);
   border-radius: var(--radius);
 }
 
@@ -138,7 +138,7 @@
 }
 
 .row:hover .more {
-  color: #f6f3e7;
+  color: var(--ivory);
   border-color: var(--emas-deep);
   box-shadow: 0 4px 16px rgba(169, 123, 42, 0.25);
   transform: translateX(4px);

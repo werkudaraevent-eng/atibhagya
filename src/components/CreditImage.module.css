@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #e4ded0;
+  background: var(--ivory-2);
 }
 
 .img {
@@ -19,7 +19,7 @@
    middle read as a loading bar, which sent editors waiting for something that
    was never going to arrive. */
 .empty {
-  background: linear-gradient(160deg, #e7e2d5 0%, #ddd7c8 100%);
+  background: rgba(var(--ink-rgb), 0.06);
 }
 
 .emptyMark {

@@ -48,7 +48,7 @@
 .image {
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  background: #e4ded0;
+  background: var(--ivory-2);
 }
 
 /* Attribution as a hairline caption, not a badge stamped on every photograph. */

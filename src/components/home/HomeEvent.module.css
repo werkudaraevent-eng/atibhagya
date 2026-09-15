@@ -141,7 +141,7 @@
 .button:hover {
   background: var(--emas-deep);
   border-color: var(--emas-deep);
-  color: #f6f3e7;
+  color: var(--ivory);
 }
 
 @media (max-width: 600px) {

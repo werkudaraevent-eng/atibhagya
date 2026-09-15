@@ -96,6 +96,11 @@
   color: #f6f3e7;
 }
 
+:global(html[data-theme='dark']) .chip[aria-checked='true'] {
+  background: var(--emas-deep);
+  color: var(--ivory);
+}
+
 .chipName {
   font: 400 clamp(15px, 1.2vw, 17px) / 1 var(--font-marcellus), serif;
 }
@@ -110,6 +115,11 @@
 
 .chip[aria-checked='true'] .chipLen {
   color: var(--emas-hover);
+}
+
+:global(html[data-theme='dark']) .chip[aria-checked='true'] .chipLen {
+  color: var(--ivory);
+  opacity: 0.85;
 }
 
 /* --- The two columns ----------------------------------------------------- */
@@ -511,7 +521,7 @@
 .ghostButton:hover {
   background: var(--emas-deep);
   border-color: var(--emas-deep);
-  color: #f6f3e7;
+  color: var(--ivory);
 }
 
 .footLink {

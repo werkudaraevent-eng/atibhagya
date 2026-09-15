@@ -41,7 +41,7 @@
 .image {
   aspect-ratio: 5 / 4;
   overflow: hidden;
-  background: #e4ded0;
+  background: var(--ivory-2);
   border-radius: var(--radius);
   position: relative;
 }

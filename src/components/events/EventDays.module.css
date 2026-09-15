@@ -156,7 +156,7 @@
   height: 11px;
   border-radius: 50%;
   border: 1px solid var(--emas-hover);
-  background: var(--biru);
+  background: #10222f;
   transform: scale(0.6);
   transition:
     transform 0.4s var(--ease-out),
