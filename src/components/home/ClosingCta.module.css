@@ -34,10 +34,11 @@
 
 .headline {
   margin: 0;
-  font: 400 clamp(28px, 3.8vw, 50px) / 1.24 var(--font-marcellus), serif;
+  font: 400 clamp(28px, 3.8vw, 50px) / 1.28 var(--font-marcellus), serif;
   color: #fff;
   text-shadow: 0 2px 30px rgba(16, 34, 47, 0.4);
   text-wrap: balance;
+  padding-bottom: 0.04em;
 }
 
 .body {

@@ -115,23 +115,16 @@ export function ProductDetail({ product, locale, dict, related }: Props) {
 
       <section id="experience" className={page.section} data-stage={t.experience} data-chapter="02">
         <div className={page.container}>
-          {/* Narrative: Highlight quote on top, then What to expect below it */}
-          <div className={styles.narrative}>
-            {product.highlightText ? (
+          {/* Narrative: Highlight quote on top */}
+          {product.highlightText ? (
+            <div className={styles.narrative}>
               <figure className={styles.highlight} data-fade>
                 <span className={styles.highlightLine} data-rule aria-hidden="true" />
                 <blockquote className={styles.highlightText}>{product.highlightText}</blockquote>
                 <span className={styles.highlightLine} data-rule aria-hidden="true" />
               </figure>
-            ) : null}
-
-            {product.whatToExpect ? (
-              <div className={styles.expect} data-fade>
-                <h2 className={styles.expectTitle}>{t.whatToExpect}</h2>
-                <p className={styles.expectBody}>{product.whatToExpect}</p>
-              </div>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
           {/* Facts arranged horizontally side-by-side (berjajar) at the bottom */}
           {programme.length || product.venues.length ? (
