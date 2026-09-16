@@ -526,9 +526,11 @@ export async function getFeaturedProducts(locale: Locale): Promise<Product[]> {
   return featured.length ? featured.slice(0, 5) : all.slice(0, 5)
 }
 
-type CatalogueCopy = {
+export type CatalogueCopy = {
   products: Pick<Dict['products'], 'eyebrow' | 'headline' | 'intro' | 'detailEyebrow'>
-  journeys: Pick<Dict['journeys'], 'eyebrow' | 'headline' | 'intro' | 'detailEyebrow'>
+  journeys: Pick<Dict['journeys'], 'eyebrow' | 'headline' | 'intro' | 'detailEyebrow'> & {
+    heroImage: Img
+  }
 }
 
 /**
@@ -541,6 +543,7 @@ export async function getCatalogueCopy(
   options: ReadOptions = {},
 ): Promise<CatalogueCopy> {
   const d = dict(locale)
+  const defaultHero = defaults(locale).home.hero.image
   const fallback: CatalogueCopy = {
     products: {
       eyebrow: d.products.eyebrow,
@@ -553,6 +556,7 @@ export async function getCatalogueCopy(
       headline: d.journeys.headline,
       intro: d.journeys.intro,
       detailEyebrow: d.journeys.detailEyebrow,
+      heroImage: defaultHero,
     },
   }
   const payload = await getPayloadSafe()
@@ -562,7 +566,7 @@ export async function getCatalogueCopy(
     const c = (await payload.findGlobal({
       slug: 'catalogue',
       locale,
-      depth: 0,
+      depth: 1,
       fallbackLocale: 'en',
       draft: options.draft === true,
     })) as Any
@@ -578,6 +582,7 @@ export async function getCatalogueCopy(
         headline: or(c.journeysHeadline, fallback.journeys.headline),
         intro: or(c.journeysIntro, fallback.journeys.intro),
         detailEyebrow: or(c.journeyDetailEyebrow, fallback.journeys.detailEyebrow),
+        heroImage: toImg(c.journeysHeroImage, fallback.journeys.heroImage),
       },
     }
   } catch (err) {

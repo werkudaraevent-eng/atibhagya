@@ -4,6 +4,7 @@ import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { dict } from '../lib/i18n/ui'
 import { prefillGlobal, text as shows } from '../lib/prefill'
 import { revalidateGlobal } from '../lib/revalidate'
+import { webImage } from '../lib/validate-media'
 
 const text = (name: string, description?: string) => ({
   name,
@@ -86,6 +87,15 @@ export const CataloguePages: GlobalConfig = {
               admin: { description: 'Line breaks are kept.' },
             },
             { name: 'journeysIntro', type: 'textarea', localized: true },
+            {
+              name: 'journeysHeroImage',
+              type: 'upload',
+              relationTo: 'media',
+              validate: webImage,
+              admin: {
+                description: 'The full-width hero background image for the journeys listing page.',
+              },
+            },
           ],
         },
         {
