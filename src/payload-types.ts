@@ -1790,6 +1790,10 @@ export interface Catalogue {
   journeysHeadline?: string | null;
   journeysIntro?: string | null;
   /**
+   * The full-width hero background image for the journeys listing page.
+   */
+  journeysHeroImage?: (number | null) | Media;
+  /**
    * The first step of the breadcrumb above a journey title — it links back to the listing. Default "Journey".
    */
   journeyDetailEyebrow?: string | null;
@@ -2106,6 +2110,7 @@ export interface CatalogueSelect<T extends boolean = true> {
   journeysEyebrow?: T;
   journeysHeadline?: T;
   journeysIntro?: T;
+  journeysHeroImage?: T;
   journeyDetailEyebrow?: T;
   _status?: T;
   updatedAt?: T;

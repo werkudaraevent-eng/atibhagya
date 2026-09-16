@@ -67,8 +67,9 @@
 
 .headline {
   margin: 24px 0 0;
-  font: 400 clamp(28px, 3vw, 42px) / 1.22 var(--font-marcellus), serif;
+  font: 400 clamp(28px, 3vw, 42px) / 1.28 var(--font-marcellus), serif;
   text-wrap: balance;
+  padding-bottom: 0.04em;
 }
 
 .body {

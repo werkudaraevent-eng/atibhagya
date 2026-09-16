@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import { CreditImage } from '@/components/CreditImage'
+import { useDragScroll } from '@/hooks/useDragScroll'
 import type { Locale, ProductCard } from '@/lib/content/types'
 import styles from './ProductCard.module.css'
 
@@ -14,7 +15,7 @@ type Props = {
 
 export function ProductGrid({ products, locale }: Props) {
   const prefix = locale === 'id' ? '/id' : ''
-  const trackRef = useRef<HTMLDivElement>(null)
+  const trackRef = useDragScroll<HTMLDivElement>({ momentum: true })
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
 
@@ -100,6 +101,7 @@ export function ProductGrid({ products, locale }: Props) {
             href={`${prefix}/product/${product.slug}`}
             className={styles.card}
             data-fade
+            draggable={false}
           >
             <div className={styles.image} data-drift={(i % 3) - 1}>
               <CreditImage

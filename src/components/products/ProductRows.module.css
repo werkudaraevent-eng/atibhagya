@@ -96,8 +96,9 @@
 
 .title {
   margin: 0;
-  font: 400 clamp(26px, 3vw, 42px) / 1.2 var(--font-marcellus), serif;
+  font: 400 clamp(26px, 3vw, 42px) / 1.26 var(--font-marcellus), serif;
   text-wrap: balance;
+  padding-bottom: 0.04em;
   transition: color 0.5s ease;
 }
 

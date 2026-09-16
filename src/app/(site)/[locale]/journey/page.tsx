@@ -47,7 +47,7 @@ export default async function JourneyListPage({
     getCatalogueCopy(locale),
   ])
   const t = withSite(dict(locale), site)
-  const opening = journeys[0]?.heroImage
+  const opening = copy.journeys.heroImage
 
   return (
     <>
