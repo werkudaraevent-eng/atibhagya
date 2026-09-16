@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { useDragScroll } from '@/hooks/useDragScroll'
 import type { Locale, ProductCard, ProductCategory } from '@/lib/content/types'
 import type { Dict } from '@/lib/i18n/ui'
 import { ProductRows } from './ProductRows'
@@ -29,6 +30,7 @@ const normalise = (value: string) =>
 
 export function ProductBrowser({ products, categories, locale, dict }: Props) {
   const t = dict.products
+  const categoriesRef = useDragScroll<HTMLDivElement>({ momentum: true })
 
   const [category, setCategory] = useState<string | null>(null)
   const [term, setTerm] = useState('')
@@ -99,7 +101,7 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
   return (
     <>
       <div className={styles.controls}>
-        <div className={styles.categories} role="group" aria-label={t.filterCategory}>
+        <div ref={categoriesRef} className={styles.categories} role="group" aria-label={t.filterCategory}>
           <button
             type="button"
             onClick={() => change(() => setCategory(null))}
