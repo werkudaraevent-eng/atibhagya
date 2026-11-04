@@ -39,11 +39,12 @@ jobs:
           # build never pushes a schema, so every query would fail.)
           NEXT_PUBLIC_SERVER_URL: http://localhost:3000
 
-  # Advisories are reported, not blocking: a transitive "high" with no fix
-  # yet should not stop a copy change from shipping. Read it, then decide.
+  # Critical advisories in what ships to production block the merge: that is
+  # how Next 16.3.4 and Payload 3.89 (RCE, access-control bypass) sat on main
+  # unnoticed while this job only reported. Highs and dev-only advisories are
+  # still printed for a person to read, without stopping a copy change.
   audit:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,4 +52,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm audit --audit-level=high
+      - name: Block on critical advisories (production dependencies)
+        run: npm audit --omit=dev --audit-level=critical
+      - name: Report high and dev-only advisories
+        if: always()
+        continue-on-error: true
+        run: npm audit --audit-level=high
