@@ -87,7 +87,7 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
     // `data-menu-open`, not `data-open`: the latter is the motion system's
     // "image opening from its top edge" hook, and the stylesheet clips
     // anything carrying it until GSAP reveals it.
-    <div className={styles.nav} data-role="nav" data-tone={tone} data-menu-open={open || undefined}>
+    <header className={styles.nav} data-role="nav" data-tone={tone} data-menu-open={open || undefined}>
       <div className={styles.inner}>
         <Link href={prefix || '/'} className={styles.logoLink}>
           <Image
@@ -200,6 +200,6 @@ export function Nav({ locale, dict, tone = 'dark' }: Props) {
       </div>
 
       <div className={styles.progress} data-role="progress" />
-    </div>
+    </header>
   )
 }

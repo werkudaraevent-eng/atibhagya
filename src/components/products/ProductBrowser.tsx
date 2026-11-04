@@ -158,6 +158,8 @@ export function ProductBrowser({ products, categories, locale, dict }: Props) {
         </p>
       ) : (
         <>
+          {/* The cards are h3s; this keeps the outline from jumping h1 → h3. */}
+          <h2 className="visuallyHidden">{t.eyebrow}</h2>
           <ProductRows products={visible} locale={locale} dict={dict} />
 
           {remaining > 0 ? (
