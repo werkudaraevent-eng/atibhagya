@@ -256,6 +256,8 @@
 
 .privacy a {
   color: var(--ink-body);
+  /* A link inside a sentence needs more than colour to be found (WCAG 1.4.1). */
+  text-decoration: underline;
   text-underline-offset: 3px;
 }
 
