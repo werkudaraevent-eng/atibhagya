@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
-import { adminOnly, signedIn } from './Users'
+import { adminOnly, contentEditors } from '../lib/access'
 
 /**
  * Phase 2 — the journal. The model is in place now so editors can start
@@ -23,8 +23,8 @@ export const Posts: CollectionConfig = {
       if (user) return true
       return { _status: { equals: 'published' } }
     },
-    create: signedIn,
-    update: signedIn,
+    create: contentEditors,
+    update: contentEditors,
     delete: adminOnly,
   },
   versions: {

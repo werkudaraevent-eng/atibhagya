@@ -1,5 +1,6 @@
 import type { FieldAccess, GlobalConfig } from 'payload'
 
+import { contentEditors } from '../lib/access'
 import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { plain, prefillGlobal, text } from '../lib/prefill'
@@ -13,7 +14,8 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site',
   label: 'Site settings',
   admin: { group: 'Pages', components: versionsView },
-  access: { read: () => true },
+  // Sales can sign in but not change the site.
+  access: { read: () => true, update: contentEditors },
   // Footer and contact details sit on every page.
   hooks: {
     // Every box shows what the site currently uses; see src/lib/prefill.ts.

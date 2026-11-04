@@ -4,7 +4,7 @@ import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
 import { revalidateCatalogue } from '../lib/revalidate'
 import { serverURL } from '../lib/server-url'
 import { webImage } from '../lib/validate-media'
-import { adminOnly, signedIn } from './Users'
+import { adminOnly, contentEditors } from '../lib/access'
 
 /**
  * A journey is an itinerary, not a package. Days hold items; an item may point
@@ -31,8 +31,8 @@ export const Journeys: CollectionConfig = {
       if (user) return true
       return { _status: { equals: 'published' } }
     },
-    create: signedIn,
-    update: signedIn,
+    create: contentEditors,
+    update: contentEditors,
     delete: adminOnly,
   },
 

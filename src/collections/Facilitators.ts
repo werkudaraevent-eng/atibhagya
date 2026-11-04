@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { stampUpdatedBy, updatedBy } from '../lib/audit'
 import { revalidateEverything } from '../lib/revalidate'
 import { webImage } from '../lib/validate-media'
-import { adminOnly, signedIn } from './Users'
+import { adminOnly, contentEditors } from '../lib/access'
 
 /**
  * Optional by design — the wireframe only renders the facilitator section when
@@ -18,8 +18,8 @@ export const Facilitators: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: signedIn,
-    update: signedIn,
+    create: contentEditors,
+    update: contentEditors,
     delete: adminOnly,
   },
   hooks: { beforeChange: [stampUpdatedBy], afterChange: [revalidateEverything] },

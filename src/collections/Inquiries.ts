@@ -1,9 +1,8 @@
-import type { Access, CollectionConfig, FieldAccess } from 'payload'
+import type { CollectionConfig, FieldAccess } from 'payload'
 
-import { adminOnly } from './Users'
+import { adminOnly, canHandleInquiries, inquiryHandlers } from '../lib/access'
 
-const isHost: Access = ({ req: { user } }) => Boolean(user)
-const isHostField: FieldAccess = ({ req: { user } }) => Boolean(user)
+const isHostField: FieldAccess = ({ req: { user } }) => canHandleInquiries(user)
 
 /** Nothing a visitor types may reach an email header. */
 const header = (value: unknown, max = 120) =>
@@ -27,6 +26,8 @@ export const Inquiries: CollectionConfig = {
     group: 'Inquiries',
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'audience', 'preferredDate', 'status', 'createdAt'],
+    // Out of the sidebar for anyone who cannot open it anyway.
+    hidden: ({ user }) => !canHandleInquiries(user),
     components: {
       // A Refresh control, and a quiet re-fetch every minute.
       beforeListTable: ['@/admin/RefreshList#RefreshList'],
@@ -34,8 +35,9 @@ export const Inquiries: CollectionConfig = {
   },
   access: {
     create: () => false,
-    read: isHost,
-    update: isHost,
+    // Visitors' personal data: admins and sales only, not content editors.
+    read: inquiryHandlers,
+    update: inquiryHandlers,
     // A guest enquiry is a business record — only an admin may remove one.
     delete: adminOnly,
   },
