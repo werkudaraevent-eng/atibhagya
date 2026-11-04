@@ -126,6 +126,7 @@ export interface Config {
   globals: {
     home: Home;
     about: About;
+    privacy: Privacy;
     catalogue: Catalogue;
     'inquiry-form': InquiryForm;
     site: Site;
@@ -133,6 +134,7 @@ export interface Config {
   globalsSelect: {
     home: HomeSelect<false> | HomeSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
+    privacy: PrivacySelect<false> | PrivacySelect<true>;
     catalogue: CatalogueSelect<false> | CatalogueSelect<true>;
     'inquiry-form': InquiryFormSelect<false> | InquiryFormSelect<true>;
     site: SiteSelect<false> | SiteSelect<true>;
@@ -192,7 +194,7 @@ export interface ProductCategory {
   createdAt: string;
 }
 /**
- * Admins manage accounts and can delete content. Editors write and publish, but cannot create accounts or delete.
+ * Admins manage accounts and can delete content. Editors write and publish content. Sales read and follow up inquiries. One person can hold several roles.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
@@ -203,7 +205,7 @@ export interface User {
   /**
    * Only an admin can change this.
    */
-  roles: ('admin' | 'editor')[];
+  roles: ('admin' | 'editor' | 'sales')[];
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1758,6 +1760,43 @@ export interface About {
   createdAt?: string | null;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "privacy".
+ */
+export interface Privacy {
+  id: number;
+  /**
+   * Set automatically on every save.
+   */
+  updatedBy?: (number | null) | User;
+  /**
+   * Inquiries older than this are deleted automatically every night. "{months}" in the text below shows this number.
+   */
+  retentionMonths: number;
+  /**
+   * Shown as "Last updated". Change it whenever the policy changes.
+   */
+  updated?: string | null;
+  eyebrow?: string | null;
+  headline?: string | null;
+  lede?: string | null;
+  /**
+   * "{email}" shows the contact address from Site settings; "{months}" the retention period.
+   */
+  sections?:
+    | {
+        heading: string;
+        body: string;
+        id?: string | null;
+      }[]
+    | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Headings for the product and journey listings and the small label above each detail page. Each box shows what the site currently says; change it, or clear it to return to the approved wording.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2092,6 +2131,31 @@ export interface AboutSelect<T extends boolean = true> {
       };
   ctaHeadline?: T;
   ctaLabel?: T;
+  metaTitle?: T;
+  metaDescription?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "privacy_select".
+ */
+export interface PrivacySelect<T extends boolean = true> {
+  updatedBy?: T;
+  retentionMonths?: T;
+  updated?: T;
+  eyebrow?: T;
+  headline?: T;
+  lede?: T;
+  sections?:
+    | T
+    | {
+        heading?: T;
+        body?: T;
+        id?: T;
+      };
   metaTitle?: T;
   metaDescription?: T;
   _status?: T;

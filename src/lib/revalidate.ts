@@ -58,9 +58,10 @@ const EVERY_PATTERN = [
   ...SECTIONS.flatMap((s) => patternsFor(`/${s}`)),
   '/[locale]/about',
   '/[locale]/inquiry',
+  '/[locale]/privacy',
 ]
 
-const EVERY_PATH = ['/', '/product', '/journey', '/events', '/about', '/inquiry'].flatMap(both)
+const EVERY_PATH = ['/', '/product', '/journey', '/events', '/about', '/inquiry', '/privacy'].flatMap(both)
 
 /**
  * A product, journey or event document. Its own page and its list, the
