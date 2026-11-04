@@ -82,6 +82,7 @@ Seven templates, exactly as the wireframe lists them.
 | `/events` | Events — the ones still to come, then the archive |
 | `/events/[slug]` | Event — full-bleed opening, the days, the place, the journeys as one stage, the invitation |
 | `/about` | About — centred, one continuous story |
+| `/privacy` | Privacy policy — one readable column, the retention period filled in from the CMS |
 | `/inquiry` | The single inquiry form every CTA leads to |
 
 Indonesian equivalents sit under `/id/…`. `next.config.mjs` rewrites `/` and
@@ -103,7 +104,7 @@ data; home and about are singletons that only choose and describe.
 | `events` | A dated occasion with its own page — a festival, a season — and the journeys that lead to it (see [Events](#events)) |
 | `inquiries` | Contact, occasion, and the products/journeys/custom activities chosen |
 | `media` | Uploads with localized alt text and credit fields |
-| `home`, `about`, `site` | Page singletons and shared chrome |
+| `home`, `about`, `privacy`, `site` | Page singletons and shared chrome; `privacy` also holds the inquiry retention period |
 | `posts` | Journal, modelled but not yet rendered |
 
 There is **no price field anywhere**. The content master lists pricing
@@ -272,15 +273,23 @@ first, topped up from the rest of the catalogue.
 
 ### Roles
 
-Two roles, set on each user in the admin.
+Three roles, set on each user in the admin; one person can hold several
+(`src/lib/access.ts`).
 
-| | Admin | Editor |
-| --- | --- | --- |
-| Write and publish content | yes | yes |
-| Delete content, media, inquiries | yes | **no** |
-| Create and manage accounts | yes | **no** |
-| See other users | yes | own record only |
-| Change anyone's role | yes | **no** |
+| | Admin | Editor | Sales |
+| --- | --- | --- | --- |
+| Write and publish content and pages | yes | yes | **no** |
+| Read, update and export inquiries | yes | **no** | yes |
+| Delete content, media, inquiries | yes | **no** | **no** |
+| Create and manage accounts | yes | **no** | **no** |
+| Change anyone's role | yes | **no** | **no** |
+
+Inquiries hold visitors' names, emails and phone numbers, so they sit with
+the people who follow them up and nobody else (least privilege, UU PDP
+No. 27/2022). The Inquiries group is hidden from the sidebar for anyone who
+cannot open it, and `/export/inquiries` checks the role, not just the
+session. Someone who writes content and answers inquiries gets both Editor
+and Sales.
 
 Verified by running each operation as each role: an editor is refused user
 creation and deletion, sees only their own account, and cannot promote
@@ -499,7 +508,10 @@ Verified against the running app:
 | --- | --- |
 | `GET /api/inquiries`, `/api/users` | 403 to anyone not signed in |
 | `POST /api/inquiries` | 403. The form writes through the Local API in the server action, which is not subject to collection access — so the public endpoint stays shut to bots |
-| `status` field | Host-only at field level; a submission cannot mark itself qualified |
+| `status` field | Admin and Sales only at field level; a submission cannot mark itself qualified |
+| Inquiry export | Admin and Sales only. CSV cells starting with `=`, `+`, `-` or `@` get a leading `'`, so a visitor's input cannot run as a spreadsheet formula |
+| `/cron/purge-inquiries` | 404 unless the request carries `Bearer $CRON_SECRET`; refuses everything when the secret is unset |
+| Dependencies | `npm audit` fails CI on any critical advisory in production dependencies |
 | `posts` | Public reads are filtered to `_status: published`; drafts are staff-only |
 | Notification email | The visitor's name is stripped of CR/LF before it reaches the subject line |
 | Field lengths | Capped on every free-text field |
@@ -537,14 +549,19 @@ sample catalogue cached as if it were real.
 **Checks and upkeep** (`.github/`):
 
 - `ci.yml` — every pull request and every push to `staging` or `main` runs
-  the type check, ESLint and a full build; `npm audit` runs beside them and
-  reports without blocking.
+  the type check, ESLint, the unit tests and a full build; an `e2e` job
+  applies every migration to an empty Postgres, seeds it, builds, and runs
+  Playwright on a phone and a desktop viewport. `npm audit` blocks on a
+  critical advisory in production dependencies and reports the rest.
 - `dependabot.yml` — weekly dependency PRs against `staging`, grouped; major
   versions of Next, React and Payload are left for a deliberate upgrade.
-- `backup.yml` — Mondays: a `pg_dump` of production and a mirror of the media
+- `backup.yml` — Mondays: a `pg_dump` of production, **encrypted with
+  [age](https://age-encryption.org) on the runner**, and a mirror of the media
   bucket, into a separate private R2 bucket. Needs the secrets listed at the
-  top of the file, and a lifecycle rule on that bucket. Try a restore on a
-  Neon branch once, before it matters.
+  top of the file (including `BACKUP_AGE_RECIPIENT`, the public key) and a
+  lifecycle rule on that bucket; the job refuses to upload without the key.
+  Keep the private key offline. Try a restore on a Neon branch once, before
+  it matters.
 
 **Menu words.** Site settings → Navigation holds the four words on the main
 menu (Products, Journeys, About, Inquiry), in both languages. One source for
@@ -556,10 +573,20 @@ marks; the addresses themselves never change. Boxes show the words in use.
 lists it beside the date. Comparing two versions of the inquiry form names
 each field row ("03 · Phone — On the form: yes → no") rather than "Item 03".
 
-**Data notice.** The line under the submit button (Inquiries → Inquiry form →
-Other wording → Data notice) says what happens to what a visitor writes.
-Indonesia's PDP law (UU 27/2022) expects it. Still open: a retention period
-— decide how long a closed inquiry is kept, and delete on that schedule.
+**Privacy policy and retention.** *Pages → Privacy policy* is the notice
+UU PDP No. 27/2022 expects: who is responsible, what is collected, why, which
+processors handle it, how long it is kept, and the visitor's rights. It
+renders at `/privacy` and `/id/privacy`, and is linked from the footer and
+from the line under the inquiry form's submit button (*Inquiries → Inquiry
+form → Other wording → Data notice*). The first text is a draft written from
+what the code does; have it reviewed before relying on it.
+
+The retention period sits on the policy itself (*Retention (months)*,
+default 24). Every night at 02:00 WIB a Vercel Cron (`vercel.json`) calls
+`/cron/purge-inquiries`, which deletes inquiries older than that. `{months}`
+in the policy's text prints the same number, so the promise and the
+behaviour cannot drift apart. Needs `CRON_SECRET` in the Vercel production
+environment (any long random string); Vercel sends it with each cron call.
 
 ## Deploying
 
@@ -789,6 +816,9 @@ no-code animation builder.
 | `npm run dev` | Next dev server on :3000 |
 | `npm run build` / `start` | Production build and server |
 | `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint |
+| `npm test` | Unit tests (`tests/unit`, Node's built-in runner via tsx) |
+| `npm run test:e2e` | Playwright (`tests/e2e`) against `next start` on :3100 — build first, with a migrated and seeded database in `DATABASE_URI` |
 | `npm run seed` | Writes the approved copy into Payload (EN + ID) |
 | `npm run seed:event` / `seed:event:staging` | Writes the first event (Prambanan Shiva Festival 2027) and its three journeys, if they are not there yet |
 | `npm run generate:types` | Regenerates `src/payload-types.ts` after a schema change |
