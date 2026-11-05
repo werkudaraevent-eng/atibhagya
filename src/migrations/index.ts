@@ -13,6 +13,7 @@ import * as migration_20260916_111150_journeys_hero_image from './20260916_11115
 import * as migration_20261104_081805_payload_3_92_upgrade from './20261104_081805_payload_3_92_upgrade';
 import * as migration_20261104_082917_privacy_retention_sales_role from './20261104_082917_privacy_retention_sales_role';
 import * as migration_20261105_141228_jcwf_event_products from './20261105_141228_jcwf_event_products';
+import * as migration_20261105_142734_storage_object_key from './20261105_142734_storage_object_key';
 
 export const migrations = [
   {
@@ -88,6 +89,11 @@ export const migrations = [
   {
     up: migration_20261105_141228_jcwf_event_products.up,
     down: migration_20261105_141228_jcwf_event_products.down,
-    name: '20261105_141228_jcwf_event_products'
+    name: '20261105_141228_jcwf_event_products',
+  },
+  {
+    up: migration_20261105_142734_storage_object_key.up,
+    down: migration_20261105_142734_storage_object_key.down,
+    name: '20261105_142734_storage_object_key',
   },
 ];

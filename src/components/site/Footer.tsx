@@ -112,7 +112,7 @@ export function Footer({ site, dict, locale }: Props) {
             {site.parentBrand ? <span className={styles.group}> · {site.parentBrand}</span> : null}
             <span className={styles.group}>
               {' · '}
-              <Link className={styles.link} href={`${prefix}/privacy`}>
+              <Link className={`${styles.link} ${styles.legalLink}`} href={`${prefix}/privacy`}>
                 {dict.privacy.link}
               </Link>
             </span>
