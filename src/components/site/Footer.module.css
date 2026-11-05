@@ -130,11 +130,24 @@
   border-top: 1px solid rgba(233, 228, 216, 0.12);
   font: 300 calc(11.5px * var(--type-scale))/1.6 var(--font-karla), sans-serif;
   letter-spacing: 0.06em;
-  color: rgba(233, 228, 216, 0.45);
+  /* 0.6, not 0.45: at 11.5px the line needs 4.5:1 on the footer's navy
+     (0.45 gave 3.79:1, 0.6 gives 5.8:1). */
+  color: rgba(233, 228, 216, 0.6);
 }
 
 .group {
   color: rgba(233, 228, 216, 0.6);
+}
+
+/* The privacy link sits in the legal line: it takes that line's small type
+   rather than the 14.5px of the column links, and keeps their gold hover. */
+.link.legalLink {
+  font: inherit;
+  letter-spacing: inherit;
+  /* Same size as the words around it, so an underline marks it as a link. */
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 228, 216, 0.35);
+  text-underline-offset: 3px;
 }
 
 .place {
@@ -154,7 +167,7 @@
 .langLink {
   font: 400 calc(11px * var(--type-scale))/1 var(--font-karla), sans-serif;
   letter-spacing: 0.14em;
-  color: rgba(233, 228, 216, 0.45);
+  color: rgba(233, 228, 216, 0.6);
   transition: color 0.3s ease;
 }
 

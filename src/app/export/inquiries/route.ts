@@ -1,15 +1,17 @@
 import ExcelJS from 'exceljs'
 import { NextResponse, type NextRequest } from 'next/server'
 
+import { canHandleInquiries } from '@/lib/access'
 import { getPayloadSafe } from '@/lib/payload'
-import { isStaffRequest } from '@/lib/preview'
+import { staffUser } from '@/lib/preview'
 
 /**
  * The inquiries as a real Excel workbook, for the team that lives in
  * spreadsheets: one row per inquiry, one column per question — including
  * the custom ones — with products and journeys by title.
  *
- * Staff only; the admin's session cookie is the credential. `?ids=a,b,c`
+ * Admins and sales only, like the collection itself; the admin's session
+ * cookie is the credential. `?ids=a,b,c`
  * limits the export to the rows ticked in the list.
  */
 export const dynamic = 'force-dynamic'
@@ -22,7 +24,8 @@ const titleOf = (v: unknown) =>
   typeof v === 'object' && v !== null ? String((v as Any).title ?? (v as Any).name ?? '') : ''
 
 export async function GET(request: NextRequest) {
-  if (!(await isStaffRequest())) {
+  // Same answer for signed-out and not-allowed: the route does not say it exists.
+  if (!canHandleInquiries(await staffUser())) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 })
   }
   const payload = await getPayloadSafe()

@@ -12,6 +12,16 @@ gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin)
 const EASE = 'power3.out'
 
 /**
+ * SplitText's default puts an aria-label on the split element so a screen
+ * reader hears the sentence rather than fragments. That is only valid on a
+ * heading; on a <p> (the footer's closing line) aria-label is prohibited
+ * (WCAG 4.1.2) and ignored. Splitting by line or word keeps whole words in
+ * the DOM, so elsewhere the text reads correctly as it is.
+ */
+const ariaFor = (el: Element): 'auto' | 'none' =>
+  el.matches('h1, h2, h3, h4, h5, h6') ? 'auto' : 'none'
+
+/**
  * When an entrance plays: as the element's top clears the bottom edge of
  * the viewport, less a sliver. Earlier thresholds (88–95%) read well on a
  * long page but never fired for anything sitting in the last few percent
@@ -371,6 +381,7 @@ export function Motion() {
                 linesClass: 'splitLine',
                 mask: 'lines',
                 autoSplit: true,
+                aria: ariaFor(el),
                 onSplit(self) {
                   return gsap.from(self.lines, {
                     yPercent: 105,
@@ -394,6 +405,7 @@ export function Motion() {
                 type: 'words',
                 wordsClass: 'settleWord',
                 autoSplit: true,
+                aria: ariaFor(el),
                 onSplit(self) {
                   return gsap.fromTo(
                     self.words,

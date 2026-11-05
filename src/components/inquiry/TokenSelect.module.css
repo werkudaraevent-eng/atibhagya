@@ -107,7 +107,8 @@
   border: none;
   background: transparent;
   padding: 7px 0;
-  font-size: calc(15.5px * var(--type-scale));
+  /* 16px is the floor: below it iOS Safari zooms the page on focus. */
+  font-size: calc(16px * var(--type-scale));
   color: var(--biru);
 }
 

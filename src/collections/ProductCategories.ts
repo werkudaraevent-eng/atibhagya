@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { stampUpdatedBy, updatedBy } from '../lib/audit'
 import { revalidateEverything } from '../lib/revalidate'
-import { adminOnly, signedIn } from './Users'
+import { adminOnly, contentEditors } from '../lib/access'
 
 /**
  * Master list behind the filter row on the product listing. Deliberately thin —
@@ -18,8 +18,8 @@ export const ProductCategories: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: signedIn,
-    update: signedIn,
+    create: contentEditors,
+    update: contentEditors,
     delete: adminOnly,
   },
   hooks: { beforeChange: [stampUpdatedBy], afterChange: [revalidateEverything] },

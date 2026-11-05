@@ -11,8 +11,15 @@
 #   BACKUP_BUCKET             e.g. atibhagya-backup (private; add a lifecycle
 #                             rule deleting objects older than 180 days)
 #   MEDIA_BUCKET              atibhagya-media
+#   BACKUP_AGE_RECIPIENT      the public key (age1…) the dump is encrypted to
 #
-# Restore: `gunzip < dump.sql.gz | psql "$NEW_DATABASE_URI"`, then
+# The dump holds every inquiry — visitors' names, emails and phone numbers —
+# so it is encrypted on the runner, before it leaves, with age
+# (https://age-encryption.org). The bucket only ever sees ciphertext; the
+# private key lives offline with the owner (password manager), never in
+# GitHub. Generate the pair once: `age-keygen -o atibhagya-backup.key`.
+#
+# Restore: `age -d -i atibhagya-backup.key dump.sql.gz.age | gunzip | psql "$NEW_DATABASE_URI"`, then
 # `aws s3 sync s3://atibhagya-backup/media s3://atibhagya-media`. Try it once
 # on a Neon branch before you need it.
 name: Backup
@@ -35,14 +42,26 @@ jobs:
           sudo apt-get install -y postgresql-client-17
           /usr/lib/postgresql/17/bin/pg_dump --version
 
-      - name: Dump the database
+      - name: age, for encrypting the dump
+        run: sudo apt-get install -y age
+
+      - name: Dump and encrypt the database
         env:
           DATABASE_URI: ${{ secrets.BACKUP_DATABASE_URI }}
+          RECIPIENT: ${{ secrets.BACKUP_AGE_RECIPIENT }}
         run: |
           set -euo pipefail
+          # No key, no backup: an unencrypted copy of personal data in a
+          # bucket is the thing this step exists to prevent.
+          if [ -z "$RECIPIENT" ]; then
+            echo "::error::BACKUP_AGE_RECIPIENT is not set; refusing to upload an unencrypted dump."
+            exit 1
+          fi
           # The runner ships its own pg_dump 16 and prefers it; call 17 by path.
-          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URI" --no-owner --no-privileges | gzip -9 > "atibhagya-$(date -u +%F).sql.gz"
-          ls -la *.sql.gz
+          /usr/lib/postgresql/17/bin/pg_dump "$DATABASE_URI" --no-owner --no-privileges \
+            | gzip -9 \
+            | age -r "$RECIPIENT" > "atibhagya-$(date -u +%F).sql.gz.age"
+          ls -la *.sql.gz.age
 
       - name: Upload the dump
         env:
@@ -53,7 +72,7 @@ jobs:
           BUCKET: ${{ secrets.BACKUP_BUCKET }}
         run: |
           set -euo pipefail
-          aws s3 cp ./*.sql.gz "s3://$BUCKET/postgres/" --endpoint-url "$ENDPOINT"
+          aws s3 cp ./*.sql.gz.age "s3://$BUCKET/postgres/" --endpoint-url "$ENDPOINT"
 
       - name: Mirror the media bucket
         env:

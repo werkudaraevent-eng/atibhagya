@@ -5,7 +5,7 @@ import { APIError, type CollectionConfig } from 'payload'
 
 import { stampUpdatedBy, updatedBy } from '../lib/audit'
 import { revalidateEverything } from '../lib/revalidate'
-import { adminOnly, signedIn } from './Users'
+import { adminOnly, contentEditors } from '../lib/access'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -32,8 +32,8 @@ export const Media: CollectionConfig = {
   },
   access: {
     read: () => true,
-    create: signedIn,
-    update: signedIn,
+    create: contentEditors,
+    update: contentEditors,
     delete: adminOnly,
   },
   hooks: {

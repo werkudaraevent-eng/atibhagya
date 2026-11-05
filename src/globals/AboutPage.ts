@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { contentEditors } from '../lib/access'
 import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import { defaults } from '../lib/content/defaults'
 import { prefillGlobal, rows, text } from '../lib/prefill'
@@ -14,7 +15,8 @@ export const AboutPage: GlobalConfig = {
   slug: 'about',
   label: 'About page',
   admin: { group: 'Pages', components: versionsView },
-  access: { read: () => true },
+  // Sales can sign in but not change the site.
+  access: { read: () => true, update: contentEditors },
   hooks: {
     // Every box shows what the site currently uses; see src/lib/prefill.ts.
     afterRead: [

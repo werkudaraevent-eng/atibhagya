@@ -85,7 +85,11 @@ export default async function JourneyListPage({
             {journeys.length === 0 ? (
               <p className={page.lede}>{t.journeys.empty}</p>
             ) : (
-              <JourneyCards journeys={journeys} locale={locale} dict={t} />
+              <>
+                {/* The cards are h3s; this keeps the outline from jumping h1 → h3. */}
+                <h2 className="visuallyHidden">{t.nav.journeys}</h2>
+                <JourneyCards journeys={journeys} locale={locale} dict={t} />
+              </>
             )}
           </div>
         </section>
