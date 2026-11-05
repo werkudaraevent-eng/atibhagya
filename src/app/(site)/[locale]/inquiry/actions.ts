@@ -43,6 +43,8 @@ export async function submitInquiry(
   trap = '',
   /** The Turnstile token, when the bot check is configured. */
   token = '',
+  /** The event page the visitor came from; only a published event is linked. */
+  eventSlug = '',
 ): Promise<SubmitResult> {
   // The locale arrives from the browser too; anything unknown is English.
   const locale: Locale = locales.includes(requested) ? requested : 'en'
@@ -142,6 +144,20 @@ export async function submitInquiry(
           if (value) data[DRAFT_KEY[field.kind]] = value
         }
       }
+    }
+
+    // Like the slugs above, the event comes from the browser: only a real,
+    // published event is linked, and an unknown one is simply dropped.
+    const eventKey = trim(eventSlug, 120)
+    if (eventKey) {
+      const found = await payload.find({
+        collection: 'events',
+        where: { and: [{ slug: { equals: eventKey } }, { _status: { equals: 'published' } }] },
+        limit: 1,
+        depth: 0,
+      })
+      const event = found.docs[0] as { id: string | number } | undefined
+      if (event) data.event = event.id
     }
 
     // The collection insists on a name; a form without that field stores the

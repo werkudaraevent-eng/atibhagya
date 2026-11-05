@@ -18,10 +18,10 @@ export default async function InterceptedInquiryPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ product?: string | string[]; journey?: string | string[] }>
+  searchParams: Promise<{ product?: string | string[]; journey?: string | string[]; event?: string | string[] }>
 }) {
   const { locale: raw } = await params
-  const { product, journey } = await searchParams
+  const { product, journey, event } = await searchParams
   const locale = raw as Locale
 
   const [products, journeys, categories, site, copy] = await Promise.all([
@@ -44,6 +44,7 @@ export default async function InterceptedInquiryPage({
       }}
       initialProducts={asArray(product)}
       initialJourneys={asArray(journey)}
+      eventSlug={asArray(event)[0] ?? ''}
       homeHref={locale === 'id' ? '/id' : '/'}
     />
   )

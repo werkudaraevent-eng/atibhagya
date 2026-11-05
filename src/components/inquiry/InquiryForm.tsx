@@ -46,6 +46,8 @@ type Props = {
   /** Prefill carried by the CTA from a product or journey page. */
   initialProducts?: string[]
   initialJourneys?: string[]
+  /** The event page the CTA came from; the server checks it exists. */
+  eventSlug?: string
   onDone?: () => void
   /**
    * The invitation above the form — eyebrow, headline, lede. It belongs to
@@ -72,6 +74,7 @@ export function InquiryForm({
   choices,
   initialProducts = [],
   initialJourneys = [],
+  eventSlug = '',
   onDone,
   heading,
   frameClassName,
@@ -195,7 +198,7 @@ export function InquiryForm({
 
     setSubmitting(true)
     setFormError(null)
-    const result = await submitInquiry(locale, draft, trapRef.current?.value ?? '', token)
+    const result = await submitInquiry(locale, draft, trapRef.current?.value ?? '', token, eventSlug)
     setSubmitting(false)
 
     if (result.ok) {

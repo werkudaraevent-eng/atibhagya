@@ -374,6 +374,7 @@ export interface Media {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  _objectKey?: string | null;
   folder?: (number | null) | FolderInterface;
   updatedAt: string;
   createdAt: string;
@@ -695,6 +696,15 @@ export interface Event {
    */
   pdf?: (number | null) | Media;
   /**
+   * The chapter’s name. Empty: "Experiences at this event".
+   */
+  productsLabel?: string | null;
+  productsHeadline?: string | null;
+  /**
+   * In the order they should appear. Only published experiences are shown.
+   */
+  products?: (number | Product)[] | null;
+  /**
    * e.g. "Reserve a place · March 2027"
    */
   closingEyebrow?: string | null;
@@ -808,6 +818,10 @@ export interface Inquiry {
       }[]
     | null;
   status?: ('new' | 'contacted' | 'qualified' | 'closed') | null;
+  /**
+   * The event page this inquiry was sent from, if any.
+   */
+  event?: (number | null) | Event;
   /**
    * The language the visitor wrote in — reply in the same one.
    */
@@ -1305,6 +1319,9 @@ export interface EventsSelect<T extends boolean = true> {
   journeys?: T;
   defaultJourney?: T;
   pdf?: T;
+  productsLabel?: T;
+  productsHeadline?: T;
+  products?: T;
   closingEyebrow?: T;
   closingHeadline?: T;
   closingBody?: T;
@@ -1390,6 +1407,7 @@ export interface InquiriesSelect<T extends boolean = true> {
         id?: T;
       };
   status?: T;
+  event?: T;
   locale?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1409,6 +1427,7 @@ export interface MediaSelect<T extends boolean = true> {
   usedInJourneyGallery?: T;
   usedByVenues?: T;
   usedByFacilitators?: T;
+  _objectKey?: T;
   folder?: T;
   updatedAt?: T;
   createdAt?: T;

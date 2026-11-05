@@ -266,6 +266,8 @@ export type EventContent = {
     image: Img
   }
   journeys: { label?: string; headline?: string; list: Journey[]; defaultSlug?: string }
+  /** Experiences offered at the event, each with its own inquiry button. */
+  products: { label?: string; headline?: string; list: ProductCard[] }
   pdfUrl?: string
   closing: {
     eyebrow?: string

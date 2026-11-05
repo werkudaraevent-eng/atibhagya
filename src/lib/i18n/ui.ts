@@ -93,6 +93,11 @@ export type Dict = {
     pdf: string
     contact: string
     viewJourney: string
+    /** The chapter of experiences offered at the event. */
+    toProducts: string
+    /** On each experience card: open the inquiry form with it chosen. */
+    enquireProduct: string
+    viewProduct: string
     /** Between the day list and its detail on small screens. */
     dayOf: string
   }
@@ -250,6 +255,9 @@ const en: Dict = {
     pdf: 'Programme (PDF)',
     contact: 'Contact',
     viewJourney: 'See the full journey',
+    toProducts: 'Experiences at this event',
+    enquireProduct: 'Enquire',
+    viewProduct: 'Details',
     dayOf: 'of',
   },
   inquiry: {
@@ -394,6 +402,9 @@ const id: Dict = {
     pdf: 'Program (PDF)',
     contact: 'Narahubung',
     viewJourney: 'Lihat perjalanan lengkap',
+    toProducts: 'Pengalaman di acara ini',
+    enquireProduct: 'Tanya & pesan',
+    viewProduct: 'Detail',
     dayOf: 'dari',
   },
   inquiry: {

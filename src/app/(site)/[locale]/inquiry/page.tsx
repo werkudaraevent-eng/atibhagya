@@ -33,16 +33,17 @@ export default async function InquiryPage({
   searchParams,
 }: {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ product?: string | string[]; journey?: string | string[] }>
+  searchParams: Promise<{ product?: string | string[]; journey?: string | string[]; event?: string | string[] }>
 }) {
   const { locale } = await params
-  const { product, journey } = await searchParams
+  const { product, journey, event } = await searchParams
 
   return (
     <InquiryScreen
       locale={locale as Locale}
       initialProducts={asArray(product)}
       initialJourneys={asArray(journey)}
+      eventSlug={asArray(event)[0] ?? ''}
     />
   )
 }
