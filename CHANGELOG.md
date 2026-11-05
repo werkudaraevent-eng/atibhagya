@@ -16,6 +16,13 @@ versions follow [Semantic Versioning](https://semver.org/).
 - CSV export neutralises spreadsheet formulas in visitor input.
 - The weekly database backup is encrypted with age before upload.
 
+### Fixed
+- The footer on the privacy page stayed blank: the page did not mount the
+  motion script that reveals it.
+- The admin opened at a Vercel per-deployment URL showed as signed in but
+  refused every save ("You are not allowed to perform this action"): that
+  address is now trusted for CORS and CSRF alongside the branch alias.
+
 ### Added
 - **Sales** role for the people who follow up inquiries.
 - Privacy policy page (`/privacy`, `/id/privacy`), editable in the CMS and

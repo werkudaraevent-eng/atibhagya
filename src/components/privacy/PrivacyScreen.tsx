@@ -1,3 +1,4 @@
+import { Motion } from '@/components/Motion'
 import { Footer } from '@/components/site/Footer'
 import { Nav } from '@/components/site/Nav'
 import page from '@/components/site/Page.module.css'
@@ -18,8 +19,11 @@ type Props = {
 const LANG: Record<Locale, string> = { en: 'en-GB', id: 'id-ID' }
 
 /**
- * The privacy policy. No motion and no ornaments: it is read, sometimes
- * carefully, and nothing should stand between the reader and the text.
+ * The privacy policy. No motion and no ornaments in the policy itself: it is
+ * read, sometimes carefully, and nothing should stand between the reader and
+ * the text. <Motion /> is still mounted because the shared footer starts
+ * hidden (data-fade, data-headline) until it reveals it; without it the
+ * footer stayed blank on this page.
  */
 export async function PrivacyScreen({ locale, draft = false }: Props) {
   const [privacy, site] = await Promise.all([
@@ -37,6 +41,7 @@ export async function PrivacyScreen({ locale, draft = false }: Props) {
 
   return (
     <>
+      <Motion />
       <Nav locale={locale} dict={t} tone="light" />
 
       <main id="main">
