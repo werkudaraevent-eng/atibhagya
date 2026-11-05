@@ -26,10 +26,12 @@ import type {
   Journey,
   Locale,
   Product,
+  ProductCard,
   ProductCategory,
   SiteContent,
   Venue,
 } from './types'
+import { toCard } from './types'
 
 type Any = Record<string, any>
 
@@ -775,6 +777,22 @@ const bareJourney: Journey = {
 
 const noImage: Img = { alt: '' }
 
+/** As with journeys: an event's experience has no approved copy to fall back on. */
+const bareProduct: Product = {
+  id: '',
+  slug: '',
+  title: '',
+  description: '',
+  facilities: [],
+  suitableFor: [],
+  element: 'earth',
+  venues: [],
+  facilitators: [],
+  heroImage: noImage,
+  gallery: [],
+  featured: false,
+}
+
 const toEvent = (doc: Any): EventContent => {
   const dates = toDates(doc.dates)
   const heroImage = toImg(doc.heroImage, { alt: doc.title ?? '' })
@@ -817,6 +835,14 @@ const toEvent = (doc: Any): EventContent => {
       headline: str(doc.journeysHeadline),
       list: journeys,
       defaultSlug: defaultJourney,
+    },
+    products: {
+      label: str(doc.productsLabel),
+      headline: str(doc.productsHeadline),
+      list: (Array.isArray(doc.products) ? doc.products : [])
+        .filter((p: unknown) => p && typeof p === 'object' && (p as Any)._status !== 'draft')
+        .map((p: Any) => toCard(toProduct(p, bareProduct)))
+        .filter((p: ProductCard) => p.slug && p.title),
     },
     pdfUrl: pdf,
     closing: {

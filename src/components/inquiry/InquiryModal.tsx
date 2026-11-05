@@ -15,6 +15,7 @@ type Props = {
   choices: Choices
   initialProducts?: string[]
   initialJourneys?: string[]
+  eventSlug?: string
   homeHref: string
 }
 

@@ -6,6 +6,7 @@ import { EventDays } from '@/components/events/EventDays'
 import { EventHero } from '@/components/events/EventHero'
 import { EventIntro } from '@/components/events/EventIntro'
 import { EventPlace } from '@/components/events/EventPlace'
+import { EventProducts } from '@/components/events/EventProducts'
 import { JourneyStage } from '@/components/events/JourneyStage'
 import { Footer } from '@/components/site/Footer'
 import { Nav } from '@/components/site/Nav'
@@ -39,6 +40,7 @@ export async function EventScreen({ locale, slug, draft = false }: Props) {
   const hasDays = event.days.columns.length > 0
   const hasPlace = Boolean(event.place.headline || event.place.body || event.place.image.src)
   const hasJourneys = event.journeys.list.length > 0
+  const hasProducts = event.products.list.length > 0
   const hasClosing = Boolean(event.closing.headline || event.closing.body)
 
   let n = 0
@@ -48,6 +50,7 @@ export async function EventScreen({ locale, slug, draft = false }: Props) {
     days: hasDays ? next() : '',
     place: hasPlace ? next() : '',
     journeys: hasJourneys ? next() : '',
+    products: hasProducts ? next() : '',
   }
 
   const labels = {
@@ -55,6 +58,7 @@ export async function EventScreen({ locale, slug, draft = false }: Props) {
     days: event.days.label ?? t.events.toDays,
     place: event.place.label ?? event.title,
     journeys: event.journeys.label ?? t.nav.journeys,
+    products: event.products.label ?? t.events.toProducts,
     closing: event.closing.eyebrow ?? t.nav.inquiry,
   }
 
@@ -64,11 +68,13 @@ export async function EventScreen({ locale, slug, draft = false }: Props) {
     ...(hasDays ? [{ id: 'days', label: labels.days }] : []),
     ...(hasPlace ? [{ id: 'place', label: labels.place }] : []),
     ...(hasJourneys ? [{ id: 'journeys', label: labels.journeys }] : []),
+    ...(hasProducts ? [{ id: 'experiences', label: labels.products }] : []),
     ...(hasClosing ? [{ id: 'enquire', label: labels.closing }] : []),
     { id: 'foot', label: t.footer.enquiries },
   ]
 
-  const inquiryHref = `${prefix}/inquiry`
+  // Carries the event so inquiries sent from its page are marked with it.
+  const inquiryHref = `${prefix}/inquiry?event=${encodeURIComponent(event.slug)}`
 
   return (
     <>
@@ -108,6 +114,18 @@ export async function EventScreen({ locale, slug, draft = false }: Props) {
             number={chapters.journeys}
             stage={labels.journeys}
             headline={event.journeys.headline}
+          />
+        ) : null}
+
+        {hasProducts ? (
+          <EventProducts
+            products={event.products}
+            eventSlug={event.slug}
+            prefix={prefix}
+            id="experiences"
+            number={chapters.products}
+            stage={labels.products}
+            dict={t}
           />
         ) : null}
 

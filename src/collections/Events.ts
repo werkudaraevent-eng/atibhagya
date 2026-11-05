@@ -249,6 +249,22 @@ export const Events: CollectionConfig = {
           ],
         },
         {
+          label: 'Experiences',
+          description:
+            'Experiences offered at the event, as cards that each open the inquiry form with that experience chosen. Inquiries sent from here are marked with this event.',
+          fields: [
+            text('productsLabel', { description: 'The chapter’s name. Empty: "Experiences at this event".' }),
+            longText('productsHeadline'),
+            {
+              name: 'products',
+              type: 'relationship',
+              relationTo: 'products',
+              hasMany: true,
+              admin: { description: 'In the order they should appear. Only published experiences are shown.' },
+            },
+          ],
+        },
+        {
           label: 'Closing',
           fields: [
             text('closingEyebrow', { description: 'e.g. "Reserve a place · March 2027"' }),

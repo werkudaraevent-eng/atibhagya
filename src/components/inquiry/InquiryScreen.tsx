@@ -15,6 +15,8 @@ type Props = {
   locale: Locale
   initialProducts?: string[]
   initialJourneys?: string[]
+  /** The event page the visitor came from, if any. */
+  eventSlug?: string
   /** Read the form as it is being edited rather than as published. */
   draft?: boolean
 }
@@ -27,9 +29,9 @@ export async function InquiryScreen({
   locale,
   initialProducts = [],
   initialJourneys = [],
+  eventSlug = '',
   draft = false,
 }: Props) {
-
   const [products, journeys, categories, site, copy] = await Promise.all([
     getProducts(locale),
     getJourneys(locale),
@@ -73,6 +75,7 @@ export async function InquiryScreen({
             }}
             initialProducts={initialProducts}
             initialJourneys={initialJourneys}
+            eventSlug={eventSlug}
             // The invitation is handed to the form so it leaves with it once
             // the inquiry has been sent; the thank-you then takes its place.
             heading={

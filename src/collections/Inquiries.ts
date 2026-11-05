@@ -25,7 +25,7 @@ export const Inquiries: CollectionConfig = {
   admin: {
     group: 'Inquiries',
     useAsTitle: 'name',
-    defaultColumns: ['name', 'email', 'audience', 'preferredDate', 'status', 'createdAt'],
+    defaultColumns: ['name', 'email', 'event', 'products', 'status', 'createdAt'],
     // Out of the sidebar for anyone who cannot open it anyway.
     hidden: ({ user }) => !canHandleInquiries(user),
     components: {
@@ -82,6 +82,19 @@ export const Inquiries: CollectionConfig = {
           ...(doc.customActivities ?? []).map((c: { label?: string }) => c.label),
         ].filter(Boolean)
 
+        // On create the relation usually arrives as a bare id.
+        let eventTitle: string | undefined
+        if (typeof doc.event === 'object' && doc.event !== null) {
+          eventTitle = (doc.event as { title?: string }).title
+        } else if (doc.event) {
+          try {
+            const found = await req.payload.findByID({ collection: 'events', id: doc.event, depth: 0 })
+            eventTitle = (found as { title?: string }).title
+          } catch {
+            eventTitle = String(doc.event)
+          }
+        }
+
         // Only what was asked and answered. A field the team has removed from
         // the form should not show up as a row of dashes.
         const lines = [
@@ -101,6 +114,7 @@ export const Inquiries: CollectionConfig = {
             .filter((a) => a.value)
             .map((a) => `${a.label ?? a.name}: ${a.value}`),
           '',
+          eventTitle ? `Via event: ${eventTitle}` : null,
           `Submitted in: ${doc.locale ?? 'en'}`,
         ].filter((line) => line !== null)
 
@@ -226,6 +240,18 @@ export const Inquiries: CollectionConfig = {
       admin: { position: 'sidebar' },
       // The public form must not be able to set or move the status.
       access: { create: isHostField, update: isHostField },
+    },
+    {
+      // Set by the server from the event page the visitor came through, so the
+      // team can filter and export one event's inquiries.
+      name: 'event',
+      type: 'relationship',
+      relationTo: 'events',
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'The event page this inquiry was sent from, if any.',
+      },
     },
     {
       name: 'locale',
