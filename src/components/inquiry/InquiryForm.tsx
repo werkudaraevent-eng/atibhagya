@@ -527,7 +527,12 @@ export function InquiryForm({
         >
           {submitting ? t.sending : t.submit}
         </button>
-        {t.privacyNote ? <p className={styles.privacy}>{t.privacyNote}</p> : null}
+        <p className={styles.privacy}>
+          {t.privacyNote ? `${t.privacyNote} ` : null}
+          <a href={`${locale === 'id' ? '/id' : ''}/privacy`} target="_blank" rel="noopener">
+            {dict.privacy.link}
+          </a>
+        </p>
       </div>
     </form>
       </div>

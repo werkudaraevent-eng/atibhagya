@@ -2,6 +2,7 @@ import { isProduction } from '../env'
 import { getPayloadSafe } from '../payload'
 import { defaults } from './defaults'
 import { guessElement, isElement } from '../elements'
+import { isLive } from '../event-timing'
 import { dict } from '../i18n/ui'
 import type { Dict } from '../i18n/ui'
 import {
@@ -730,12 +731,6 @@ export async function getInquiryCopy(
 
 /* --- Events --------------------------------------------------------------- */
 
-/**
- * Today, as a date in Jakarta (UTC+7): the festival's own clock, whatever
- * the server's. An event stays live through the whole of its last day.
- */
-const todayInJakarta = () => new Date(Date.now() + 7 * 3600_000).toISOString().slice(0, 10)
-
 const toDates = (rows: unknown): EventContent['dates'] =>
   (Array.isArray(rows) ? rows : [])
     .filter((r: Any) => r?.date)
@@ -746,11 +741,6 @@ const toDates = (rows: unknown): EventContent['dates'] =>
       venue: str(r.venue),
     }))
     .sort((a, b) => a.date.localeCompare(b.date))
-
-const isLive = (dates: EventContent['dates']) => {
-  const last = dates.at(-1)?.date
-  return Boolean(last && last >= todayInJakarta())
-}
 
 const steps = (rows: unknown) =>
   (Array.isArray(rows) ? rows : [])

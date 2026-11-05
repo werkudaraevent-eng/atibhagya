@@ -4,7 +4,7 @@ import { stampUpdatedBy, updatedBy, versionsView } from '../lib/audit'
 import { revalidateEverything } from '../lib/revalidate'
 import { serverURL } from '../lib/server-url'
 import { pdfFile, webImage } from '../lib/validate-media'
-import { adminOnly, signedIn } from './Users'
+import { adminOnly, contentEditors } from '../lib/access'
 
 type Opts = { required?: boolean; description?: string }
 
@@ -52,8 +52,8 @@ export const Events: CollectionConfig = {
       if (user) return true
       return { _status: { equals: 'published' } }
     },
-    create: signedIn,
-    update: signedIn,
+    create: contentEditors,
+    update: contentEditors,
     delete: adminOnly,
   },
   defaultSort: '-updatedAt',

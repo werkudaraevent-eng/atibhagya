@@ -110,12 +110,18 @@ export function Footer({ site, dict, locale }: Props) {
           <span className={styles.legal}>
             {site.footerLegal}
             {site.parentBrand ? <span className={styles.group}> · {site.parentBrand}</span> : null}
+            <span className={styles.group}>
+              {' · '}
+              <Link className={styles.link} href={`${prefix}/privacy`}>
+                {dict.privacy.link}
+              </Link>
+            </span>
           </span>
           <span className={styles.place}>
             {site.address ? <span>{site.address}</span> : null}
             <LanguageSwitcher
               locale={locale}
-              label={dict.languageLabel}
+              label={dict.languageLabelFooter}
               className={styles.lang}
               itemClassName={styles.langLink}
               currentClassName={styles.langCurrent}

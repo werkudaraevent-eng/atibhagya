@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { contentEditors } from '../lib/access'
 import { stampUpdatedByGlobal, updatedBy, versionsView } from '../lib/audit'
 import type { Locale } from '../lib/content/types'
 import { dict } from '../lib/i18n/ui'
@@ -176,7 +177,8 @@ export const InquiryFormCopy: GlobalConfig = {
       'The fields on the inquiry form and the words around them. Every box shows what the site currently says — change it, or clear it to return to the approved copy.',
     components: versionsView,
   },
-  access: { read: () => true },
+  // Sales can sign in but not change the site.
+  access: { read: () => true, update: contentEditors },
   hooks: {
     beforeValidate: [
       ({ data }) => {

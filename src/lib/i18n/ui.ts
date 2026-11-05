@@ -9,6 +9,10 @@ export type Dict = {
   menu: string
   close: string
   languageLabel: string
+  /** The footer's language switcher; distinct so the two landmarks can be told apart. */
+  languageLabelFooter: string
+  /** The privacy policy: its link and the page's date line. */
+  privacy: { link: string; updated: string }
   skipToContent: string
   /** Accessible name of the breadcrumb landmark. */
   youAreHere: string
@@ -166,6 +170,8 @@ const en: Dict = {
   menu: 'Menu',
   close: 'Close',
   languageLabel: 'Language',
+  languageLabelFooter: 'Language (footer)',
+  privacy: { link: 'Privacy policy', updated: 'Last updated' },
   skipToContent: 'Skip to content',
   youAreHere: 'You are here',
   yourPath: 'Where you are on the page',
@@ -308,6 +314,8 @@ const id: Dict = {
   menu: 'Menu',
   close: 'Tutup',
   languageLabel: 'Bahasa',
+  languageLabelFooter: 'Bahasa (footer)',
+  privacy: { link: 'Kebijakan privasi', updated: 'Terakhir diperbarui' },
   skipToContent: 'Lompat ke konten',
   youAreHere: 'Posisi Anda',
   yourPath: 'Posisi Anda di halaman',

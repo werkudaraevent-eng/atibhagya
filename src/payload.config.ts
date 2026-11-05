@@ -26,7 +26,9 @@ import { AboutPage } from './globals/AboutPage'
 import { CataloguePages } from './globals/CataloguePages'
 import { HomePage } from './globals/HomePage'
 import { InquiryFormCopy } from './globals/InquiryForm'
+import { PrivacyPage } from './globals/PrivacyPage'
 import { SiteSettings } from './globals/SiteSettings'
+import { neutraliseFormulas } from './lib/csv-safe'
 import { serverURL } from './lib/server-url'
 
 const filename = fileURLToPath(import.meta.url)
@@ -120,6 +122,7 @@ const pathFor = (collection: string, slug: unknown, locale?: string) => {
   if (collection === 'journeys') return `${prefix}/preview/journey/${slug}`
   if (collection === 'events') return `${prefix}/preview/event/${slug}`
   if (collection === 'about') return `${prefix}/preview/about`
+  if (collection === 'privacy') return `${prefix}/preview/privacy`
   if (collection === 'inquiry-form') return `${prefix}/preview/inquiry`
   if (collection === 'catalogue') return `${prefix}/preview/catalogue`
   // A category shows itself as a filter on the listing.
@@ -163,7 +166,7 @@ export default buildConfig({
       // inside product pages and have none of their own; media has its
       // "where used" panel; inquiries and users are records, not pages.
       collections: ['products', 'journeys', 'events', 'product-categories'],
-      globals: ['home', 'about', 'catalogue', 'inquiry-form', 'site'],
+      globals: ['home', 'about', 'privacy', 'catalogue', 'inquiry-form', 'site'],
       url: ({ data, collectionConfig, globalConfig, locale }) =>
         `${serverURL}${pathFor(
           collectionConfig?.slug ?? globalConfig?.slug ?? 'home',
@@ -190,7 +193,7 @@ export default buildConfig({
     Posts,
     Users,
   ],
-  globals: [HomePage, AboutPage, CataloguePages, InquiryFormCopy, SiteSettings],
+  globals: [HomePage, AboutPage, PrivacyPage, CataloguePages, InquiryFormCopy, SiteSettings],
   // The folder tree behind the media library. Scoped to media only, so it
   // never appears on content collections where it would be noise — and
   // without the separate "Browse by Folder" view in the sidebar: folders are
@@ -242,7 +245,14 @@ export default buildConfig({
           slug: 'inquiries',
           // Inquiries arrive through the form, never from a spreadsheet.
           import: false,
-          export: { disableJobsQueue: true, disableSave: true },
+          export: {
+            disableJobsQueue: true,
+            disableSave: true,
+            // Visitors typed these cells; none may open as a formula.
+            hooks: {
+              before: ({ data, format }) => (format === 'csv' ? neutraliseFormulas(data) : data),
+            },
+          },
         },
       ],
     }),

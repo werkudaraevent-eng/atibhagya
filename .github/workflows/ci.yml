@@ -30,6 +30,9 @@ jobs:
 
       - run: npm run lint
 
+      - name: Unit tests
+        run: npm test
+
       - name: Build
         run: npm run build
         env:
@@ -39,11 +42,31 @@ jobs:
           # build never pushes a schema, so every query would fail.)
           NEXT_PUBLIC_SERVER_URL: http://localhost:3000
 
-  # Advisories are reported, not blocking: a transitive "high" with no fix
-  # yet should not stop a copy change from shipping. Read it, then decide.
-  audit:
+  # The flows that must never break, in a real browser against a production
+  # build on a real Postgres: every migration applied from empty (which also
+  # proves the migration chain), the seed loaded, then Playwright on a phone
+  # and a desktop viewport.
+  e2e:
     runs-on: ubuntu-latest
-    continue-on-error: true
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: atibhagya
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URI: postgresql://postgres:postgres@localhost:5432/atibhagya
+      # Throwaway values for a throwaway database; nothing real lives here.
+      PAYLOAD_SECRET: ci-only-not-a-real-secret
+      CRON_SECRET: ci-only-cron-secret
+      NEXT_PUBLIC_SERVER_URL: http://localhost:3100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,4 +74,34 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm audit --audit-level=high
+      - run: npx playwright install --with-deps chromium
+      - run: npm run migrate
+      - run: npm run seed
+      - run: npm run build
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: test-results/
+          retention-days: 7
+
+  # Critical advisories in what ships to production block the merge: that is
+  # how Next 16.3.4 and Payload 3.89 (RCE, access-control bypass) sat on main
+  # unnoticed while this job only reported. Highs and dev-only advisories are
+  # still printed for a person to read, without stopping a copy change.
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Block on critical advisories (production dependencies)
+        run: npm audit --omit=dev --audit-level=critical
+      - name: Report high and dev-only advisories
+        if: always()
+        continue-on-error: true
+        run: npm audit --audit-level=high

@@ -93,6 +93,8 @@ export default async function JourneyPreviewPage({
                 {journey.description}
               </p>
             ) : null}
+            {/* The days are h3s; this keeps the outline from jumping h1 → h3. */}
+            <h2 className="visuallyHidden">{t.journeys.itinerary}</h2>
             <Itinerary journey={journey} locale={locale} dict={t} />
           </div>
         </section>

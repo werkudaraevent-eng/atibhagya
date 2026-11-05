@@ -10,3 +10,7 @@ next-env.d.ts
 /public/media
 *.db
 *.db-journal
+/test-results
+/playwright-report
+.env.production
+.env.staging

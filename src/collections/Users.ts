@@ -1,21 +1,6 @@
-import type { Access, CollectionConfig, FieldAccess } from 'payload'
+import type { CollectionConfig } from 'payload'
 
-export type Role = 'admin' | 'editor'
-
-const rolesOf = (user: unknown): Role[] => {
-  const roles = (user as { roles?: unknown })?.roles
-  return Array.isArray(roles) ? (roles as Role[]) : []
-}
-
-export const isAdmin = (user: unknown) => rolesOf(user).includes('admin')
-
-/** Admins only. Used wherever an action is destructive or grants access. */
-export const adminOnly: Access = ({ req: { user } }) => isAdmin(user)
-
-/** Anyone signed in. Editors may write content; only admins may destroy it. */
-export const signedIn: Access = ({ req: { user } }) => Boolean(user)
-
-const adminFieldOnly: FieldAccess = ({ req: { user } }) => isAdmin(user)
+import { ROLE_OPTIONS, adminFieldOnly, adminOnly, isAdmin, signedIn } from '../lib/access'
 
 /**
  * Whether the admin is served over HTTPS — every Vercel deployment, or any
@@ -46,7 +31,7 @@ export const Users: CollectionConfig = {
     group: 'Admin',
     defaultColumns: ['email', 'name', 'roles', 'updatedAt'],
     description:
-      'Admins manage accounts and can delete content. Editors write and publish, but cannot create accounts or delete.',
+      'Admins manage accounts and can delete content. Editors write and publish content. Sales read and follow up inquiries. One person can hold several roles.',
   },
   access: {
     // Only an admin hands out accounts.
@@ -93,10 +78,7 @@ export const Users: CollectionConfig = {
       hasMany: true,
       required: true,
       defaultValue: ['editor'],
-      options: [
-        { label: 'Admin — manages accounts and can delete', value: 'admin' },
-        { label: 'Editor — writes and publishes content', value: 'editor' },
-      ],
+      options: ROLE_OPTIONS,
       // An editor must not be able to promote themselves.
       access: {
         create: adminFieldOnly,

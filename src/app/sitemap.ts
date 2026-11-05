@@ -31,6 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/product', lastModified: stamp(latest(products.map((p) => p.updatedAt))), priority: 0.8 },
     { path: '/journey', lastModified: stamp(latest(journeys.map((j) => j.updatedAt))), priority: 0.8 },
     { path: '/about', priority: 0.8 },
+    { path: '/privacy', priority: 0.3 },
     ...(events.length
       ? [{ path: '/events', lastModified: stamp(latest(events.map((e) => e.updatedAt))), priority: 0.8 }]
       : []),

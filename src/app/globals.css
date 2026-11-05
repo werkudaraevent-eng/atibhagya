@@ -17,7 +17,12 @@
   --ivory-2: #efece0;
   --ivory-on-dark: #e9e4d8;
   --emas: #c69a4b;
-  --emas-deep: #a97b2a;
+  /*
+   * The gold that small text is set in. #a97b2a measured 3.4:1 on ivory;
+   * WCAG 2.2 AA asks 4.5:1 for text this size. #87621f is the same hue a
+   * step darker: 5.0:1 on --ivory, 4.7:1 on --ivory-2.
+   */
+  --emas-deep: #87621f;
   --emas-hover: #e3bd72;
 
   --ink-rgb: 12, 27, 38;
@@ -25,7 +30,8 @@
 
   --ink-body: rgba(var(--ink-rgb), 0.86);
   --ink-label: rgba(var(--ink-rgb), 0.70);
-  --ink-caption: rgba(var(--ink-rgb), 0.58);
+  /* 0.58 measured 4.2:1 on ivory; 0.62 clears 4.5:1 on both papers. */
+  --ink-caption: rgba(var(--ink-rgb), 0.62);
   --hairline: rgba(var(--ink-rgb), 0.22);
   --hairline-strong: rgba(var(--ink-rgb), 0.30);
 
