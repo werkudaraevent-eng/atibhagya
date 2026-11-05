@@ -29,7 +29,7 @@ import { InquiryFormCopy } from './globals/InquiryForm'
 import { PrivacyPage } from './globals/PrivacyPage'
 import { SiteSettings } from './globals/SiteSettings'
 import { neutraliseFormulas } from './lib/csv-safe'
-import { serverURL } from './lib/server-url'
+import { serverURL, trustedOrigins } from './lib/server-url'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -257,8 +257,8 @@ export default buildConfig({
       ],
     }),
   ],
-  cors: [serverURL],
-  csrf: [serverURL],
+  cors: trustedOrigins,
+  csrf: trustedOrigins,
   // The site reads through the Local API and the admin through REST; nothing
   // speaks GraphQL. Off, so there is no introspectable schema and no
   // deeply-nested query for a stranger to run.
