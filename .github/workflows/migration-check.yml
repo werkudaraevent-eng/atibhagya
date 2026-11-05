@@ -39,7 +39,7 @@ jobs:
 
       - name: Comment when none was added
         if: steps.look.outputs.found == 'no'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const marker = '<!-- migration-check -->'
