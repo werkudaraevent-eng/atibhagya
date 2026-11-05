@@ -17,6 +17,9 @@ versions follow [Semantic Versioning](https://semver.org/).
 - The weekly database backup is encrypted with age before upload.
 
 ### Fixed
+- The footer's privacy link was larger than the legal line it sits in; it now
+  matches it and is underlined. The footer's legal line and language links
+  were 3.8:1 contrast; raised to 5.8:1 (WCAG AA).
 - The footer on the privacy page stayed blank: the page did not mount the
   motion script that reveals it.
 - The admin opened at a Vercel per-deployment URL showed as signed in but

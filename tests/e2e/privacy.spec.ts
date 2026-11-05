@@ -27,3 +27,13 @@ test('its footer is shown, not left hidden waiting for motion', async ({ page })
   await expect.poll(async () => Number(await explore.evaluate((el) => getComputedStyle(el).opacity))).toBeGreaterThan(0.9)
   await expect(footer.locator('[data-headline]')).toHaveCSS('visibility', 'visible')
 })
+
+test('the footer link to it is set like the legal line around it', async ({ page }) => {
+  await page.goto('/privacy')
+  const link = page.locator('footer').getByRole('link', { name: 'Privacy policy' })
+  const [own, line] = await link.evaluate((el) => [
+    getComputedStyle(el).fontSize,
+    getComputedStyle(el.parentElement as Element).fontSize,
+  ])
+  expect(own).toBe(line)
+})
