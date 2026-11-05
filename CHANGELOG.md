@@ -17,6 +17,10 @@ versions follow [Semantic Versioning](https://semver.org/).
 - The weekly database backup is encrypted with age before upload.
 
 ### Fixed
+- The production build failed reading `media`: the Payload 3.92 migration
+  was generated without a storage bucket and missed the storage adapter's
+  `_objectkey` column. Migration `storage_object_key` adds it (`IF NOT EXISTS`;
+  staging already had it).
 - The footer's privacy link was larger than the legal line it sits in; it now
   matches it and is underlined. The footer's legal line and language links
   were 3.8:1 contrast; raised to 5.8:1 (WCAG AA).
